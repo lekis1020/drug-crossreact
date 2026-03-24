@@ -31,10 +31,10 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
     //   Left (Gram+/MRSA) → Center (Broad) → Right (Gram-/Pseudomonas)
     const GROUP_POSITIONS: Record<string, { x: number; y: number }> = {
       // === Row 1: Penicillins ===
-      'group-penicillin--natural-':     { x: -900, y: -600 },
-      'group-penicillin--amino-':       { x: -550, y: -600 },
-      'group-penicillin--anti-staph-':  { x: -900, y: -350 },
-      'group-penicillin--extended-':    { x: -550, y: -350 },
+      'group-penicillin-natural-':     { x: -900, y: -600 },
+      'group-penicillin-amino-':       { x: -550, y: -600 },
+      'group-penicillin-anti-staph-':  { x: -900, y: -350 },
+      'group-penicillin-extended-':    { x: -550, y: -350 },
 
       // === Row 1-2: Cephalosporins (1G→5G left to right) ===
       'group-cephalosporin-1g':         { x: -50,  y: -600 },
