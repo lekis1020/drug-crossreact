@@ -27,7 +27,8 @@
         "33253923",
         "29408440",
         "Stevenson2026_JACIG",
-        "Hutten2025_Allergy"
+        "Hutten2025_Allergy",
+        "28887994"
       ],
       "structural_data": "PubChem (pubchempy)",
       "smiles_count": 25
@@ -674,6 +675,83 @@
         "Hutten2025_Allergy"
       ],
       "clinical_note": "Discrepancy between references. Conservative approach: treat as potential cross-reactivity."
+    },
+    {
+      "drug_a": "cefuroxime",
+      "drug_b": "ceftriaxone",
+      "ige_cross_reactivity": "moderate",
+      "rate_percent": null,
+      "structural_basis": "Non-identical R1 side chain but clinical cross-reactivity reported (aminothiazolyl group variants)",
+      "evidence_pmids": [
+        "28887994"
+      ],
+      "clinical_note": "Trubiano 2017: cefuroxime (furyl-methoxyimino) shares partial aminothiazolyl-methoxyimino structural motif with ceftriaxone/cefotaxime/cefepime group. Clinical cross-reactivity documented despite non-identical R1."
+    },
+    {
+      "drug_a": "cefuroxime",
+      "drug_b": "cefotaxime",
+      "ige_cross_reactivity": "moderate",
+      "rate_percent": null,
+      "structural_basis": "Non-identical R1 but shared methoxyimino moiety",
+      "evidence_pmids": [
+        "28887994"
+      ],
+      "clinical_note": "Partial structural similarity in methoxyimino substituent. Clinical cross-reactivity reported."
+    },
+    {
+      "drug_a": "cefuroxime",
+      "drug_b": "cefepime",
+      "ige_cross_reactivity": "moderate",
+      "rate_percent": null,
+      "structural_basis": "Non-identical R1 but shared methoxyimino moiety",
+      "evidence_pmids": [
+        "28887994"
+      ],
+      "clinical_note": "Trubiano 2017 groups cefuroxime with cefepime/cefotaxime/ceftriaxone/ceftazidime for some clinical cross-reactivity evidence."
+    },
+    {
+      "drug_a": "cefuroxime",
+      "drug_b": "ceftazidime",
+      "ige_cross_reactivity": "low",
+      "rate_percent": null,
+      "structural_basis": "Non-identical R1; ceftazidime has carboxypropoxyimino vs furyl-methoxyimino",
+      "evidence_pmids": [
+        "28887994"
+      ],
+      "clinical_note": "Grouped together by Trubiano but weaker structural basis. Different oxyimino substituents."
+    },
+    {
+      "drug_a": "penicillins (confirmed allergy)",
+      "drug_b": "3rd-gen cephalosporins",
+      "ige_cross_reactivity": "safe",
+      "rate_percent": null,
+      "structural_basis": "Different R1 side chains",
+      "evidence_pmids": [
+        "28887994"
+      ],
+      "clinical_note": "Trubiano 2017: 3rd-gen cephalosporins can be used in patients with non-immediate or non-life-threatening penicillin allergy."
+    },
+    {
+      "drug_a": "penicillins",
+      "drug_b": "carbapenems",
+      "ige_cross_reactivity": "low",
+      "rate_percent": "\u22641%",
+      "structural_basis": "Different ring structure (5-membered with carbon replacing sulfur)",
+      "evidence_pmids": [
+        "28887994"
+      ],
+      "clinical_note": "Trubiano 2017: Carbapenems can be used in penicillin-allergic patients. Cross-reactivity \u22641%. Risk/benefit assessment for life-threatening penicillin allergy."
+    },
+    {
+      "drug_a": "penicillins",
+      "drug_b": "aztreonam",
+      "ige_cross_reactivity": "safe",
+      "rate_percent": "0%",
+      "structural_basis": "Monobactam: no fused ring, sulfonate instead of carboxylate",
+      "evidence_pmids": [
+        "28887994"
+      ],
+      "clinical_note": "Trubiano 2017: Monobactams can be used in patients with any history of penicillin allergy."
     }
   ],
   "prediction_rules": [
@@ -742,6 +820,16 @@
         "Stevenson2026_JACIG"
       ],
       "notes": "In 58 confirmed cephalosporin-allergic patients, 0/58 had positive ST to unrelated R1 cephalosporins and 0/7 reacted on OPC. Strong evidence for R1 model safety."
+    },
+    {
+      "rule_id": "R006",
+      "condition": "non_identical_r1_clinical_crossreactivity",
+      "predicted_cross_reactivity": "moderate",
+      "evidence_basis": "clinical_studies",
+      "pmids": [
+        "28887994"
+      ],
+      "notes": "Trubiano 2017: Some non-identical R1 pairs show clinical cross-reactivity, particularly cefuroxime (G6 furyl-methoxyimino) with aminothiazolyl-methoxyimino group (G3). R1 similarity rather than identity may drive some cross-reactivity."
     }
   ],
   "predict_function_logic": "Same R1 group \u2192 HIGH | G1\u2194G2 \u2192 MODERATE | Different \u2192 LOW/SAFE"

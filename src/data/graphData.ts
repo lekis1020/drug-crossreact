@@ -280,6 +280,31 @@ export function buildGraphElements(): { nodes: DrugNodeData[]; edges: CrossReact
   // Nitroimidazole internal → moderate
   edges.push({ id: 'edge-metronidazole-tinidazole', source: 'metronidazole', target: 'tinidazole', crossReactivity: 'moderate', pmids: [] });
 
+
+  // === Trubiano 2017: Cefuroxime non-identical R1 clinical cross-reactivity ===
+  // Cefuroxime (G6 furyl-methoxyimino) ↔ G3 (aminothiazolyl-methoxyimino) group
+  // Shared methoxyimino moiety → clinical cross-reactivity documented
+  const cefuroximeG3targets = ['ceftriaxone', 'cefotaxime', 'cefepime', 'cefixime', 'cefdinir', 'cefpodoxime', 'cefditoren', 'ceftaroline', 'ceftobiprole'];
+  for (const target of cefuroximeG3targets) {
+    edges.push({
+      id: `edge-cefuroxime-${target}`,
+      source: 'cefuroxime',
+      target,
+      crossReactivity: 'moderate',
+      pmids: ['28887994'],
+      clinicalNote: 'Non-identical R1 but shared methoxyimino moiety. Clinical cross-reactivity reported (Trubiano 2017).',
+    });
+  }
+  // Cefuroxime ↔ Ceftazidime: lower evidence (different oxyimino)
+  edges.push({
+    id: 'edge-cefuroxime-ceftazidime',
+    source: 'cefuroxime',
+    target: 'ceftazidime',
+    crossReactivity: 'low',
+    pmids: ['28887994'],
+    clinicalNote: 'Grouped by Trubiano 2017 but weaker structural basis. Different oxyimino substituents.',
+  });
+
   // === New evidence: Stevenson 2026, Hutten 2025 ===
 
   // Cefazolin → Penicillins: low cross-reactivity (10.2% ST+, 0% OPC confirmed)
