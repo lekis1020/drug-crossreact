@@ -1,0 +1,185 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1774357164880,
+  "projectRoot": "/Users/napler/clawd/projects/med-knowledge/apps/drug-crossreact",
+  "techStack": {
+    "languages": [],
+    "frameworks": [],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [],
+    "gitBranches": null
+  },
+  "customNotes": [],
+  "directoryMap": {},
+  "hotPaths": [
+    {
+      "path": "",
+      "accessCount": 6,
+      "lastAccessed": 1774359251261,
+      "type": "directory"
+    },
+    {
+      "path": "src/types/index.ts",
+      "accessCount": 3,
+      "lastAccessed": 1774358903581,
+      "type": "file"
+    },
+    {
+      "path": "src/data/drugDatabase.ts",
+      "accessCount": 3,
+      "lastAccessed": 1774358903942,
+      "type": "file"
+    },
+    {
+      "path": "src/data/colors.ts",
+      "accessCount": 3,
+      "lastAccessed": 1774358904164,
+      "type": "file"
+    },
+    {
+      "path": "package.json",
+      "accessCount": 3,
+      "lastAccessed": 1774358908619,
+      "type": "file"
+    },
+    {
+      "path": "REQUIREMENTS.md",
+      "accessCount": 3,
+      "lastAccessed": 1774358912710,
+      "type": "file"
+    },
+    {
+      "path": "crossreact_prediction_db.json",
+      "accessCount": 3,
+      "lastAccessed": 1774358913043,
+      "type": "file"
+    },
+    {
+      "path": "vite.config.ts",
+      "accessCount": 3,
+      "lastAccessed": 1774358917640,
+      "type": "file"
+    },
+    {
+      "path": "index.html",
+      "accessCount": 3,
+      "lastAccessed": 1774358918356,
+      "type": "file"
+    },
+    {
+      "path": "src/main.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1774359200929,
+      "type": "file"
+    },
+    {
+      "path": "tsconfig.app.json",
+      "accessCount": 3,
+      "lastAccessed": 1774359200950,
+      "type": "file"
+    },
+    {
+      "path": "src/index.css",
+      "accessCount": 3,
+      "lastAccessed": 1774359251622,
+      "type": "file"
+    },
+    {
+      "path": "src/components/Graph.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1774359260189,
+      "type": "file"
+    },
+    {
+      "path": "src/data/graphData.ts",
+      "accessCount": 2,
+      "lastAccessed": 1774359259724,
+      "type": "file"
+    },
+    {
+      "path": "src/components/SearchBar.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1774359260617,
+      "type": "file"
+    },
+    {
+      "path": "src/components/SidePanel.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1774359261213,
+      "type": "file"
+    },
+    {
+      "path": "src/components/FilterPanel.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1774359261480,
+      "type": "file"
+    },
+    {
+      "path": "src/components/DrugTooltip.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1774359261939,
+      "type": "file"
+    },
+    {
+      "path": "src/App.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1774359262367,
+      "type": "file"
+    },
+    {
+      "path": "src/declarations.d.ts",
+      "accessCount": 2,
+      "lastAccessed": 1774359262699,
+      "type": "file"
+    },
+    {
+      "path": "antibiotic_cross_reactivity_db_2026.md",
+      "accessCount": 1,
+      "lastAccessed": 1774357181563,
+      "type": "file"
+    },
+    {
+      "path": "tsconfig.json",
+      "accessCount": 1,
+      "lastAccessed": 1774357621890,
+      "type": "file"
+    },
+    {
+      "path": "tsconfig.node.json",
+      "accessCount": 1,
+      "lastAccessed": 1774357625964,
+      "type": "file"
+    },
+    {
+      "path": "src/vite-env.d.ts",
+      "accessCount": 1,
+      "lastAccessed": 1774357636195,
+      "type": "file"
+    },
+    {
+      "path": "src/types/cytoscape-cose-bilkent.d.ts",
+      "accessCount": 1,
+      "lastAccessed": 1774359208853,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}

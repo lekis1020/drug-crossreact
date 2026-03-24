@@ -25,7 +25,9 @@
         "34757066",
         "34767158",
         "33253923",
-        "29408440"
+        "29408440",
+        "Stevenson2026_JACIG",
+        "Hutten2025_Allergy"
       ],
       "structural_data": "PubChem (pubchempy)",
       "smiles_count": 25
@@ -36,7 +38,12 @@
       "R2 side chain role excluded (debated in literature, PMID 29017833)",
       "Carbapenems: cross-reactivity data limited to low risk (structural basis)",
       "PMID 19489917 excluded: not in verified database"
-    ]
+    ],
+    "evidence_notes": {
+      "stevenson_2026": "Retrospective audit, n=212, 2 Australian tertiary hospitals, 2016-2021. Strong support for R1 model. Limitation: limited non-cefazolin confirmed allergies.",
+      "hutten_2025": "Systematic comparison of 4 cross-reactivity tables covering 51 BAs. Found 36% disharmony, highlighting need for standardization. No new clinical data but critical for interpretation.",
+      "clinical_predictors": "Anaphylaxis (OR 6.05) and IV route (OR 9.68) are significant predictors of positive ST (Stevenson 2026)."
+    }
   },
   "r1_groups": [
     {
@@ -565,6 +572,72 @@
         "36137197"
       ],
       "clinical_note": "T-cell crossreactivity observed"
+    },
+    {
+      "drug_a": "cefazolin",
+      "drug_b": "penicillins",
+      "ige_cross_reactivity": "low",
+      "rate_percent": "10.2% ST positive (but 0% OPC confirmed)",
+      "structural_basis": "unique R1 side chain - mechanism unclear, possible false positive or cosensitization",
+      "evidence_pmids": [
+        "Stevenson2026_JACIG"
+      ],
+      "clinical_note": "5/49 cefazolin-allergic patients without PAL had positive penicillin ST; none confirmed by OPC. May represent false positives (ref: 7.3% false positive rate in similar studies)."
+    },
+    {
+      "drug_a": "cephalosporins (confirmed allergic)",
+      "drug_b": "unrelated R1 cephalosporins",
+      "ige_cross_reactivity": "safe",
+      "rate_percent": "0% (0/58 ST+, 0/7 OPC+)",
+      "structural_basis": "different R1 side chains",
+      "evidence_pmids": [
+        "Stevenson2026_JACIG"
+      ],
+      "clinical_note": "No cross-reactivity found outside R1 side-chain groups in 58 confirmed cephalosporin-allergic patients. Reinforces R1 model."
+    },
+    {
+      "drug_a": "aminocephalosporins (cefalexin/cefaclor)",
+      "drug_b": "aminopenicillins (amoxicillin)",
+      "ige_cross_reactivity": "moderate",
+      "rate_percent": "1/6 OPC positive (16.7%)",
+      "structural_basis": "shared R1 side chain (aminobenzyl group)",
+      "evidence_pmids": [
+        "Stevenson2026_JACIG"
+      ],
+      "clinical_note": "1 cefalexin-allergic patient reacted to amoxicillin OPC with urticaria. Confirms R1 side-chain cross-reactivity."
+    },
+    {
+      "drug_a": "patients with \u22653 BL allergy labels",
+      "drug_b": "penicillins",
+      "ige_cross_reactivity": "moderate",
+      "rate_percent": "37.5% OPC reaction rate (3/8)",
+      "structural_basis": "multiple sensitizations, possible broad BL reactivity",
+      "evidence_pmids": [
+        "Stevenson2026_JACIG"
+      ],
+      "clinical_note": "Patients with multiple BL allergy labels warrant more caution. Avoid direct challenges without preceding skin tests."
+    },
+    {
+      "drug_a": "aztreonam",
+      "drug_b": "ceftriaxone",
+      "ige_cross_reactivity": "disputed",
+      "rate_percent": null,
+      "structural_basis": "Trubiano: safe; Romano & Zagursky: identical R1 ring",
+      "evidence_pmids": [
+        "Hutten2025_Allergy"
+      ],
+      "clinical_note": "Clinically relevant discrepancy between major cross-reactivity references. Exercise caution."
+    },
+    {
+      "drug_a": "penicillin V",
+      "drug_b": "cefamandole",
+      "ige_cross_reactivity": "disputed",
+      "rate_percent": null,
+      "structural_basis": "Trubiano: safe; Romano & Zagursky: similar R1 side chain",
+      "evidence_pmids": [
+        "Hutten2025_Allergy"
+      ],
+      "clinical_note": "Discrepancy between references. Conservative approach: treat as potential cross-reactivity."
     }
   ],
   "prediction_rules": [
@@ -583,7 +656,7 @@
     },
     {
       "rule_id": "R002",
-      "condition": "aminobenzyl_variants (G1↔G2)",
+      "condition": "aminobenzyl_variants (G1\u2194G2)",
       "predicted_cross_reactivity": "moderate",
       "evidence_basis": "structural_similarity",
       "pmids": [
@@ -613,7 +686,27 @@
         "29017833"
       ],
       "notes": "Cross-reactivity from beta-lactam ring alone is infrequent in IgE-mediated allergy (PMID 33500632)"
+    },
+    {
+      "rule_id": "R004",
+      "condition": "disputed_cross_reactivity",
+      "predicted_cross_reactivity": "uncertain",
+      "evidence_basis": "conflicting_literature",
+      "pmids": [
+        "Hutten2025_Allergy"
+      ],
+      "notes": "36% disharmony found between 4 major cross-reactivity tables (Romano, Trubiano, Zagursky, SWAB). 272/394 discrepancies were clinically relevant (different safe vs unsafe advice). Always check multiple sources."
+    },
+    {
+      "rule_id": "R005",
+      "condition": "confirmed_allergic_unrelated_r1",
+      "predicted_cross_reactivity": "safe",
+      "evidence_basis": "prospective_cohort",
+      "pmids": [
+        "Stevenson2026_JACIG"
+      ],
+      "notes": "In 58 confirmed cephalosporin-allergic patients, 0/58 had positive ST to unrelated R1 cephalosporins and 0/7 reacted on OPC. Strong evidence for R1 model safety."
     }
   ],
-  "predict_function_logic": "Same R1 group → HIGH | G1↔G2 → MODERATE | Different → LOW/SAFE"
+  "predict_function_logic": "Same R1 group \u2192 HIGH | G1\u2194G2 \u2192 MODERATE | Different \u2192 LOW/SAFE"
 }
