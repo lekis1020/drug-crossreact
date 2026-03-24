@@ -19,13 +19,17 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
   const containerRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<Core | null>(null);
 
-  // Initialize cytoscape once
   useEffect(() => {
     if (!containerRef.current) return;
 
-    const { nodes, edges } = buildGraphElements();
+    const { nodes, edges, parentNodes, nodeParents } = buildGraphElements();
 
-    const elements = [
+    const elements: cytoscape.ElementDefinition[] = [
+      // Parent (compound) nodes
+      ...parentNodes.map(p => ({
+        data: { id: p.id, label: p.label, isGroup: 'true' },
+      })),
+      // Drug nodes with parent reference
       ...nodes.map(n => ({
         data: {
           id: n.id,
@@ -33,8 +37,10 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
           drugClass: n.drugClass,
           r1Group: n.r1Group ?? '',
           color: n.color,
+          parent: nodeParents[n.id] || undefined,
         },
       })),
+      // Edges
       ...edges.map(e => ({
         data: {
           id: e.id,
@@ -49,31 +55,54 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
       container: containerRef.current,
       elements,
       style: [
+        // Compound (parent/group) nodes
         {
-          selector: 'node',
+          selector: 'node[isGroup = "true"]',
+          style: {
+            'background-color': 'rgba(30, 41, 59, 0.4)',
+            'background-opacity': 0.4,
+            'border-width': 1.5,
+            'border-color': 'rgba(100, 116, 139, 0.4)',
+            'border-style': 'dashed' as any,
+            shape: 'round-rectangle',
+            'padding': '20px',
+            label: 'data(label)',
+            'font-size': '22px',
+            'font-weight': 'bold',
+            color: 'rgba(148, 163, 184, 0.8)',
+            'text-valign': 'top',
+            'text-halign': 'center',
+            'text-margin-y': -8,
+            'text-outline-width': 0,
+          } as any,
+        },
+        // Drug nodes
+        {
+          selector: 'node[!isGroup]',
           style: {
             'background-color': 'data(color)',
             label: 'data(label)',
-            width: 34,
-            height: 34,
-            'font-size': '10px',
+            width: 44,
+            height: 44,
+            'font-size': '18px',
             color: '#cbd5e1',
             'text-valign': 'bottom',
             'text-halign': 'center',
-            'text-margin-y': 5,
-            'text-outline-width': 2,
+            'text-margin-y': 8,
+            'text-outline-width': 3,
             'text-outline-color': '#0f172a',
             'border-width': 1.5,
             'border-color': 'data(color)',
             'border-opacity': 0.5,
             'transition-property': 'opacity, width, height, border-width, border-opacity',
             'transition-duration': 200,
-          },
+          } as any,
         },
+        // Edge styles
         {
           selector: 'edge[crossReactivity = "high"]',
           style: {
-            width: 2.5,
+            width: 3,
             'line-color': '#ef4444',
             'line-style': 'solid',
             opacity: 0.75,
@@ -83,7 +112,7 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
         {
           selector: 'edge[crossReactivity = "moderate"]',
           style: {
-            width: 1.5,
+            width: 2,
             'line-color': '#f97316',
             'line-style': 'dashed',
             'line-dash-pattern': [8, 5],
@@ -105,7 +134,7 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
         {
           selector: 'edge[crossReactivity = "disputed"]',
           style: {
-            width: 2,
+            width: 2.5,
             'line-color': '#eab308',
             'line-style': 'dashed',
             'line-dash-pattern': [3, 3],
@@ -113,17 +142,18 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
             'curve-style': 'bezier',
           },
         },
+        // Selection states
         {
           selector: 'node.selected',
           style: {
-            width: 50,
-            height: 50,
-            'font-size': '12px',
+            width: 66,
+            height: 66,
+            'font-size': '22px',
             'border-width': 3,
             'border-color': '#ffffff',
             'border-opacity': 1,
             'z-index': 999,
-          },
+          } as any,
         },
         {
           selector: 'node.highlighted',
@@ -132,7 +162,7 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
             'border-color': '#ffffff',
             'border-opacity': 0.7,
             'z-index': 100,
-          },
+          } as any,
         },
         {
           selector: 'node.dimmed',
@@ -147,23 +177,23 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
         name: 'cose-bilkent',
         animate: false,
         nodeDimensionsIncludeLabels: true,
-        idealEdgeLength: 130,
-        nodeRepulsion: 9000,
-        gravity: 0.3,
-        numIter: 2500,
+        idealEdgeLength: 150,
+        nodeRepulsion: 12000,
+        gravity: 0.25,
+        numIter: 3000,
         tile: false,
         randomize: true,
       } as Parameters<Core['layout']>[0],
-      minZoom: 0.25,
-      maxZoom: 3,
+      minZoom: 0.15,
+      maxZoom: 4,
       wheelSensitivity: 0.25,
     });
 
-    cy.on('tap', 'node', (e: EventObject) => {
+    cy.on('tap', 'node[!isGroup]', (e: EventObject) => {
       onDrugSelect(e.target.id());
     });
 
-    cy.on('mouseover', 'node', (e: EventObject) => {
+    cy.on('mouseover', 'node[!isGroup]', (e: EventObject) => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       const pos = e.target.renderedPosition() as { x: number; y: number };
@@ -171,7 +201,7 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
       (containerRef.current as HTMLElement).style.cursor = 'pointer';
     });
 
-    cy.on('mouseout', 'node', () => {
+    cy.on('mouseout', 'node[!isGroup]', () => {
       onDrugHover(null);
       if (containerRef.current) (containerRef.current as HTMLElement).style.cursor = 'default';
     });
@@ -182,7 +212,7 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
       cy.destroy();
       cyRef.current = null;
     };
-  }, []); // intentionally empty — only initialize once
+  }, []);
 
   // Highlight selection
   useEffect(() => {
@@ -197,12 +227,13 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
         const connectedEdges = selected.connectedEdges();
         const connectedNodes = connectedEdges.connectedNodes().not(selected);
 
-        cy.elements().addClass('dimmed');
+        // Only dim non-group nodes
+        cy.nodes('[!isGroup]').addClass('dimmed');
+        cy.edges().addClass('dimmed');
         selected.removeClass('dimmed').addClass('selected');
         connectedNodes.removeClass('dimmed').addClass('highlighted');
         connectedEdges.removeClass('dimmed');
 
-        // Pan to selected node
         cy.animate({
           center: { eles: selected },
           duration: 400,
@@ -217,7 +248,7 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
     const cy = cyRef.current;
     if (!cy) return;
 
-    cy.nodes().forEach(node => {
+    cy.nodes('[!isGroup]').forEach(node => {
       const cls = node.data('drugClass') as DrugClass;
       if (filters.classes[cls] === false) {
         node.style('display', 'none');

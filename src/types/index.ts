@@ -5,7 +5,13 @@ export type DrugClass =
   | 'monobactam'
   | 'quinolone'
   | 'glycopeptide'
-  | 'sulfonamide';
+  | 'sulfonamide'
+  | 'macrolide'
+  | 'aminoglycoside'
+  | 'tetracycline'
+  | 'lincosamide'
+  | 'oxazolidinone'
+  | 'nitroimidazole';
 
 export type CrossReactivity = 'high' | 'moderate' | 'low' | 'disputed';
 

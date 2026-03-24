@@ -88,7 +88,13 @@
       "drugs": [
         "ceftriaxone",
         "cefotaxime",
-        "cefepime"
+        "cefepime",
+        "cefixime",
+        "cefdinir",
+        "cefpodoxime",
+        "cefditoren",
+        "ceftaroline",
+        "ceftobiprole"
       ],
       "expected_ige_cross_reactivity": "high",
       "literature_confirmed": true,
@@ -391,6 +397,36 @@
       "group": "G15",
       "r1_name": "carbapenem-hydroxyethyl",
       "confidence": "high"
+    },
+    "cefixime": {
+      "group": "G3",
+      "r1_name": "aminothiazolyl-methoxyimino",
+      "confidence": "high"
+    },
+    "cefdinir": {
+      "group": "G3",
+      "r1_name": "aminothiazolyl-methoxyimino",
+      "confidence": "high"
+    },
+    "cefpodoxime": {
+      "group": "G3",
+      "r1_name": "aminothiazolyl-methoxyimino",
+      "confidence": "high"
+    },
+    "cefditoren": {
+      "group": "G3",
+      "r1_name": "aminothiazolyl-methoxyimino",
+      "confidence": "high"
+    },
+    "ceftaroline": {
+      "group": "G3",
+      "r1_name": "aminothiazolyl-methoxyimino",
+      "confidence": "moderate"
+    },
+    "ceftobiprole": {
+      "group": "G3",
+      "r1_name": "aminothiazolyl-methoxyimino",
+      "confidence": "moderate"
     }
   },
   "drug_structures": {

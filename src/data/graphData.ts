@@ -31,6 +31,12 @@ const DRUG_CLASS_MAP: Record<string, DrugClass> = {
   cefuroxime: 'cephalosporin',
   cefazolin: 'cephalosporin',
   cefoxitin: 'cephalosporin',
+  cefixime: 'cephalosporin',
+  cefdinir: 'cephalosporin',
+  cefpodoxime: 'cephalosporin',
+  cefditoren: 'cephalosporin',
+  ceftaroline: 'cephalosporin',
+  ceftobiprole: 'cephalosporin',
   aztreonam: 'monobactam',
   meropenem: 'carbapenem',
   imipenem: 'carbapenem',
@@ -39,19 +45,129 @@ const DRUG_CLASS_MAP: Record<string, DrugClass> = {
 };
 
 const NON_BETA_LACTAM_NODES: DrugNodeData[] = [
+  // Quinolones
   { id: 'ciprofloxacin', label: 'Ciprofloxacin', drugClass: 'quinolone', color: getDrugColor(undefined, 'quinolone') },
   { id: 'moxifloxacin', label: 'Moxifloxacin', drugClass: 'quinolone', color: getDrugColor(undefined, 'quinolone') },
   { id: 'levofloxacin', label: 'Levofloxacin', drugClass: 'quinolone', color: getDrugColor(undefined, 'quinolone') },
+  { id: 'delafloxacin', label: 'Delafloxacin', drugClass: 'quinolone', color: getDrugColor(undefined, 'quinolone') },
+  { id: 'ofloxacin', label: 'Ofloxacin', drugClass: 'quinolone', color: getDrugColor(undefined, 'quinolone') },
+  // Glycopeptides
   { id: 'vancomycin', label: 'Vancomycin', drugClass: 'glycopeptide', color: getDrugColor(undefined, 'glycopeptide') },
   { id: 'teicoplanin', label: 'Teicoplanin', drugClass: 'glycopeptide', color: getDrugColor(undefined, 'glycopeptide') },
   { id: 'dalbavancin', label: 'Dalbavancin', drugClass: 'glycopeptide', color: getDrugColor(undefined, 'glycopeptide') },
+  { id: 'oritavancin', label: 'Oritavancin', drugClass: 'glycopeptide', color: getDrugColor(undefined, 'glycopeptide') },
+  { id: 'telavancin', label: 'Telavancin', drugClass: 'glycopeptide', color: getDrugColor(undefined, 'glycopeptide') },
+  // Macrolides
+  { id: 'azithromycin', label: 'Azithromycin', drugClass: 'macrolide', color: getDrugColor(undefined, 'macrolide') },
+  { id: 'clarithromycin', label: 'Clarithromycin', drugClass: 'macrolide', color: getDrugColor(undefined, 'macrolide') },
+  { id: 'erythromycin', label: 'Erythromycin', drugClass: 'macrolide', color: getDrugColor(undefined, 'macrolide') },
+  // Aminoglycosides
+  { id: 'gentamicin', label: 'Gentamicin', drugClass: 'aminoglycoside', color: getDrugColor(undefined, 'aminoglycoside') },
+  { id: 'tobramycin', label: 'Tobramycin', drugClass: 'aminoglycoside', color: getDrugColor(undefined, 'aminoglycoside') },
+  { id: 'amikacin', label: 'Amikacin', drugClass: 'aminoglycoside', color: getDrugColor(undefined, 'aminoglycoside') },
+  // Tetracyclines
+  { id: 'doxycycline', label: 'Doxycycline', drugClass: 'tetracycline', color: getDrugColor(undefined, 'tetracycline') },
+  { id: 'minocycline', label: 'Minocycline', drugClass: 'tetracycline', color: getDrugColor(undefined, 'tetracycline') },
+  { id: 'tetracycline', label: 'Tetracycline', drugClass: 'tetracycline', color: getDrugColor(undefined, 'tetracycline') },
+  { id: 'tigecycline', label: 'Tigecycline', drugClass: 'tetracycline', color: getDrugColor(undefined, 'tetracycline') },
+  // Lincosamides
+  { id: 'clindamycin', label: 'Clindamycin', drugClass: 'lincosamide', color: getDrugColor(undefined, 'lincosamide') },
+  // Oxazolidinones
+  { id: 'linezolid', label: 'Linezolid', drugClass: 'oxazolidinone', color: getDrugColor(undefined, 'oxazolidinone') },
+  { id: 'tedizolid', label: 'Tedizolid', drugClass: 'oxazolidinone', color: getDrugColor(undefined, 'oxazolidinone') },
+  // Sulfonamides
   { id: 'sulfamethoxazole', label: 'Sulfamethoxazole', drugClass: 'sulfonamide', color: getDrugColor(undefined, 'sulfonamide') },
   { id: 'sulfasalazine', label: 'Sulfasalazine', drugClass: 'sulfonamide', color: getDrugColor(undefined, 'sulfonamide') },
+  { id: 'trimethoprim-sulfamethoxazole', label: 'TMP-SMX', drugClass: 'sulfonamide', color: getDrugColor(undefined, 'sulfonamide') },
+  // Nitroimidazoles
+  { id: 'metronidazole', label: 'Metronidazole', drugClass: 'nitroimidazole', color: getDrugColor(undefined, 'nitroimidazole') },
+  { id: 'tinidazole', label: 'Tinidazole', drugClass: 'nitroimidazole', color: getDrugColor(undefined, 'nitroimidazole') },
 ];
 
-let cache: { nodes: DrugNodeData[]; edges: CrossReactEdgeData[] } | null = null;
+function makePairs(ids: string[]): Array<[string, string]> {
+  const pairs: Array<[string, string]> = [];
+  for (let i = 0; i < ids.length; i++) {
+    for (let j = i + 1; j < ids.length; j++) {
+      pairs.push([ids[i], ids[j]]);
+    }
+  }
+  return pairs;
+}
 
-export function buildGraphElements(): { nodes: DrugNodeData[]; edges: CrossReactEdgeData[] } {
+
+export const DRUG_SUBGROUP_MAP: Record<string, string> = {
+  // Penicillins
+  'penicillin-g': 'Penicillin (Natural)',
+  'penicillin-v': 'Penicillin (Natural)',
+  'amoxicillin': 'Penicillin (Amino)',
+  'ampicillin': 'Penicillin (Amino)',
+  'oxacillin': 'Penicillin (Anti-staph)',
+  'dicloxacillin': 'Penicillin (Anti-staph)',
+  'nafcillin': 'Penicillin (Anti-staph)',
+  'piperacillin': 'Penicillin (Extended)',
+  // Cephalosporins
+  'cephalexin': 'Cephalosporin 1G',
+  'cefadroxil': 'Cephalosporin 1G',
+  'cefazolin': 'Cephalosporin 1G',
+  'cefaclor': 'Cephalosporin 1G',
+  'cefuroxime': 'Cephalosporin 2G',
+  'cefprozil': 'Cephalosporin 2G',
+  'cefoxitin': 'Cephalosporin 2G',
+  'ceftriaxone': 'Cephalosporin 3G',
+  'cefotaxime': 'Cephalosporin 3G',
+  'ceftazidime': 'Cephalosporin 3G',
+  'ceftibuten': 'Cephalosporin 3G',
+  'cefixime': 'Cephalosporin 3G',
+  'cefdinir': 'Cephalosporin 3G',
+  'cefpodoxime': 'Cephalosporin 3G',
+  'cefditoren': 'Cephalosporin 3G',
+  'cefepime': 'Cephalosporin 4G',
+  'ceftaroline': 'Cephalosporin 5G',
+  'ceftobiprole': 'Cephalosporin 5G',
+  // Others
+  'meropenem': 'Carbapenem',
+  'imipenem': 'Carbapenem',
+  'ertapenem': 'Carbapenem',
+  'doripenem': 'Carbapenem',
+  'aztreonam': 'Monobactam',
+  // Non-BL
+  'ciprofloxacin': 'Fluoroquinolone',
+  'moxifloxacin': 'Fluoroquinolone',
+  'levofloxacin': 'Fluoroquinolone',
+  'delafloxacin': 'Fluoroquinolone',
+  'ofloxacin': 'Fluoroquinolone',
+  'vancomycin': 'Glycopeptide',
+  'teicoplanin': 'Glycopeptide',
+  'dalbavancin': 'Glycopeptide',
+  'oritavancin': 'Glycopeptide',
+  'telavancin': 'Glycopeptide',
+  'azithromycin': 'Macrolide',
+  'clarithromycin': 'Macrolide',
+  'erythromycin': 'Macrolide',
+  'gentamicin': 'Aminoglycoside',
+  'tobramycin': 'Aminoglycoside',
+  'amikacin': 'Aminoglycoside',
+  'doxycycline': 'Tetracycline',
+  'minocycline': 'Tetracycline',
+  'tetracycline': 'Tetracycline',
+  'tigecycline': 'Tetracycline',
+  'clindamycin': 'Lincosamide',
+  'linezolid': 'Oxazolidinone',
+  'tedizolid': 'Oxazolidinone',
+  'sulfamethoxazole': 'Sulfonamide',
+  'sulfasalazine': 'Sulfonamide',
+  'trimethoprim-sulfamethoxazole': 'Sulfonamide',
+  'metronidazole': 'Nitroimidazole',
+  'tinidazole': 'Nitroimidazole',
+};
+
+function subgroupId(name: string): string {
+  return 'group-' + name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+}
+
+let cache: { nodes: DrugNodeData[]; edges: CrossReactEdgeData[]; parentNodes: Array<{id: string; label: string; isGroup: boolean}>; nodeParents: Record<string, string> } | null = null;
+
+export function buildGraphElements(): { nodes: DrugNodeData[]; edges: CrossReactEdgeData[]; parentNodes: Array<{id: string; label: string; isGroup: boolean}>; nodeParents: Record<string, string> } {
   if (cache) return cache;
 
   const nodes: DrugNodeData[] = [];
@@ -113,30 +229,60 @@ export function buildGraphElements(): { nodes: DrugNodeData[]; edges: CrossReact
   }
 
   // Quinolone internal → moderate
-  const quinolones = ['ciprofloxacin', 'moxifloxacin', 'levofloxacin'];
-  for (let i = 0; i < quinolones.length; i++) {
-    for (let j = i + 1; j < quinolones.length; j++) {
-      const source = quinolones[i];
-      const target = quinolones[j];
-      edges.push({ id: `edge-${source}-${target}`, source, target, crossReactivity: 'moderate', pmids: [] });
-    }
+  const quinolones = ['ciprofloxacin', 'moxifloxacin', 'levofloxacin', 'delafloxacin', 'ofloxacin'];
+  for (const [s, t] of makePairs(quinolones)) {
+    edges.push({ id: `edge-${s}-${t}`, source: s, target: t, crossReactivity: 'moderate', pmids: [] });
   }
 
   // Glycopeptide internal → moderate
-  const glycopeptides = ['vancomycin', 'teicoplanin', 'dalbavancin'];
-  for (let i = 0; i < glycopeptides.length; i++) {
-    for (let j = i + 1; j < glycopeptides.length; j++) {
-      const source = glycopeptides[i];
-      const target = glycopeptides[j];
-      edges.push({ id: `edge-${source}-${target}`, source, target, crossReactivity: 'moderate', pmids: [] });
-    }
+  const glycopeptides = ['vancomycin', 'teicoplanin', 'dalbavancin', 'oritavancin', 'telavancin'];
+  for (const [s, t] of makePairs(glycopeptides)) {
+    edges.push({ id: `edge-${s}-${t}`, source: s, target: t, crossReactivity: 'moderate', pmids: [] });
   }
 
+  // Macrolide internal → moderate
+  const macrolides = ['azithromycin', 'clarithromycin', 'erythromycin'];
+  for (const [s, t] of makePairs(macrolides)) {
+    edges.push({ id: `edge-${s}-${t}`, source: s, target: t, crossReactivity: 'moderate', pmids: [] });
+  }
+
+  // Aminoglycoside internal → moderate
+  const aminoglycosides = ['gentamicin', 'tobramycin', 'amikacin'];
+  for (const [s, t] of makePairs(aminoglycosides)) {
+    edges.push({ id: `edge-${s}-${t}`, source: s, target: t, crossReactivity: 'moderate', pmids: [] });
+  }
+
+  // Tetracycline core → moderate; tigecycline ↔ core → low (structural divergence)
+  const tetracyclineCore = ['doxycycline', 'minocycline', 'tetracycline'];
+  for (const [s, t] of makePairs(tetracyclineCore)) {
+    edges.push({ id: `edge-${s}-${t}`, source: s, target: t, crossReactivity: 'moderate', pmids: [] });
+  }
+  for (const core of tetracyclineCore) {
+    edges.push({
+      id: `edge-tigecycline-${core}`,
+      source: 'tigecycline',
+      target: core,
+      crossReactivity: 'low',
+      pmids: [],
+      clinicalNote: 'Tigecycline is structurally distinct (glycylcycline); lower cross-reactivity expected.',
+    });
+  }
+
+  // Oxazolidinone internal → moderate
+  edges.push({ id: 'edge-linezolid-tedizolid', source: 'linezolid', target: 'tedizolid', crossReactivity: 'moderate', pmids: [] });
+
+  // Sulfonamide internal → moderate
+  const sulfonamideList = ['sulfamethoxazole', 'sulfasalazine', 'trimethoprim-sulfamethoxazole'];
+  for (const [s, t] of makePairs(sulfonamideList)) {
+    edges.push({ id: `edge-${s}-${t}`, source: s, target: t, crossReactivity: 'moderate', pmids: [] });
+  }
+
+  // Nitroimidazole internal → moderate
+  edges.push({ id: 'edge-metronidazole-tinidazole', source: 'metronidazole', target: 'tinidazole', crossReactivity: 'moderate', pmids: [] });
 
   // === New evidence: Stevenson 2026, Hutten 2025 ===
 
   // Cefazolin → Penicillins: low cross-reactivity (10.2% ST+, 0% OPC confirmed)
-  // Stevenson 2026: unique R1, but unexplained ST positivity
   edges.push({
     id: 'edge-cefazolin-penicillin-g',
     source: 'cefazolin',
@@ -147,7 +293,6 @@ export function buildGraphElements(): { nodes: DrugNodeData[]; edges: CrossReact
   });
 
   // Disputed: Aztreonam ↔ Ceftriaxone (Hutten 2025)
-  // Trubiano: safe; Romano & Zagursky: identical R1 ring
   edges.push({
     id: 'edge-aztreonam-ceftriaxone',
     source: 'aztreonam',
@@ -157,7 +302,26 @@ export function buildGraphElements(): { nodes: DrugNodeData[]; edges: CrossReact
     clinicalNote: 'DISPUTED: Trubiano considers safe; Romano & Zagursky report identical R1 ring. Exercise caution.',
   });
 
-  cache = { nodes, edges };
+  // Build compound parent nodes for subgroups
+  const subgroups = new Set<string>();
+  for (const node of nodes) {
+    const sg = DRUG_SUBGROUP_MAP[node.id];
+    if (sg) subgroups.add(sg);
+  }
+  const parentNodes = Array.from(subgroups).map(sg => ({
+    id: subgroupId(sg),
+    label: sg,
+    isGroup: true,
+  }));
+
+  // Assign parent to each drug node
+  const nodeParents: Record<string, string> = {};
+  for (const node of nodes) {
+    const sg = DRUG_SUBGROUP_MAP[node.id];
+    if (sg) nodeParents[node.id] = subgroupId(sg);
+  }
+
+  cache = { nodes, edges, parentNodes, nodeParents };
   return cache;
 }
 

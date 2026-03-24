@@ -26,6 +26,12 @@ export const DRUG_CLASS_COLORS: Record<DrugClass, string> = {
   cephalosporin: '#4ECDC4',
   carbapenem: '#A3E4D7',
   monobactam: '#45B7D1',
+  macrolide: '#06B6D4',
+  aminoglycoside: '#10B981',
+  tetracycline: '#84CC16',
+  lincosamide: '#F43F5E',
+  oxazolidinone: '#8B5CF6',
+  nitroimidazole: '#D97706',
 };
 
 export const CLASS_LABELS: Record<DrugClass, string> = {
@@ -36,6 +42,12 @@ export const CLASS_LABELS: Record<DrugClass, string> = {
   quinolone: 'Fluoroquinolone',
   glycopeptide: 'Glycopeptide',
   sulfonamide: 'Sulfonamide',
+  macrolide: 'Macrolide',
+  aminoglycoside: 'Aminoglycoside',
+  tetracycline: 'Tetracycline',
+  lincosamide: 'Lincosamide',
+  oxazolidinone: 'Oxazolidinone',
+  nitroimidazole: 'Nitroimidazole',
 };
 
 export function getDrugColor(r1Group?: string, drugClass?: DrugClass): string {

@@ -3,6 +3,7 @@ import { Graph } from './components/Graph';
 import { SearchBar } from './components/SearchBar';
 import { SidePanel } from './components/SidePanel';
 import { FilterPanel } from './components/FilterPanel';
+import { EvidenceManager } from './components/EvidenceManager';
 import { DrugTooltip } from './components/DrugTooltip';
 import { buildGraphElements } from './data/graphData';
 import type { FilterState, TooltipState } from './types';
@@ -16,11 +17,18 @@ const INITIAL_FILTERS: FilterState = {
     quinolone: true,
     glycopeptide: true,
     sulfonamide: true,
+    macrolide: true,
+    aminoglycoside: true,
+    tetracycline: true,
+    lincosamide: true,
+    oxazolidinone: true,
+      nitroimidazole: true,
   },
   risks: { high: true, moderate: true, low: true, disputed: true },
 };
 
 export default function App() {
+  const [evidenceOpen, setEvidenceOpen] = useState(false);
   const [selectedDrug, setSelectedDrug] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<TooltipState | null>(null);
   const [filters, setFilters] = useState<FilterState>(INITIAL_FILTERS);
@@ -61,7 +69,14 @@ export default function App() {
         <div className="flex-1 min-w-0">
           <SearchBar onSearch={handleDrugSelect} selectedDrug={selectedDrug} />
         </div>
-        <FilterPanel filters={filters} onFiltersChange={setFilters} />
+        <button
+            onClick={() => setEvidenceOpen(true)}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors"
+            style={{ background: '#1e293b', border: '1px solid #334155', color: '#e2e8f0' }}
+          >
+            📚 Evidence
+          </button>
+          <FilterPanel filters={filters} onFiltersChange={setFilters} />
       </header>
 
       {/* Main */}
@@ -123,6 +138,7 @@ export default function App() {
       {tooltip && tooltipDrug && (
         <DrugTooltip drug={tooltipDrug} x={tooltip.x} y={tooltip.y} />
       )}
+      <EvidenceManager isOpen={evidenceOpen} onClose={() => setEvidenceOpen(false)} />
     </div>
   );
 }
