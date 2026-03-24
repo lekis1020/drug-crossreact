@@ -26,29 +26,41 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
 
 
     // === Preset positions: logical group arrangement ===
+    // Layout: Beta-lactams top, Non-BL bottom grouped by spectrum
+    // Non-BL arrangement: 
+    //   Left (Gram+/MRSA) → Center (Broad) → Right (Gram-/Pseudomonas)
     const GROUP_POSITIONS: Record<string, { x: number; y: number }> = {
-      // Beta-lactams: left-to-right flow
-      'group-penicillin--natural-':     { x: -800, y: -400 },
-      'group-penicillin--amino-':       { x: -500, y: -400 },
-      'group-penicillin--anti-staph-':  { x: -800, y: -200 },
-      'group-penicillin--extended-':    { x: -500, y: -200 },
-      'group-cephalosporin-1g':         { x: -100, y: -400 },
-      'group-cephalosporin-2g':         { x: 200,  y: -400 },
-      'group-cephalosporin-3g':         { x: 550,  y: -400 },
-      'group-cephalosporin-4g':         { x: 900,  y: -400 },
-      'group-cephalosporin-5g':         { x: 1150, y: -400 },
-      'group-carbapenem':               { x: -100, y: -100 },
-      'group-monobactam':               { x: 200,  y: -100 },
-      // Non-beta-lactams: bottom rows
-      'group-fluoroquinolone':          { x: -700, y: 200 },
-      'group-glycopeptide':             { x: -300, y: 200 },
-      'group-macrolide':                { x: 100,  y: 200 },
-      'group-aminoglycoside':           { x: 450,  y: 200 },
-      'group-tetracycline':             { x: 800,  y: 200 },
-      'group-sulfonamide':              { x: -500, y: 450 },
-      'group-lincosamide':              { x: -150, y: 450 },
-      'group-oxazolidinone':            { x: 150,  y: 450 },
-      'group-nitroimidazole':           { x: 450,  y: 450 },
+      // === Row 1: Penicillins ===
+      'group-penicillin--natural-':     { x: -900, y: -600 },
+      'group-penicillin--amino-':       { x: -550, y: -600 },
+      'group-penicillin--anti-staph-':  { x: -900, y: -350 },
+      'group-penicillin--extended-':    { x: -550, y: -350 },
+
+      // === Row 1-2: Cephalosporins (1G→5G left to right) ===
+      'group-cephalosporin-1g':         { x: -50,  y: -600 },
+      'group-cephalosporin-2g':         { x: 350,  y: -600 },
+      'group-cephalosporin-3g':         { x: 800,  y: -600 },
+      'group-cephalosporin-4g':         { x: 1300, y: -600 },
+      'group-cephalosporin-5g':         { x: 1700, y: -600 },
+
+      // === Row 2: Other beta-lactams ===
+      'group-carbapenem':               { x: 350,  y: -250 },
+      'group-monobactam':               { x: 800,  y: -250 },
+
+      // === Row 3: Non-BL — Gram+ / MRSA cover (left) ===
+      'group-glycopeptide':             { x: -900, y: 150 },    // Vancomycin = MRSA
+      'group-oxazolidinone':            { x: -550, y: 150 },    // Linezolid = MRSA
+      'group-lincosamide':              { x: -250, y: 150 },    // Clindamycin = Gram+/anaerobe
+
+      // === Row 3: Non-BL — Broad spectrum (center) ===
+      'group-fluoroquinolone':          { x: 150,  y: 150 },    // Broad (G+/G-)
+      'group-tetracycline':             { x: 550,  y: 150 },    // Broad (atypicals)
+      'group-macrolide':                { x: 950,  y: 150 },    // Atypical/Gram+
+      'group-sulfonamide':              { x: 1350, y: 150 },    // Broad (UTI, PJP)
+
+      // === Row 4: Non-BL — Gram- / Anaerobe / Niche (bottom) ===
+      'group-aminoglycoside':           { x: 150,  y: 450 },    // Gram- / Pseudomonas
+      'group-nitroimidazole':           { x: 550,  y: 450 },    // Anaerobe
     };
 
     // Assign positions to drug nodes based on their parent group
