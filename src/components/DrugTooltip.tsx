@@ -1,5 +1,6 @@
 import type { DrugNodeData } from '../types';
 import { CLASS_LABELS } from '../data/colors';
+import { DRUG_SUBGROUP_MAP } from '../data/graphData';
 
 interface DrugTooltipProps {
   drug: DrugNodeData;
@@ -8,42 +9,55 @@ interface DrugTooltipProps {
 }
 
 export function DrugTooltip({ drug, x, y }: DrugTooltipProps) {
+  const subgroup = DRUG_SUBGROUP_MAP[drug.id] ?? '';
+
   return (
     <div
-      className="fixed z-50 pointer-events-none"
-      style={{ left: x + 14, top: y - 10 }}
+      className="fixed pointer-events-none z-50"
+      style={{
+        left: x + 16,
+        top: y - 10,
+        maxWidth: 280,
+      }}
     >
       <div
-        className="rounded-lg p-3 shadow-xl text-xs max-w-xs"
-        style={{ background: '#0f172a', border: '1px solid #334155' }}
+        className="rounded-xl p-3.5"
+        style={{
+          background: 'rgba(15, 23, 42, 0.95)',
+          backdropFilter: 'blur(16px)',
+          border: '1px solid rgba(51, 65, 85, 0.5)',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+        }}
       >
         <div className="flex items-center gap-2 mb-2">
-          <span
-            className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-            style={{ background: drug.color }}
-          />
-          <span className="font-semibold text-white text-sm">{drug.label}</span>
+          <span className="w-3.5 h-3.5 rounded-full flex-shrink-0" style={{ background: drug.color }} />
+          <span className="font-bold text-white text-sm">{drug.label}</span>
         </div>
-        <div className="space-y-0.5 text-slate-400">
-          <div>
-            Class: <span className="text-slate-300">{CLASS_LABELS[drug.drugClass]}</span>
+        <div className="space-y-1 text-xs">
+          <div className="flex justify-between">
+            <span className="text-slate-500">Class</span>
+            <span className="text-slate-300">{CLASS_LABELS[drug.drugClass]}</span>
           </div>
-          {drug.r1Group && (
-            <div>
-              R1 Group: <span className="text-slate-300">{drug.r1Group}</span>
+          {subgroup && (
+            <div className="flex justify-between">
+              <span className="text-slate-500">Subgroup</span>
+              <span className="text-slate-300">{subgroup}</span>
             </div>
           )}
-          {drug.r1Name && (
-            <div>
-              R1: <span className="text-slate-300">{drug.r1Name}</span>
+          {drug.r1Group && (
+            <div className="flex justify-between">
+              <span className="text-slate-500">R1 Group</span>
+              <span className="text-slate-300">{drug.r1Group}</span>
             </div>
           )}
           {drug.formula && (
-            <div>
-              Formula: <span className="text-slate-300 font-mono">{drug.formula}</span>
+            <div className="flex justify-between">
+              <span className="text-slate-500">Formula</span>
+              <span className="text-slate-300 font-mono">{drug.formula}</span>
             </div>
           )}
         </div>
+        <p className="text-xs text-slate-600 mt-2">Click to select</p>
       </div>
     </div>
   );

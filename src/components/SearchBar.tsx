@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import { buildGraphElements } from '../data/graphData';
-import type { DrugNodeData } from '../types';
 
 interface SearchBarProps {
   onSearch: (drugId: string) => void;
@@ -9,81 +8,74 @@ interface SearchBarProps {
 
 export function SearchBar({ onSearch, selectedDrug }: SearchBarProps) {
   const [query, setQuery] = useState('');
-  const [suggestions, setSuggestions] = useState<DrugNodeData[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const { nodes } = buildGraphElements();
+  const matches = query.length > 0
+    ? nodes.filter(n => n.label.toLowerCase().includes(query.toLowerCase())).slice(0, 8)
+    : [];
 
   useEffect(() => {
-    if (selectedDrug) {
-      const node = nodes.find(n => n.id === selectedDrug);
-      if (node) setQuery(node.label);
-    } else {
-      setQuery('');
-    }
-  }, [selectedDrug]);
+    const handler = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
 
-  const handleInput = (value: string) => {
-    setQuery(value);
-    if (!value.trim()) {
-      setSuggestions([]);
-      setIsOpen(false);
-      return;
-    }
-    const q = value.toLowerCase();
-    const matches = nodes.filter(n => n.label.toLowerCase().includes(q)).slice(0, 8);
-    setSuggestions(matches);
-    setIsOpen(matches.length > 0);
-  };
-
-  const handleSelect = (node: DrugNodeData) => {
-    setQuery(node.label);
+  const handleSelect = (id: string, label: string) => {
+    onSearch(id);
+    setQuery(label);
     setIsOpen(false);
-    onSearch(node.id);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') setIsOpen(false);
   };
 
   return (
-    <div className="relative w-full max-w-md">
+    <div ref={containerRef} className="relative">
       <div className="relative">
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
+        <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm">🔍</span>
         <input
           ref={inputRef}
           type="text"
           value={query}
-          onChange={e => handleInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onFocus={() => { if (query && suggestions.length) setIsOpen(true); }}
-          onBlur={() => setTimeout(() => setIsOpen(false), 150)}
-          placeholder="Search drug..."
-          className="w-full pl-9 pr-4 py-2 text-sm rounded-lg focus:outline-none"
+          onChange={e => { setQuery(e.target.value); setIsOpen(true); }}
+          onFocus={() => setIsOpen(true)}
+          placeholder="Search drug name..."
+          className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm text-white placeholder-slate-500 outline-none transition-all focus:ring-2 focus:ring-blue-500/40"
           style={{
-            background: '#1e293b',
-            border: '1px solid #334155',
-            color: '#e2e8f0',
+            background: 'rgba(30, 41, 59, 0.6)',
+            border: '1px solid rgba(51, 65, 85, 0.5)',
           }}
         />
+        {selectedDrug && (
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-lg">
+            selected
+          </span>
+        )}
       </div>
-      {isOpen && (
+
+      {isOpen && matches.length > 0 && (
         <div
-          className="absolute top-full mt-1 w-full rounded-lg shadow-xl z-50 overflow-hidden"
-          style={{ background: '#1e293b', border: '1px solid #334155' }}
+          className="absolute top-full mt-2 w-full rounded-xl overflow-hidden z-50"
+          style={{
+            background: 'rgba(15, 23, 42, 0.95)',
+            backdropFilter: 'blur(16px)',
+            border: '1px solid rgba(51, 65, 85, 0.5)',
+            boxShadow: '0 12px 40px rgba(0,0,0,0.4)',
+          }}
         >
-          {suggestions.map(node => (
+          {matches.map(n => (
             <button
-              key={node.id}
-              onMouseDown={() => handleSelect(node)}
-              className="w-full px-4 py-2 text-left text-sm flex items-center gap-2 hover:bg-slate-700"
+              key={n.id}
+              onClick={() => handleSelect(n.id, n.label)}
+              className="w-full text-left px-4 py-3 text-sm hover:bg-slate-800/60 transition-colors flex items-center gap-3"
             >
-              <span
-                className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                style={{ background: node.color }}
-              />
-              <span className="text-slate-200">{node.label}</span>
-              <span className="text-slate-500 text-xs ml-auto capitalize">{node.drugClass}</span>
+              <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: n.color }} />
+              <span className="text-slate-200">{n.label}</span>
+              <span className="text-xs text-slate-500 ml-auto">{n.drugClass}</span>
             </button>
           ))}
         </div>

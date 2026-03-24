@@ -130,21 +130,25 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
         {
           selector: 'node[isGroup = "true"]',
           style: {
-            'background-color': 'rgba(30, 41, 59, 0.4)',
-            'background-opacity': 0.4,
-            'border-width': 1.5,
-            'border-color': 'rgba(100, 116, 139, 0.4)',
+            'background-color': 'rgba(30, 41, 59, 0.25)',
+            'background-opacity': 0.25,
+            'border-width': 1,
+            'border-color': 'rgba(100, 116, 139, 0.25)',
             'border-style': 'dashed' as any,
             shape: 'round-rectangle',
-            'padding': '20px',
+            'padding': '25px',
             label: 'data(label)',
-            'font-size': '22px',
+            'font-size': '16px',
             'font-weight': 'bold',
-            color: 'rgba(148, 163, 184, 0.8)',
+            color: 'rgba(148, 163, 184, 0.6)',
             'text-valign': 'top',
             'text-halign': 'center',
-            'text-margin-y': -8,
+            'text-margin-y': -6,
             'text-outline-width': 0,
+            'text-background-color': '#0f172a',
+            'text-background-opacity': 0.7,
+            'text-background-padding': '4px',
+            'text-background-shape': 'round-rectangle',
           } as any,
         },
         // Drug nodes
@@ -334,7 +338,7 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
     <div
       ref={containerRef}
       className="w-full h-full"
-      style={{ background: '#0f172a' }}
+      style={{ background: 'radial-gradient(ellipse at center, #0f172a 0%, #020617 70%)' }}
     />
   );
 }

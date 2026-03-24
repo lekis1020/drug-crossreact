@@ -22,7 +22,7 @@ const INITIAL_FILTERS: FilterState = {
     tetracycline: true,
     lincosamide: true,
     oxazolidinone: true,
-      nitroimidazole: true,
+    nitroimidazole: true,
   },
   risks: { high: true, moderate: true, low: true, disputed: true },
 };
@@ -32,20 +32,19 @@ export default function App() {
   const [selectedDrug, setSelectedDrug] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<TooltipState | null>(null);
   const [filters, setFilters] = useState<FilterState>(INITIAL_FILTERS);
+  const [sidePanelOpen, setSidePanelOpen] = useState(true);
 
   const { nodes } = buildGraphElements();
   const nodeMap = new Map(nodes.map(n => [n.id, n]));
 
   const handleDrugSelect = useCallback((drugId: string) => {
     setSelectedDrug(prev => (prev === drugId ? null : drugId));
+    setSidePanelOpen(true);
   }, []);
 
   const handleDrugHover = useCallback(
     (drugId: string | null, x?: number, y?: number) => {
-      if (!drugId) {
-        setTooltip(null);
-        return;
-      }
+      if (!drugId) { setTooltip(null); return; }
       setTooltip({ drugId, x: x ?? 0, y: y ?? 0 });
     },
     [],
@@ -54,34 +53,50 @@ export default function App() {
   const tooltipDrug = tooltip ? nodeMap.get(tooltip.drugId) : null;
 
   return (
-    <div className="flex flex-col h-screen" style={{ background: '#020617', color: '#e2e8f0' }}>
-      {/* Header */}
+    <div className="flex flex-col h-screen overflow-hidden" style={{ background: '#020617', color: '#e2e8f0' }}>
+      {/* Header — glass morphism */}
       <header
-        className="flex items-center gap-3 px-4 py-2.5 flex-shrink-0"
-        style={{ background: '#0f172a', borderBottom: '1px solid #1e293b' }}
+        className="flex items-center gap-4 px-5 py-3 flex-shrink-0 z-30"
+        style={{
+          background: 'rgba(15, 23, 42, 0.85)',
+          backdropFilter: 'blur(16px)',
+          borderBottom: '1px solid rgba(51, 65, 85, 0.5)',
+        }}
       >
-        <div className="flex items-center gap-2 mr-1">
-          <span className="text-base">💊</span>
-          <h1 className="font-semibold text-white text-sm whitespace-nowrap">
-            Cross-Reactivity
-          </h1>
+        <div className="flex items-center gap-3 mr-2">
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center"
+            style={{ background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)' }}>
+            <span className="text-lg">💊</span>
+          </div>
+          <div>
+            <h1 className="font-bold text-white text-base leading-tight">Drug Cross-Reactivity</h1>
+            <p className="text-xs text-slate-500 leading-tight">Interactive Graph Explorer</p>
+          </div>
         </div>
-        <div className="flex-1 min-w-0">
+
+        <div className="flex-1 max-w-lg">
           <SearchBar onSearch={handleDrugSelect} selectedDrug={selectedDrug} />
         </div>
-        <button
+
+        <div className="flex items-center gap-2 ml-auto">
+          <button
             onClick={() => setEvidenceOpen(true)}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors"
-            style={{ background: '#1e293b', border: '1px solid #334155', color: '#e2e8f0' }}
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-medium transition-all hover:scale-105"
+            style={{
+              background: 'rgba(30, 41, 59, 0.8)',
+              border: '1px solid rgba(51, 65, 85, 0.6)',
+              color: '#94a3b8',
+            }}
           >
-            📚 Evidence
+            <span>📚</span> Evidence
           </button>
           <FilterPanel filters={filters} onFiltersChange={setFilters} />
+        </div>
       </header>
 
       {/* Main */}
-      <main className="flex flex-1 overflow-hidden">
-        {/* Graph area — ~75% */}
+      <main className="flex flex-1 overflow-hidden relative">
+        {/* Graph area */}
         <div className="flex-1 relative min-w-0">
           <Graph
             selectedDrug={selectedDrug}
@@ -90,47 +105,86 @@ export default function App() {
             filters={filters}
           />
 
-          {/* Legend */}
+          {/* Legend — floating glass card */}
           <div
-            className="absolute bottom-4 left-4 rounded-lg p-3 text-xs"
-            style={{ background: 'rgba(15,23,42,0.9)', border: '1px solid #1e293b' }}
+            className="absolute bottom-5 left-5 rounded-2xl p-4 z-20"
+            style={{
+              background: 'rgba(15, 23, 42, 0.85)',
+              backdropFilter: 'blur(12px)',
+              border: '1px solid rgba(51, 65, 85, 0.4)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+            }}
           >
-            <p className="text-slate-400 font-medium mb-2">Edge legend</p>
-            <div className="flex items-center gap-2 mb-1.5">
-              <div className="w-6 h-0.5 bg-red-500 rounded" />
-              <span className="text-slate-300">High cross-reactivity</span>
+            <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-3">Edge Legend</p>
+            <div className="space-y-2.5">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-[3px] rounded-full bg-red-500" />
+                <span className="text-sm text-slate-300">High cross-reactivity</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8" style={{ borderTop: '2.5px dashed #eab308', height: 0 }} />
+                <span className="text-sm text-slate-300">Disputed ⚠️</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8" style={{ borderTop: '2px dashed #f97316', height: 0 }} />
+                <span className="text-sm text-slate-300">Moderate</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8" style={{ borderTop: '1.5px dashed #6b7280', height: 0 }} />
+                <span className="text-sm text-slate-300">Low</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <div
-                className="w-6"
-                style={{
-                  borderTop: '2px dashed #f97316',
-                  height: 0,
-                }}
-              />
-              <span className="text-slate-300">Moderate</span>
+            <div className="mt-3 pt-3 border-t border-slate-700/50">
+              <p className="text-xs text-slate-500">Click node to select · Scroll to zoom</p>
             </div>
-            <p className="text-slate-500 mt-2 text-xs">Click node to select</p>
           </div>
 
-          {/* Deselect hint */}
+          {/* Clear selection button */}
           {selectedDrug && (
             <button
               onClick={() => setSelectedDrug(null)}
-              className="absolute top-3 left-3 text-xs text-slate-400 hover:text-slate-200 transition-colors"
-              style={{ background: 'rgba(15,23,42,0.8)', border: '1px solid #1e293b', borderRadius: 6, padding: '4px 10px' }}
+              className="absolute top-4 left-4 text-sm text-slate-400 hover:text-white transition-all hover:scale-105 z-20 flex items-center gap-1.5"
+              style={{
+                background: 'rgba(15, 23, 42, 0.85)',
+                backdropFilter: 'blur(12px)',
+                border: '1px solid rgba(51, 65, 85, 0.4)',
+                borderRadius: 12,
+                padding: '8px 14px',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
+              }}
             >
-              ✕ Clear selection
+              <span>✕</span> Clear selection
             </button>
           )}
+
+          {/* Toggle side panel */}
+          <button
+            onClick={() => setSidePanelOpen(!sidePanelOpen)}
+            className="absolute top-4 right-4 z-20 w-9 h-9 rounded-xl flex items-center justify-center text-slate-400 hover:text-white transition-all hover:scale-105"
+            style={{
+              background: 'rgba(15, 23, 42, 0.85)',
+              backdropFilter: 'blur(12px)',
+              border: '1px solid rgba(51, 65, 85, 0.4)',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
+            }}
+          >
+            {sidePanelOpen ? '→' : '←'}
+          </button>
         </div>
 
-        {/* Side panel — ~25% / 288px */}
+        {/* Side panel — slide in/out */}
         <aside
-          className="w-72 flex-shrink-0 overflow-hidden"
-          style={{ borderLeft: '1px solid #1e293b', background: '#0f172a' }}
+          className="flex-shrink-0 overflow-hidden transition-all duration-300 ease-in-out"
+          style={{
+            width: sidePanelOpen ? 360 : 0,
+            borderLeft: sidePanelOpen ? '1px solid rgba(51, 65, 85, 0.4)' : 'none',
+            background: 'rgba(15, 23, 42, 0.95)',
+            backdropFilter: 'blur(16px)',
+          }}
         >
-          <SidePanel selectedDrugId={selectedDrug} />
+          <div className="w-[360px] h-full">
+            <SidePanel selectedDrugId={selectedDrug} />
+          </div>
         </aside>
       </main>
 
