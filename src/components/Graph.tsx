@@ -39,9 +39,9 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
       // === Row 1-2: Cephalosporins (1G→5G left to right) ===
       'group-cephalosporin-1g':         { x: -50,  y: -600 },
       'group-cephalosporin-2g':         { x: 350,  y: -600 },
-      'group-cephalosporin-3g':         { x: 800,  y: -600 },
-      'group-cephalosporin-4g':         { x: 1300, y: -600 },
-      'group-cephalosporin-5g':         { x: 1700, y: -600 },
+      'group-cephalosporin-3g':         { x: 750,  y: -650 },
+      'group-cephalosporin-4g':         { x: 1250, y: -400 },
+      'group-cephalosporin-5g':         { x: 1250, y: -750 },
 
       // === Row 2: Other beta-lactams ===
       'group-carbapenem':               { x: 350,  y: -250 },
