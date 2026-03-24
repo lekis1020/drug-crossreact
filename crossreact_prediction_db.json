@@ -1,0 +1,619 @@
+{
+  "metadata": {
+    "created": "2026-03-24",
+    "version": "1.0",
+    "scope": "IgE-mediated cross-reactivity prediction",
+    "data_sources": {
+      "literature_pmids": [
+        "28814358",
+        "40767862",
+        "33385590",
+        "38677347",
+        "33500632",
+        "36137197",
+        "40090865",
+        "38527607",
+        "32145403",
+        "29017833",
+        "31495420",
+        "40083843",
+        "39798177",
+        "41331653",
+        "34324747",
+        "39561736",
+        "31362351",
+        "34757066",
+        "34767158",
+        "33253923",
+        "29408440"
+      ],
+      "structural_data": "PubChem (pubchempy)",
+      "smiles_count": 25
+    },
+    "limitations": [
+      "R1 side chain classification based on SMILES analysis + literature",
+      "Cross-reactivity rates from limited prospective studies",
+      "R2 side chain role excluded (debated in literature, PMID 29017833)",
+      "Carbapenems: cross-reactivity data limited to low risk (structural basis)",
+      "PMID 19489917 excluded: not in verified database"
+    ]
+  },
+  "r1_groups": [
+    {
+      "group_id": "G1",
+      "name": "aminobenzyl",
+      "description": "D-alpha-aminophenylacetyl side chain with unsubstituted benzene ring",
+      "smiles_fragment": "NC(C(=O)*)c1ccccc1",
+      "drugs": [
+        "ampicillin",
+        "cephalexin",
+        "cefaclor"
+      ],
+      "expected_ige_cross_reactivity": "high",
+      "literature_confirmed": true,
+      "pmids": [
+        "34757066",
+        "29408440"
+      ]
+    },
+    {
+      "group_id": "G2",
+      "name": "para-hydroxy-aminobenzyl",
+      "description": "D-alpha-amino-para-hydroxyphenylacetyl side chain",
+      "smiles_fragment": "NC(C(=O)*)c1ccc(O)cc1",
+      "drugs": [
+        "amoxicillin",
+        "cefadroxil",
+        "cefprozil"
+      ],
+      "expected_ige_cross_reactivity": "high",
+      "literature_confirmed": true,
+      "pmids": [
+        "34757066",
+        "29408440"
+      ]
+    },
+    {
+      "group_id": "G3",
+      "name": "aminothiazolyl-methoxyimino",
+      "description": "2-aminothiazol-4-yl with methoxyimino substituent (syn configuration)",
+      "smiles_fragment": "NC1=NC(=CS1)/C(=N\\OC)C(=O)*",
+      "drugs": [
+        "ceftriaxone",
+        "cefotaxime",
+        "cefepime"
+      ],
+      "expected_ige_cross_reactivity": "high",
+      "literature_confirmed": true,
+      "pmids": [
+        "29408440"
+      ]
+    },
+    {
+      "group_id": "G4",
+      "name": "aminothiazolyl-carboxypropoxyimino",
+      "description": "2-aminothiazol-4-yl with tert-butyl carboxylic acid oxyimino substituent",
+      "smiles_fragment": "NC1=NC(=CS1)/C(=N\\OC(C)(C)C(=O)O)C(=O)*",
+      "drugs": [
+        "ceftazidime",
+        "aztreonam"
+      ],
+      "expected_ige_cross_reactivity": "high",
+      "literature_confirmed": true,
+      "pmids": [
+        "29408440"
+      ]
+    },
+    {
+      "group_id": "G5",
+      "name": "aminothiazolyl-carboxypropenoyl",
+      "description": "2-aminothiazol-4-yl with carboxyvinyl chain",
+      "smiles_fragment": "NC1=NC(=CS1)/C(=C/CC(=O)O)C(=O)*",
+      "drugs": [
+        "ceftibuten"
+      ],
+      "expected_ige_cross_reactivity": "moderate",
+      "literature_confirmed": false,
+      "pmids": []
+    },
+    {
+      "group_id": "G6",
+      "name": "furyl-methoxyimino",
+      "description": "Furan-2-yl with methoxyimino substituent",
+      "smiles_fragment": "CO/N=C(\\C(=O)*)c1ccco1",
+      "drugs": [
+        "cefuroxime"
+      ],
+      "expected_ige_cross_reactivity": "low",
+      "literature_confirmed": true,
+      "pmids": [
+        "29408440"
+      ]
+    },
+    {
+      "group_id": "G7",
+      "name": "tetrazole-acetyl",
+      "description": "1H-tetrazol-1-yl acetyl side chain",
+      "smiles_fragment": "Cn1nnnc1CC(=O)*",
+      "drugs": [
+        "cefazolin"
+      ],
+      "expected_ige_cross_reactivity": "low",
+      "literature_confirmed": true,
+      "pmids": [
+        "34757066",
+        "29408440"
+      ]
+    },
+    {
+      "group_id": "G8",
+      "name": "thienyl-acetyl",
+      "description": "Thiophen-2-yl acetyl side chain",
+      "smiles_fragment": "c1ccsc1CC(=O)*",
+      "drugs": [
+        "cefoxitin"
+      ],
+      "expected_ige_cross_reactivity": "low",
+      "literature_confirmed": true,
+      "pmids": [
+        "29408440"
+      ]
+    },
+    {
+      "group_id": "G9",
+      "name": "benzyl",
+      "description": "Phenylacetyl side chain without amino group",
+      "smiles_fragment": "c1ccccc1CC(=O)*",
+      "drugs": [
+        "penicillin G"
+      ],
+      "expected_ige_cross_reactivity": "low",
+      "literature_confirmed": true,
+      "pmids": [
+        "34757066"
+      ]
+    },
+    {
+      "group_id": "G10",
+      "name": "phenoxyacetyl",
+      "description": "Phenoxyacetyl side chain",
+      "smiles_fragment": "c1ccccc1OCC(=O)*",
+      "drugs": [
+        "penicillin V"
+      ],
+      "expected_ige_cross_reactivity": "low",
+      "literature_confirmed": true,
+      "pmids": [
+        "34757066"
+      ]
+    },
+    {
+      "group_id": "G11",
+      "name": "isoxazolyl-phenyl",
+      "description": "5-methyl-3-phenylisoxazole-4-carbonyl",
+      "smiles_fragment": "Cc1onc(c1C(=O)*)c2ccccc2",
+      "drugs": [
+        "oxacillin"
+      ],
+      "expected_ige_cross_reactivity": "low",
+      "literature_confirmed": true,
+      "pmids": [
+        "34757066"
+      ]
+    },
+    {
+      "group_id": "G12",
+      "name": "isoxazolyl-dichlorophenyl",
+      "description": "5-methyl-3-(2,6-dichlorophenyl)isoxazole-4-carbonyl",
+      "smiles_fragment": "Cc1onc(c1C(=O)*)c2c(Cl)cccc2Cl",
+      "drugs": [
+        "dicloxacillin"
+      ],
+      "expected_ige_cross_reactivity": "low",
+      "literature_confirmed": true,
+      "pmids": [
+        "34757066"
+      ]
+    },
+    {
+      "group_id": "G13",
+      "name": "ethoxynaphthoyl",
+      "description": "2-ethoxynaphthalene-1-carbonyl",
+      "smiles_fragment": "CCOc1ccc2ccccc2c1C(=O)*",
+      "drugs": [
+        "nafcillin"
+      ],
+      "expected_ige_cross_reactivity": "low",
+      "literature_confirmed": true,
+      "pmids": [
+        "34757066"
+      ]
+    },
+    {
+      "group_id": "G14",
+      "name": "ureido-aminobenzyl",
+      "description": "Piperazine-dione ureido linked aminobenzyl",
+      "smiles_fragment": "CCN1CCN(C(=O)C1=O)C(=O)NC(c2ccccc2)C(=O)*",
+      "drugs": [
+        "piperacillin"
+      ],
+      "expected_ige_cross_reactivity": "moderate",
+      "literature_confirmed": true,
+      "pmids": [
+        "29408440"
+      ]
+    },
+    {
+      "group_id": "G15",
+      "name": "carbapenem-hydroxyethyl",
+      "description": "1-hydroxyethyl substituent on carbapenem core",
+      "smiles_fragment": "CC(O)*",
+      "drugs": [
+        "meropenem",
+        "imipenem",
+        "ertapenem",
+        "doripenem"
+      ],
+      "expected_ige_cross_reactivity": "high within class",
+      "literature_confirmed": false,
+      "pmids": []
+    }
+  ],
+  "drug_r1_map": {
+    "amoxicillin": {
+      "group": "G2",
+      "r1_name": "para-hydroxy-aminobenzyl",
+      "confidence": "high"
+    },
+    "ampicillin": {
+      "group": "G1",
+      "r1_name": "aminobenzyl",
+      "confidence": "high"
+    },
+    "cephalexin": {
+      "group": "G1",
+      "r1_name": "aminobenzyl",
+      "confidence": "high"
+    },
+    "cefaclor": {
+      "group": "G1",
+      "r1_name": "aminobenzyl",
+      "confidence": "high"
+    },
+    "cefadroxil": {
+      "group": "G2",
+      "r1_name": "para-hydroxy-aminobenzyl",
+      "confidence": "high"
+    },
+    "cefprozil": {
+      "group": "G2",
+      "r1_name": "para-hydroxy-aminobenzyl",
+      "confidence": "high"
+    },
+    "ceftriaxone": {
+      "group": "G3",
+      "r1_name": "aminothiazolyl-methoxyimino",
+      "confidence": "high"
+    },
+    "cefotaxime": {
+      "group": "G3",
+      "r1_name": "aminothiazolyl-methoxyimino",
+      "confidence": "high"
+    },
+    "cefepime": {
+      "group": "G3",
+      "r1_name": "aminothiazolyl-methoxyimino",
+      "confidence": "high"
+    },
+    "ceftazidime": {
+      "group": "G4",
+      "r1_name": "aminothiazolyl-carboxypropoxyimino",
+      "confidence": "high"
+    },
+    "aztreonam": {
+      "group": "G4",
+      "r1_name": "aminothiazolyl-carboxypropoxyimino",
+      "confidence": "high"
+    },
+    "ceftibuten": {
+      "group": "G5",
+      "r1_name": "aminothiazolyl-carboxypropenoyl",
+      "confidence": "high"
+    },
+    "cefuroxime": {
+      "group": "G6",
+      "r1_name": "furyl-methoxyimino",
+      "confidence": "high"
+    },
+    "cefazolin": {
+      "group": "G7",
+      "r1_name": "tetrazole-acetyl",
+      "confidence": "high"
+    },
+    "cefoxitin": {
+      "group": "G8",
+      "r1_name": "thienyl-acetyl",
+      "confidence": "high"
+    },
+    "penicillin G": {
+      "group": "G9",
+      "r1_name": "benzyl",
+      "confidence": "high"
+    },
+    "penicillin V": {
+      "group": "G10",
+      "r1_name": "phenoxyacetyl",
+      "confidence": "high"
+    },
+    "oxacillin": {
+      "group": "G11",
+      "r1_name": "isoxazolyl-phenyl",
+      "confidence": "high"
+    },
+    "dicloxacillin": {
+      "group": "G12",
+      "r1_name": "isoxazolyl-dichlorophenyl",
+      "confidence": "high"
+    },
+    "nafcillin": {
+      "group": "G13",
+      "r1_name": "ethoxynaphthoyl",
+      "confidence": "high"
+    },
+    "piperacillin": {
+      "group": "G14",
+      "r1_name": "ureido-aminobenzyl",
+      "confidence": "high"
+    },
+    "meropenem": {
+      "group": "G15",
+      "r1_name": "carbapenem-hydroxyethyl",
+      "confidence": "high"
+    },
+    "imipenem": {
+      "group": "G15",
+      "r1_name": "carbapenem-hydroxyethyl",
+      "confidence": "high"
+    },
+    "ertapenem": {
+      "group": "G15",
+      "r1_name": "carbapenem-hydroxyethyl",
+      "confidence": "high"
+    },
+    "doripenem": {
+      "group": "G15",
+      "r1_name": "carbapenem-hydroxyethyl",
+      "confidence": "high"
+    }
+  },
+  "drug_structures": {
+    "amoxicillin": {
+      "cid": 33613,
+      "formula": "C16H19N3O5S"
+    },
+    "ampicillin": {
+      "cid": 6249,
+      "formula": "C16H19N3O4S"
+    },
+    "cephalexin": {
+      "cid": 27447,
+      "formula": "C16H17N3O4S"
+    },
+    "cefaclor": {
+      "cid": 51039,
+      "formula": "C15H14ClN3O4S"
+    },
+    "cefadroxil": {
+      "cid": 47965,
+      "formula": "C16H17N3O5S"
+    },
+    "cefazolin": {
+      "cid": 33255,
+      "formula": "C14H14N8O4S3"
+    },
+    "ceftibuten": {
+      "cid": 5282242,
+      "formula": "C15H14N4O6S2"
+    },
+    "cefuroxime": {
+      "cid": 5479529,
+      "formula": "C16H16N4O8S"
+    },
+    "ceftriaxone": {
+      "cid": 5479530,
+      "formula": "C18H18N8O7S3"
+    },
+    "cefotaxime": {
+      "cid": 5742673,
+      "formula": "C16H17N5O7S2"
+    },
+    "cefepime": {
+      "cid": 5479537,
+      "formula": "C19H24N6O5S2"
+    },
+    "ceftazidime": {
+      "cid": 5481173,
+      "formula": "C22H22N6O7S2"
+    },
+    "cefprozil": {
+      "cid": 62977,
+      "formula": "C18H19N3O5S"
+    },
+    "cefoxitin": {
+      "cid": 441199,
+      "formula": "C16H17N3O7S2"
+    },
+    "penicillin G": {
+      "cid": 5904,
+      "formula": "C16H18N2O4S"
+    },
+    "penicillin V": {
+      "cid": 6869,
+      "formula": "C16H18N2O5S"
+    },
+    "piperacillin": {
+      "cid": 43672,
+      "formula": "C23H27N5O7S"
+    },
+    "oxacillin": {
+      "cid": 6196,
+      "formula": "C19H19N3O5S"
+    },
+    "nafcillin": {
+      "cid": 8982,
+      "formula": "C21H22N2O5S"
+    },
+    "dicloxacillin": {
+      "cid": 18381,
+      "formula": "C19H17Cl2N3O5S"
+    },
+    "aztreonam": {
+      "cid": 5742832,
+      "formula": "C13H17N5O8S2"
+    },
+    "meropenem": {
+      "cid": 441130,
+      "formula": "C17H25N3O5S"
+    },
+    "imipenem": {
+      "cid": 104838,
+      "formula": "C12H17N3O4S"
+    },
+    "ertapenem": {
+      "cid": 150610,
+      "formula": "C22H25N3O7S"
+    },
+    "doripenem": {
+      "cid": 73303,
+      "formula": "C15H24N4O6S2"
+    }
+  },
+  "literature_confirmed_pairs": [
+    {
+      "drug_a": "aminopenicillins",
+      "drug_b": "aminocephalosporins",
+      "ige_cross_reactivity": "high",
+      "rate_percent": "over 30%",
+      "structural_basis": "side-chain similarities or identities",
+      "evidence_pmids": [
+        "33500632"
+      ],
+      "clinical_note": null
+    },
+    {
+      "drug_a": "penicillins",
+      "drug_b": "cephalosporins",
+      "ige_cross_reactivity": "unknown",
+      "rate_percent": "0% to 27%",
+      "structural_basis": null,
+      "evidence_pmids": [
+        "29408440"
+      ],
+      "clinical_note": null
+    },
+    {
+      "drug_a": "penicillins",
+      "drug_b": "early generation cephalosporins",
+      "ige_cross_reactivity": "moderate",
+      "rate_percent": null,
+      "structural_basis": "shared side chains",
+      "evidence_pmids": [
+        "29017833"
+      ],
+      "clinical_note": "confirmatory challenge data are lacking"
+    },
+    {
+      "drug_a": "penicillin/amoxicillin",
+      "drug_b": "later-generation cephalosporins",
+      "ige_cross_reactivity": "safe",
+      "rate_percent": null,
+      "structural_basis": "distinct side chains",
+      "evidence_pmids": [
+        "29017833"
+      ],
+      "clinical_note": "do not have any skin test cross-reactivity"
+    },
+    {
+      "drug_a": "penicillins",
+      "drug_b": "cefazolin",
+      "ige_cross_reactivity": "low",
+      "rate_percent": null,
+      "structural_basis": "side chains different from those of penicillins",
+      "evidence_pmids": [
+        "32145403"
+      ],
+      "clinical_note": null
+    },
+    {
+      "drug_a": "penicillins",
+      "drug_b": "ceftibuten",
+      "ige_cross_reactivity": "low",
+      "rate_percent": null,
+      "structural_basis": "side chains different from those of penicillins",
+      "evidence_pmids": [
+        "32145403"
+      ],
+      "clinical_note": null
+    },
+    {
+      "drug_a": "clavulanate",
+      "drug_b": "tazobactam",
+      "ige_cross_reactivity": "unknown",
+      "rate_percent": null,
+      "structural_basis": "shared antigenic determinants",
+      "evidence_pmids": [
+        "36137197"
+      ],
+      "clinical_note": "T-cell crossreactivity observed"
+    }
+  ],
+  "prediction_rules": [
+    {
+      "rule_id": "R001",
+      "condition": "same_r1_group",
+      "predicted_cross_reactivity": "high",
+      "evidence_basis": "literature",
+      "pmids": [
+        "33500632",
+        "34757066",
+        "29408440",
+        "29017833"
+      ],
+      "notes": "IgE-mediated cross-reactivity primarily driven by R1 side chain identity (PMID 33500632)"
+    },
+    {
+      "rule_id": "R002",
+      "condition": "aminobenzyl_variants (G1↔G2)",
+      "predicted_cross_reactivity": "moderate",
+      "evidence_basis": "structural_similarity",
+      "pmids": [
+        "29408440"
+      ],
+      "notes": "G1(aminobenzyl) vs G2(para-OH-aminobenzyl): structural variant, lower but possible cross-reactivity"
+    },
+    {
+      "rule_id": "R003",
+      "condition": "different_r1_group",
+      "predicted_cross_reactivity": "low_to_safe",
+      "evidence_basis": "literature",
+      "pmids": [
+        "32145403",
+        "29017833",
+        "29408440"
+      ],
+      "notes": "Different R1 side chains account for absence of cross-reactivity (PMID 32145403)"
+    },
+    {
+      "rule_id": "R004",
+      "condition": "beta_lactam_core_only_shared",
+      "predicted_cross_reactivity": "rare",
+      "evidence_basis": "literature",
+      "pmids": [
+        "33500632",
+        "29017833"
+      ],
+      "notes": "Cross-reactivity from beta-lactam ring alone is infrequent in IgE-mediated allergy (PMID 33500632)"
+    }
+  ],
+  "predict_function_logic": "Same R1 group → HIGH | G1↔G2 → MODERATE | Different → LOW/SAFE"
+}
