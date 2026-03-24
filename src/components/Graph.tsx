@@ -24,12 +24,70 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
 
     const { nodes, edges, parentNodes, nodeParents } = buildGraphElements();
 
+
+    // === Preset positions: logical group arrangement ===
+    const GROUP_POSITIONS: Record<string, { x: number; y: number }> = {
+      // Beta-lactams: left-to-right flow
+      'group-penicillin--natural-':     { x: -800, y: -400 },
+      'group-penicillin--amino-':       { x: -500, y: -400 },
+      'group-penicillin--anti-staph-':  { x: -800, y: -200 },
+      'group-penicillin--extended-':    { x: -500, y: -200 },
+      'group-cephalosporin-1g':         { x: -100, y: -400 },
+      'group-cephalosporin-2g':         { x: 200,  y: -400 },
+      'group-cephalosporin-3g':         { x: 550,  y: -400 },
+      'group-cephalosporin-4g':         { x: 900,  y: -400 },
+      'group-cephalosporin-5g':         { x: 1150, y: -400 },
+      'group-carbapenem':               { x: -100, y: -100 },
+      'group-monobactam':               { x: 200,  y: -100 },
+      // Non-beta-lactams: bottom rows
+      'group-fluoroquinolone':          { x: -700, y: 200 },
+      'group-glycopeptide':             { x: -300, y: 200 },
+      'group-macrolide':                { x: 100,  y: 200 },
+      'group-aminoglycoside':           { x: 450,  y: 200 },
+      'group-tetracycline':             { x: 800,  y: 200 },
+      'group-sulfonamide':              { x: -500, y: 450 },
+      'group-lincosamide':              { x: -150, y: 450 },
+      'group-oxazolidinone':            { x: 150,  y: 450 },
+      'group-nitroimidazole':           { x: 450,  y: 450 },
+    };
+
+    // Assign positions to drug nodes based on their parent group
+    const nodePositions: Record<string, { x: number; y: number }> = {};
+    const groupChildCounts: Record<string, number> = {};
+    const groupChildIndex: Record<string, number> = {};
+
+    // Count children per group
+    for (const n of nodes) {
+      const parentId = nodeParents[n.id];
+      if (parentId) {
+        groupChildCounts[parentId] = (groupChildCounts[parentId] || 0) + 1;
+      }
+    }
+
+    // Assign positions in a grid within each group
+    for (const n of nodes) {
+      const parentId = nodeParents[n.id];
+      if (parentId && GROUP_POSITIONS[parentId]) {
+        const center = GROUP_POSITIONS[parentId];
+        const idx = groupChildIndex[parentId] || 0;
+        groupChildIndex[parentId] = idx + 1;
+        const total = groupChildCounts[parentId];
+        const cols = Math.ceil(Math.sqrt(total));
+        const row = Math.floor(idx / cols);
+        const col = idx % cols;
+        const spacing = 90;
+        const offsetX = (col - (cols - 1) / 2) * spacing;
+        const offsetY = row * spacing;
+        nodePositions[n.id] = { x: center.x + offsetX, y: center.y + offsetY };
+      }
+    }
+
     const elements: cytoscape.ElementDefinition[] = [
       // Parent (compound) nodes
       ...parentNodes.map(p => ({
         data: { id: p.id, label: p.label, isGroup: 'true' },
       })),
-      // Drug nodes with parent reference
+      // Drug nodes with parent reference + preset position
       ...nodes.map(n => ({
         data: {
           id: n.id,
@@ -39,6 +97,7 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
           color: n.color,
           parent: nodeParents[n.id] || undefined,
         },
+        position: nodePositions[n.id] || { x: 0, y: 0 },
       })),
       // Edges
       ...edges.map(e => ({
@@ -173,17 +232,7 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
           style: { opacity: 0.05 },
         },
       ],
-      layout: {
-        name: 'cose-bilkent',
-        animate: false,
-        nodeDimensionsIncludeLabels: true,
-        idealEdgeLength: 150,
-        nodeRepulsion: 12000,
-        gravity: 0.25,
-        numIter: 3000,
-        tile: false,
-        randomize: true,
-      } as Parameters<Core['layout']>[0],
+      layout: { name: 'preset' } as Parameters<Core['layout']>[0],
       minZoom: 0.15,
       maxZoom: 4,
       wheelSensitivity: 0.25,
