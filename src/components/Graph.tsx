@@ -272,31 +272,54 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
         },
       ],
       layout: { name: 'preset' } as Parameters<Core['layout']>[0],
-      minZoom: 0.15,
+      minZoom: 0.2,
       maxZoom: 4,
       wheelSensitivity: 0.25,
     });
 
-    const applyResponsiveGroupLabelStyle = (containerWidth: number) => {
-      const groupFontSize = Math.max(12, Math.min(18, Math.round(containerWidth / 90)));
-      const minZoomedFontSize = Math.max(10, groupFontSize - 2);
+    let baseGroupFontSize = 20;
+    let zoomFramePending = false;
+
+    const applyResponsiveGroupLabelStyle = () => {
+      const zoom = Math.max(0.2, cy.zoom());
+      const zoomCompensation = Math.pow(zoom, -0.85);
+      const adjustedFontSize = Math.round(
+        Math.max(baseGroupFontSize, Math.min(52, baseGroupFontSize * zoomCompensation)),
+      );
+      const backgroundPadding = Math.round(Math.max(4, Math.min(12, adjustedFontSize * 0.28)));
 
       cy.style()
         .selector('node[isGroup = "true"]')
         .style({
-          'font-size': `${groupFontSize}px`,
-          'min-zoomed-font-size': `${minZoomedFontSize}px`,
+          'font-size': `${adjustedFontSize}px`,
+          'text-background-padding': `${backgroundPadding}px`,
         })
         .update();
     };
 
-    applyResponsiveGroupLabelStyle(containerRef.current.clientWidth);
+    const scheduleGroupLabelUpdate = () => {
+      if (zoomFramePending) return;
+      zoomFramePending = true;
+      requestAnimationFrame(() => {
+        zoomFramePending = false;
+        applyResponsiveGroupLabelStyle();
+      });
+    };
+
+    const setBaseGroupFontSize = (containerWidth: number) => {
+      baseGroupFontSize = Math.max(16, Math.min(28, Math.round(containerWidth / 70)));
+      applyResponsiveGroupLabelStyle();
+    };
+
+    setBaseGroupFontSize(containerRef.current.clientWidth);
 
     const resizeObserver = new ResizeObserver((entries) => {
       const width = entries[0]?.contentRect.width ?? containerRef.current?.clientWidth ?? 1200;
-      applyResponsiveGroupLabelStyle(width);
+      setBaseGroupFontSize(width);
     });
     resizeObserver.observe(containerRef.current);
+
+    cy.on('zoom', scheduleGroupLabelUpdate);
 
     cy.on('tap', 'node[!isGroup]', (e: EventObject) => {
       onDrugSelect(e.target.id());
@@ -318,6 +341,7 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
     cyRef.current = cy;
 
     return () => {
+      cy.off('zoom', scheduleGroupLabelUpdate);
       resizeObserver.disconnect();
       cy.destroy();
       cyRef.current = null;
