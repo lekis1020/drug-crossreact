@@ -45,7 +45,8 @@
       "hutten_2025": "Systematic comparison of 4 cross-reactivity tables covering 51 BAs. Found 36% disharmony, highlighting need for standardization. No new clinical data but critical for interpretation.",
       "clinical_predictors": "Anaphylaxis (OR 6.05) and IV route (OR 9.68) are significant predictors of positive ST (Stevenson 2026)."
     },
-    "last_literature_monitoring_at": "2026-03-25T04:54:01.995Z"
+    "last_literature_monitoring_at": "2026-03-25T08:49:08.678Z",
+    "last_database_update_at": "2026-03-25T08:49:08.678Z"
   },
   "r1_groups": [
     {
@@ -1060,7 +1061,7 @@
     "query": "((beta-lactam*[Title/Abstract] OR cephalosporin*[Title/Abstract] OR penicillin*[Title/Abstract] OR carbapenem*[Title/Abstract] OR monobactam*[Title/Abstract] OR antibiotic*[Title/Abstract])) AND (cross-react*[Title/Abstract] OR hypersensitiv*[Title/Abstract] OR allergy[Title/Abstract] OR anaphylaxis[Title/Abstract]) AND (case report[Publication Type] OR clinical study[Publication Type] OR cohort[Title/Abstract] OR trial[Title/Abstract])",
     "checked_window_days": 30,
     "max_results": 150,
-    "checked_at": "2026-03-25T04:54:01.995Z",
+    "checked_at": "2026-03-25T08:49:08.678Z",
     "records": [
       {
         "pmid": "41784074",
@@ -1072,7 +1073,7 @@
         "status": "needs_review",
         "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41784074/",
         "first_seen_at": "2026-03-25T04:54:01.995Z",
-        "last_seen_at": "2026-03-25T04:54:01.995Z"
+        "last_seen_at": "2026-03-25T08:49:08.678Z"
       },
       {
         "pmid": "41782164",
@@ -1084,7 +1085,7 @@
         "status": "needs_review",
         "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41782164/",
         "first_seen_at": "2026-03-25T04:54:01.995Z",
-        "last_seen_at": "2026-03-25T04:54:01.995Z"
+        "last_seen_at": "2026-03-25T08:49:08.678Z"
       },
       {
         "pmid": "41872049",
@@ -1096,7 +1097,7 @@
         "status": "needs_review",
         "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41872049/",
         "first_seen_at": "2026-03-25T04:54:01.995Z",
-        "last_seen_at": "2026-03-25T04:54:01.995Z"
+        "last_seen_at": "2026-03-25T08:49:08.678Z"
       },
       {
         "pmid": "41833900",
@@ -1108,7 +1109,7 @@
         "status": "needs_review",
         "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41833900/",
         "first_seen_at": "2026-03-25T04:54:01.995Z",
-        "last_seen_at": "2026-03-25T04:54:01.995Z"
+        "last_seen_at": "2026-03-25T08:49:08.678Z"
       },
       {
         "pmid": "41840409",
@@ -1120,7 +1121,7 @@
         "status": "needs_review",
         "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41840409/",
         "first_seen_at": "2026-03-25T04:54:01.995Z",
-        "last_seen_at": "2026-03-25T04:54:01.995Z"
+        "last_seen_at": "2026-03-25T08:49:08.678Z"
       },
       {
         "pmid": "41859182",
@@ -1132,7 +1133,7 @@
         "status": "needs_review",
         "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41859182/",
         "first_seen_at": "2026-03-25T04:54:01.995Z",
-        "last_seen_at": "2026-03-25T04:54:01.995Z"
+        "last_seen_at": "2026-03-25T08:49:08.678Z"
       },
       {
         "pmid": "41772923",
@@ -1144,7 +1145,7 @@
         "status": "needs_review",
         "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41772923/",
         "first_seen_at": "2026-03-25T04:54:01.995Z",
-        "last_seen_at": "2026-03-25T04:54:01.995Z"
+        "last_seen_at": "2026-03-25T08:49:08.678Z"
       },
       {
         "pmid": "41733406",
@@ -1156,7 +1157,7 @@
         "status": "needs_review",
         "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41733406/",
         "first_seen_at": "2026-03-25T04:54:01.995Z",
-        "last_seen_at": "2026-03-25T04:54:01.995Z"
+        "last_seen_at": "2026-03-25T08:49:08.678Z"
       },
       {
         "pmid": "41733399",
@@ -1168,7 +1169,7 @@
         "status": "needs_review",
         "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41733399/",
         "first_seen_at": "2026-03-25T04:54:01.995Z",
-        "last_seen_at": "2026-03-25T04:54:01.995Z"
+        "last_seen_at": "2026-03-25T08:49:08.678Z"
       },
       {
         "pmid": "41575649",
@@ -1180,7 +1181,7 @@
         "status": "needs_review",
         "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41575649/",
         "first_seen_at": "2026-03-25T04:54:01.995Z",
-        "last_seen_at": "2026-03-25T04:54:01.995Z"
+        "last_seen_at": "2026-03-25T08:49:08.678Z"
       },
       {
         "pmid": "41317864",
@@ -1192,7 +1193,7 @@
         "status": "needs_review",
         "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41317864/",
         "first_seen_at": "2026-03-25T04:54:01.995Z",
-        "last_seen_at": "2026-03-25T04:54:01.995Z"
+        "last_seen_at": "2026-03-25T08:49:08.678Z"
       },
       {
         "pmid": "41177521",
@@ -1204,7 +1205,7 @@
         "status": "needs_review",
         "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41177521/",
         "first_seen_at": "2026-03-25T04:54:01.995Z",
-        "last_seen_at": "2026-03-25T04:54:01.995Z"
+        "last_seen_at": "2026-03-25T08:49:08.678Z"
       },
       {
         "pmid": "37522348",
@@ -1216,7 +1217,7 @@
         "status": "needs_review",
         "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/37522348/",
         "first_seen_at": "2026-03-25T04:54:01.995Z",
-        "last_seen_at": "2026-03-25T04:54:01.995Z"
+        "last_seen_at": "2026-03-25T08:49:08.678Z"
       },
       {
         "pmid": "41749358",
@@ -1228,7 +1229,7 @@
         "status": "needs_review",
         "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41749358/",
         "first_seen_at": "2026-03-25T04:54:01.995Z",
-        "last_seen_at": "2026-03-25T04:54:01.995Z"
+        "last_seen_at": "2026-03-25T08:49:08.678Z"
       },
       {
         "pmid": "41763604",
@@ -1240,7 +1241,7 @@
         "status": "needs_review",
         "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41763604/",
         "first_seen_at": "2026-03-25T04:54:01.995Z",
-        "last_seen_at": "2026-03-25T04:54:01.995Z"
+        "last_seen_at": "2026-03-25T08:49:08.678Z"
       },
       {
         "pmid": "41729756",
@@ -1252,7 +1253,7 @@
         "status": "needs_review",
         "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41729756/",
         "first_seen_at": "2026-03-25T04:54:01.995Z",
-        "last_seen_at": "2026-03-25T04:54:01.995Z"
+        "last_seen_at": "2026-03-25T08:49:08.678Z"
       }
     ]
   }

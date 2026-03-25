@@ -4,8 +4,8 @@
     "version": "0.1-draft",
     "scope": "Iodinated CT contrast-media cross-reactivity",
     "status": "template",
-    "last_database_update_at": null,
-    "last_literature_monitoring_at": null,
+    "last_database_update_at": "2026-03-25T08:49:06.498Z",
+    "last_literature_monitoring_at": "2026-03-25T08:49:06.498Z",
     "notes": "Template scaffold. Populate literature_confirmed_pairs only after clinical review."
   },
   "agent_groups": [
@@ -122,10 +122,47 @@
   ],
   "literature_monitoring": {
     "strategy": "PubMed E-utilities scheduled monitor",
-    "query": null,
+    "query": "((\"contrast media\"[MeSH Terms] OR \"iodinated contrast\"[Title/Abstract] OR \"contrast media\"[Title/Abstract]) OR iohexol[Title/Abstract] OR iopromide[Title/Abstract] OR iopamidol[Title/Abstract] OR ioversol[Title/Abstract] OR iomeprol[Title/Abstract] OR iobitridol[Title/Abstract] OR iodixanol[Title/Abstract] OR ioxaglate[Title/Abstract] OR ioxitalamate[Title/Abstract] OR diatrizoate[Title/Abstract]) AND (cross-react*[Title/Abstract] OR hypersensitiv*[Title/Abstract] OR allergy[Title/Abstract] OR anaphylaxis[Title/Abstract]) AND (skin test[Title/Abstract] OR provocation[Title/Abstract] OR case report[Publication Type] OR cohort[Title/Abstract] OR study[Title/Abstract])",
     "checked_window_days": 30,
     "max_results": 150,
-    "checked_at": null,
-    "records": []
+    "checked_at": "2026-03-25T08:49:06.498Z",
+    "records": [
+      {
+        "pmid": "41850224",
+        "title": "Drug hypersensitivity leading to emergency department visit: a comprehensive analysis of clinical features and management.",
+        "journal": "The Korean journal of internal medicine",
+        "pubdate": "2026 Mar",
+        "doi": "10.3904/kjim.2025.166",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41850224/",
+        "first_seen_at": "2026-03-25T08:49:06.498Z",
+        "last_seen_at": "2026-03-25T08:49:06.498Z"
+      },
+      {
+        "pmid": "41700646",
+        "title": "Allergies to Iodinated Contrast Do Not Predict Adverse Reactions with Contrast Use in Genito-Urinary Surgery.",
+        "journal": "Journal of endourology",
+        "pubdate": "2026 Mar",
+        "doi": "10.1177/08927790261417886",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41700646/",
+        "first_seen_at": "2026-03-25T08:49:06.498Z",
+        "last_seen_at": "2026-03-25T08:49:06.498Z"
+      },
+      {
+        "pmid": "41260486",
+        "title": "Biphasic, refractory, and life-threatening anaphylactic reactions to iodinated contrast media: A 10-year retrospective analysis.",
+        "journal": "Annals of allergy, asthma & immunology : official publication of the American College of Allergy, Asthma, & Immunology",
+        "pubdate": "2026 Mar",
+        "doi": "10.1016/j.anai.2025.11.004",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41260486/",
+        "first_seen_at": "2026-03-25T08:49:06.498Z",
+        "last_seen_at": "2026-03-25T08:49:06.498Z"
+      }
+    ]
   }
 }
