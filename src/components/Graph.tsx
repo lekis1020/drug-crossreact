@@ -18,12 +18,43 @@ interface GraphNode extends DrugNodeData {
   x: number;
   y: number;
   z: number;
+  fx?: number;
+  fy?: number;
 }
 
 interface GraphLink extends Omit<CrossReactEdgeData, 'source' | 'target'> {
   source: string | GraphNode;
   target: string | GraphNode;
 }
+
+const GROUP_POSITIONS_2D: Record<string, { x: number; y: number }> = {
+  'group-penicillin-natural-': { x: -900, y: -600 },
+  'group-penicillin-amino-': { x: -550, y: -600 },
+  'group-penicillin-anti-staph-': { x: -900, y: -350 },
+  'group-penicillin-extended-': { x: -550, y: -350 },
+
+  'group-cephalosporin-1g': { x: -50, y: -600 },
+  'group-cephalosporin-2g': { x: 350, y: -600 },
+  'group-cephalosporin-3g': { x: 750, y: -650 },
+  'group-cephalosporin-4g': { x: 1250, y: -400 },
+  'group-cephalosporin-5g': { x: 1250, y: -750 },
+
+  'group-carbapenem': { x: 350, y: -250 },
+  'group-monobactam': { x: 800, y: -250 },
+
+  'group-glycopeptide': { x: -900, y: 150 },
+  'group-oxazolidinone': { x: -550, y: 150 },
+  'group-lincosamide': { x: -250, y: 150 },
+
+  'group-fluoroquinolone': { x: 150, y: 150 },
+  'group-tetracycline': { x: 550, y: 150 },
+  'group-macrolide': { x: 950, y: 150 },
+  'group-sulfonamide': { x: 1350, y: 150 },
+
+  'group-aminoglycoside': { x: 150, y: 450 },
+  'group-nitroimidazole': { x: 550, y: 450 },
+  'group-lipopeptide': { x: -900, y: 450 },
+};
 
 const GROUP_POSITIONS_3D: Record<string, { x: number; y: number; z: number }> = {
   'group-penicillin-natural-': { x: -900, y: -500, z: 900 },
@@ -90,11 +121,12 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters, viewMo
   const containerRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<any>(null);
 
-  const baseGraph = useMemo(() => {
+  const baseGraphByMode = useMemo(() => {
     const { nodes, edges, nodeParents } = buildGraphElements();
 
     const groupChildCounts: Record<string, number> = {};
-    const groupChildIndex: Record<string, number> = {};
+    const groupChildIndex2d: Record<string, number> = {};
+    const groupChildIndex3d: Record<string, number> = {};
 
     for (const node of nodes) {
       const parentId = nodeParents[node.id];
@@ -103,16 +135,40 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters, viewMo
       }
     }
 
-    const nodes3d: GraphNode[] = nodes.map((node) => {
+    const nodes2d: GraphNode[] = nodes.map((node) => {
       const parentId = nodeParents[node.id];
-      const center = parentId && GROUP_POSITIONS_3D[parentId] ? GROUP_POSITIONS_3D[parentId] : { x: 0, y: 0, z: 0 };
+      const center2d = parentId && GROUP_POSITIONS_2D[parentId] ? GROUP_POSITIONS_2D[parentId] : { x: 0, y: 0 };
 
       if (!parentId) {
-        return { ...node, x: center.x, y: center.y, z: center.z };
+        return { ...node, x: center2d.x, y: center2d.y, z: 0, fx: center2d.x, fy: center2d.y };
       }
 
-      const idx = groupChildIndex[parentId] ?? 0;
-      groupChildIndex[parentId] = idx + 1;
+      const idx = groupChildIndex2d[parentId] ?? 0;
+      groupChildIndex2d[parentId] = idx + 1;
+
+      const total = groupChildCounts[parentId] ?? 1;
+      const cols = Math.max(2, Math.ceil(Math.sqrt(total)));
+      const row = Math.floor(idx / cols);
+      const col = idx % cols;
+      const spacing = 90;
+      const offsetX = (col - (cols - 1) / 2) * spacing;
+      const offsetY = row * spacing;
+      const x = center2d.x + offsetX;
+      const y = center2d.y + offsetY;
+
+      return { ...node, x, y, z: 0, fx: x, fy: y };
+    });
+
+    const nodes3d: GraphNode[] = nodes.map((node) => {
+      const parentId = nodeParents[node.id];
+      const center3d = parentId && GROUP_POSITIONS_3D[parentId] ? GROUP_POSITIONS_3D[parentId] : { x: 0, y: 0, z: 0 };
+
+      if (!parentId) {
+        return { ...node, x: center3d.x, y: center3d.y, z: center3d.z };
+      }
+
+      const idx = groupChildIndex3d[parentId] ?? 0;
+      groupChildIndex3d[parentId] = idx + 1;
 
       const total = groupChildCounts[parentId] ?? 1;
       const cube = Math.max(2, Math.ceil(Math.cbrt(total)));
@@ -131,17 +187,25 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters, viewMo
 
       return {
         ...node,
-        x: center.x + offsetX,
-        y: center.y + offsetY,
-        z: center.z + offsetZ,
+        x: center3d.x + offsetX,
+        y: center3d.y + offsetY,
+        z: center3d.z + offsetZ,
       };
     });
 
     return {
-      nodes: nodes3d,
-      links: edges as GraphLink[],
+      '2d': {
+        nodes: nodes2d,
+        links: edges as GraphLink[],
+      },
+      '3d': {
+        nodes: nodes3d,
+        links: edges as GraphLink[],
+      },
     };
   }, []);
+
+  const baseGraph = baseGraphByMode[viewMode];
 
   const visibleGraph = useMemo(() => {
     const visibleNodeIds = new Set(
@@ -320,11 +384,17 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters, viewMo
         <ForceGraph3D
           {...commonProps}
           numDimensions={3}
+          warmupTicks={80}
+          cooldownTicks={120}
+          d3VelocityDecay={0.22}
           showNavInfo={false}
         />
       ) : (
         <ForceGraph2D
           {...commonProps}
+          warmupTicks={0}
+          cooldownTicks={0}
+          d3VelocityDecay={0.35}
         />
       )}
     </div>
