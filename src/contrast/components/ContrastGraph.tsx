@@ -266,6 +266,13 @@ export function ContrastGraph({ selectedAgent, onAgentSelect, onAgentHover, filt
 
     cyRef.current = cy;
 
+    cy.ready(() => {
+      const visibleNodes = cy.nodes('[!isGroup]:visible');
+      if (visibleNodes.length > 0) {
+        cy.fit(visibleNodes, 90);
+      }
+    });
+
     return () => {
       cy.off('zoom', scheduleGroupLabelUpdate);
       resizeObserver.disconnect();
@@ -318,7 +325,11 @@ export function ContrastGraph({ selectedAgent, onAgentSelect, onAgentHover, filt
       const nodesVisible = edge.source().visible() && edge.target().visible();
       edge.style('display', riskVisible && nodesVisible ? 'element' : 'none');
     });
-  }, [filters]);
+    const visibleNodes = cy.nodes('[!isGroup]:visible');
+    if (!selectedAgent && visibleNodes.length > 0) {
+      cy.fit(visibleNodes, 90);
+    }
+  }, [filters, selectedAgent]);
 
   return (
     <div

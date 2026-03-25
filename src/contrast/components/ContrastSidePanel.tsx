@@ -33,10 +33,12 @@ function EvidenceLink({ id }: { id: string }) {
 
 export function ContrastSidePanel({ selectedAgentId }: ContrastSidePanelProps) {
   if (!selectedAgentId) {
+    const { nodes } = buildContrastGraphElements();
     return (
       <div className="h-full flex flex-col items-center justify-center p-6 text-center">
         <div className="text-6xl mb-4 opacity-30">🧪</div>
-        <p className="text-base text-slate-500">Select a contrast agent to review cross-reactivity evidence</p>
+        <p className="text-base text-slate-500 mb-2">Select a contrast agent to review cross-reactivity evidence</p>
+        <p className="text-sm text-slate-600">{nodes.length} agents loaded</p>
       </div>
     );
   }

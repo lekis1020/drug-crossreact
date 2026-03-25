@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { contrastDatabase } from './data/contrastDatabase';
 import { buildContrastGraphElements } from './data/contrastGraphData';
 import { ContrastGraph } from './components/ContrastGraph';
@@ -37,13 +37,22 @@ function formatDate(value: string | null): string {
 }
 
 export function ContrastPage({ onSwitchToAntibiotic }: ContrastPageProps) {
-  const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
+  const [selectedAgent, setSelectedAgent] = useState<string | null>(() => {
+    const firstAgent = buildContrastGraphElements().nodes[0];
+    return firstAgent?.id ?? null;
+  });
   const [tooltip, setTooltip] = useState<{ agentId: string; x: number; y: number } | null>(null);
   const [filters, setFilters] = useState<ContrastFilterState>(() => createInitialFilters());
   const [sidePanelOpen, setSidePanelOpen] = useState(true);
 
   const { nodes } = buildContrastGraphElements();
   const nodeMap = useMemo(() => new Map(nodes.map((node) => [node.id, node])), [nodes]);
+
+  useEffect(() => {
+    if (!selectedAgent && nodes.length > 0) {
+      setSelectedAgent(nodes[0].id);
+    }
+  }, [nodes, selectedAgent]);
 
   const handleAgentSelect = useCallback((agentId: string) => {
     setSelectedAgent((prev) => (prev === agentId ? null : agentId));
