@@ -752,6 +752,30 @@
         "28887994"
       ],
       "clinical_note": "Trubiano 2017: Monobactams can be used in patients with any history of penicillin allergy."
+    },
+    {
+      "drug_a": "piperacillin",
+      "drug_b": "aminopenicillins (ampicillin/amoxicillin)",
+      "ige_cross_reactivity": "moderate",
+      "rate_percent": null,
+      "structural_basis": "Piperacillin R1 (ureido-aminobenzyl, G14) shares aminobenzyl backbone with G1/G2",
+      "evidence_pmids": [
+        "29408440",
+        "28887994"
+      ],
+      "clinical_note": "Piperacillin is a ureido-penicillin with aminobenzyl-derived R1. Cross-reactivity with aminopenicillins reported. Skin testing recommended before use in ampicillin/amoxicillin-allergic patients."
+    },
+    {
+      "drug_a": "piperacillin",
+      "drug_b": "penicillin G",
+      "ige_cross_reactivity": "moderate",
+      "rate_percent": null,
+      "structural_basis": "Shared penicillin core (beta-lactam + thiazolidine ring). Different R1 side chains but core-mediated cross-reactivity possible.",
+      "evidence_pmids": [
+        "28887994",
+        "34998313"
+      ],
+      "clinical_note": "Penicillin class cross-reactivity via shared core structure. In confirmed penicillin allergy (SPT+), other penicillins including piperacillin should be avoided (Trubiano 2017)."
     }
   ],
   "prediction_rules": [

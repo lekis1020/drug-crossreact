@@ -281,6 +281,43 @@ export function buildGraphElements(): { nodes: DrugNodeData[]; edges: CrossReact
   edges.push({ id: 'edge-metronidazole-tinidazole', source: 'metronidazole', target: 'tinidazole', crossReactivity: 'moderate', pmids: [] });
 
 
+
+  // === Piperacillin cross-reactivity ===
+  // G14 (ureido-aminobenzyl) shares aminobenzyl backbone with G1/G2
+  const pipG1targets = ['ampicillin', 'cephalexin', 'cefaclor']; // G1
+  const pipG2targets = ['amoxicillin', 'cefadroxil', 'cefprozil']; // G2
+  for (const target of pipG1targets) {
+    edges.push({
+      id: `edge-piperacillin-${target}`,
+      source: 'piperacillin',
+      target,
+      crossReactivity: 'moderate',
+      pmids: ['29408440', '28887994'],
+      clinicalNote: 'Piperacillin R1 (ureido-aminobenzyl) shares aminobenzyl backbone with G1. Cross-reactivity reported.',
+    });
+  }
+  for (const target of pipG2targets) {
+    edges.push({
+      id: `edge-piperacillin-${target}`,
+      source: 'piperacillin',
+      target,
+      crossReactivity: 'moderate',
+      pmids: ['29408440', '28887994'],
+      clinicalNote: 'Piperacillin R1 (ureido-aminobenzyl) shares aminobenzyl backbone with G2. Cross-reactivity reported.',
+    });
+  }
+  // Piperacillin ↔ Penicillin G/V: penicillin core cross-reactivity
+  for (const target of ['penicillin-g', 'penicillin-v']) {
+    edges.push({
+      id: `edge-piperacillin-${target}`,
+      source: 'piperacillin',
+      target,
+      crossReactivity: 'moderate',
+      pmids: ['28887994', '34998313'],
+      clinicalNote: 'Shared penicillin core. In confirmed penicillin allergy, other penicillins including piperacillin should be avoided.',
+    });
+  }
+
   // === Trubiano 2017: Cefuroxime non-identical R1 clinical cross-reactivity ===
   // Cefuroxime (G6 furyl-methoxyimino) ↔ G3 (aminothiazolyl-methoxyimino) group
   // Shared methoxyimino moiety → clinical cross-reactivity documented
