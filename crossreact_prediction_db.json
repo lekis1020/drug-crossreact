@@ -165,7 +165,8 @@
       "description": "Thiophen-2-yl acetyl side chain",
       "smiles_fragment": "c1ccsc1CC(=O)*",
       "drugs": [
-        "cefoxitin"
+        "cefoxitin",
+        "cephalothin"
       ],
       "expected_ige_cross_reactivity": "low",
       "literature_confirmed": true,
@@ -428,6 +429,11 @@
       "group": "G3",
       "r1_name": "aminothiazolyl-methoxyimino",
       "confidence": "moderate"
+    },
+    "cephalothin": {
+      "group": "G8",
+      "r1_name": "thienyl-acetyl",
+      "confidence": "high"
     }
   },
   "drug_structures": {
@@ -933,6 +939,40 @@
         "28887994"
       ],
       "clinical_note": "Penicillin class cross-reactivity."
+    },
+    {
+      "drug_a": "cefoxitin",
+      "drug_b": "penicillin G",
+      "ige_cross_reactivity": "low",
+      "rate_percent": null,
+      "structural_basis": "In vitro data: shared but non-identical R1 proposed cross-reactivity (Zagursky). Disputed by other authors.",
+      "evidence_pmids": [
+        "Hutten2025_Allergy",
+        "29408440"
+      ],
+      "clinical_note": "Zagursky: in vitro cross-reactivity between penicillin G, cefoxitin, and cephalothin based on shared but non-identical R1. Not universally accepted."
+    },
+    {
+      "drug_a": "cefoxitin",
+      "drug_b": "cephalothin",
+      "ige_cross_reactivity": "high",
+      "rate_percent": null,
+      "structural_basis": "Identical R1 side chain (thienyl-acetyl, G8)",
+      "evidence_pmids": [
+        "29408440"
+      ],
+      "clinical_note": "Both share identical thienyl-acetyl R1 (G8). Cephalothin (1st gen, discontinued in many countries) and cefoxitin (cephamycin)."
+    },
+    {
+      "drug_a": "cefoxitin",
+      "drug_b": "cefotaxime",
+      "ige_cross_reactivity": "low",
+      "rate_percent": null,
+      "structural_basis": "Shared R2 side chain (identical R2), non-identical R1",
+      "evidence_pmids": [
+        "28887994"
+      ],
+      "clinical_note": "Trubiano 2017: cefoxitin-cefotaxime share identical R2 side chain. Cross-reactivity based on R2 is less established than R1."
     }
   ],
   "prediction_rules": [

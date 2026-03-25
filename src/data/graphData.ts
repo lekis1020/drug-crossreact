@@ -75,6 +75,7 @@ const DRUG_CLASS_MAP: Record<string, DrugClass> = {
   cefuroxime: 'cephalosporin',
   cefazolin: 'cephalosporin',
   cefoxitin: 'cephalosporin',
+  cephalothin: 'cephalosporin',
   cefixime: 'cephalosporin',
   cefdinir: 'cephalosporin',
   cefpodoxime: 'cephalosporin',
@@ -156,6 +157,7 @@ export const DRUG_SUBGROUP_MAP: Record<string, string> = {
   'cefadroxil': 'Cephalosporin 1G',
   'cefazolin': 'Cephalosporin 1G',
   'cefaclor': 'Cephalosporin 1G',
+  'cephalothin': 'Cephalosporin 1G',
   'cefuroxime': 'Cephalosporin 2G',
   'cefprozil': 'Cephalosporin 2G',
   'cefoxitin': 'Cephalosporin 2G',
@@ -332,6 +334,28 @@ export function buildGraphElements(): { nodes: DrugNodeData[]; edges: CrossReact
 
 
 
+
+
+  // === Cefoxitin cross-reactivity ===
+  // Cefoxitin ↔ Penicillin G: in vitro data (Zagursky, disputed)
+  edges.push({
+    id: 'edge-cefoxitin-penicillin-g',
+    source: 'cefoxitin',
+    target: 'penicillin-g',
+    crossReactivity: 'disputed',
+    pmids: ['Hutten2025_Allergy', '29408440'],
+    clinicalNote: 'Zagursky: in vitro cross-reactivity (shared non-identical R1). Not universally accepted. Other authors consider safe.',
+  });
+
+  // Cefoxitin ↔ Cefotaxime: shared R2 side chain
+  edges.push({
+    id: 'edge-cefoxitin-cefotaxime',
+    source: 'cefoxitin',
+    target: 'cefotaxime',
+    crossReactivity: 'low',
+    pmids: ['28887994'],
+    clinicalNote: 'Shared identical R2 side chain (Trubiano 2017). R2-based cross-reactivity less established than R1.',
+  });
 
   // === Case-report and study-level cross-reactivity (comprehensive) ===
 
