@@ -16,38 +16,38 @@ interface GraphNode extends DrugNodeData {
   z: number;
 }
 
-interface GraphLink extends CrossReactEdgeData {
-  source: string;
-  target: string;
+interface GraphLink extends Omit<CrossReactEdgeData, 'source' | 'target'> {
+  source: string | GraphNode;
+  target: string | GraphNode;
 }
 
 const GROUP_POSITIONS_3D: Record<string, { x: number; y: number; z: number }> = {
-  'group-penicillin-natural-': { x: -900, y: -500, z: 320 },
-  'group-penicillin-amino-': { x: -550, y: -500, z: 240 },
-  'group-penicillin-anti-staph-': { x: -900, y: -280, z: 180 },
-  'group-penicillin-extended-': { x: -550, y: -280, z: 140 },
+  'group-penicillin-natural-': { x: -900, y: -500, z: 900 },
+  'group-penicillin-amino-': { x: -550, y: -500, z: 720 },
+  'group-penicillin-anti-staph-': { x: -900, y: -280, z: 620 },
+  'group-penicillin-extended-': { x: -550, y: -280, z: 520 },
 
-  'group-cephalosporin-1g': { x: -100, y: -500, z: 280 },
-  'group-cephalosporin-2g': { x: 300, y: -500, z: 220 },
-  'group-cephalosporin-3g': { x: 740, y: -560, z: 180 },
-  'group-cephalosporin-4g': { x: 1180, y: -320, z: 120 },
-  'group-cephalosporin-5g': { x: 1180, y: -730, z: 80 },
+  'group-cephalosporin-1g': { x: -100, y: -500, z: 760 },
+  'group-cephalosporin-2g': { x: 300, y: -500, z: 620 },
+  'group-cephalosporin-3g': { x: 740, y: -560, z: 460 },
+  'group-cephalosporin-4g': { x: 1180, y: -320, z: 280 },
+  'group-cephalosporin-5g': { x: 1180, y: -730, z: 120 },
 
-  'group-carbapenem': { x: 360, y: -220, z: 70 },
-  'group-monobactam': { x: 800, y: -220, z: 20 },
+  'group-carbapenem': { x: 360, y: -220, z: 180 },
+  'group-monobactam': { x: 800, y: -220, z: 40 },
 
-  'group-glycopeptide': { x: -860, y: 140, z: -60 },
-  'group-oxazolidinone': { x: -560, y: 140, z: -100 },
-  'group-lincosamide': { x: -240, y: 140, z: -140 },
+  'group-glycopeptide': { x: -860, y: 140, z: -120 },
+  'group-oxazolidinone': { x: -560, y: 140, z: -240 },
+  'group-lincosamide': { x: -240, y: 140, z: -340 },
 
-  'group-fluoroquinolone': { x: 120, y: 140, z: -160 },
-  'group-tetracycline': { x: 500, y: 140, z: -200 },
-  'group-macrolide': { x: 860, y: 140, z: -230 },
-  'group-sulfonamide': { x: 1260, y: 140, z: -250 },
+  'group-fluoroquinolone': { x: 120, y: 140, z: -460 },
+  'group-tetracycline': { x: 500, y: 140, z: -560 },
+  'group-macrolide': { x: 860, y: 140, z: -660 },
+  'group-sulfonamide': { x: 1260, y: 140, z: -760 },
 
-  'group-aminoglycoside': { x: 140, y: 430, z: -260 },
-  'group-nitroimidazole': { x: 520, y: 430, z: -280 },
-  'group-lipopeptide': { x: -860, y: 430, z: -240 },
+  'group-aminoglycoside': { x: 140, y: 430, z: -820 },
+  'group-nitroimidazole': { x: 520, y: 430, z: -900 },
+  'group-lipopeptide': { x: -860, y: 430, z: -760 },
 };
 
 const EDGE_COLORS: Record<CrossReactEdgeData['crossReactivity'], string> = {
@@ -76,6 +76,10 @@ function parseHexColor(hex: string): [number, number, number] {
 function applyAlpha(hex: string, alpha: number): string {
   const [r, g, b] = parseHexColor(hex);
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function endpointId(endpoint: string | GraphNode): string {
+  return typeof endpoint === 'string' ? endpoint : endpoint.id;
 }
 
 export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: GraphProps) {
@@ -110,14 +114,18 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
       groupChildIndex[parentId] = idx + 1;
 
       const total = groupChildCounts[parentId] ?? 1;
-      const cols = Math.max(2, Math.ceil(Math.sqrt(total)));
-      const row = Math.floor(idx / cols);
-      const col = idx % cols;
-      const spacing = 90;
-      const offsetX = (col - (cols - 1) / 2) * spacing;
-      const offsetY = row * spacing;
-      const depthBand = idx % 3;
-      const offsetZ = (depthBand - 1) * 55;
+      const cube = Math.max(2, Math.ceil(Math.cbrt(total)));
+      const layerSize = cube * cube;
+      const layers = Math.ceil(total / layerSize);
+      const layer = Math.floor(idx / layerSize);
+      const inLayer = idx % layerSize;
+      const row = Math.floor(inLayer / cube);
+      const col = inLayer % cube;
+      const spacing = 100;
+      const depthSpacing = 140;
+      const offsetX = (col - (cube - 1) / 2) * spacing;
+      const offsetY = (row - (cube - 1) / 2) * spacing;
+      const offsetZ = (layer - (layers - 1) / 2) * depthSpacing;
 
       return {
         ...node,
@@ -141,8 +149,8 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
     const links = baseGraph.links.filter(
       (link) =>
         filters.risks[link.crossReactivity] &&
-        visibleNodeIds.has(link.source) &&
-        visibleNodeIds.has(link.target),
+        visibleNodeIds.has(endpointId(link.source)) &&
+        visibleNodeIds.has(endpointId(link.target)),
     );
 
     const nodes = baseGraph.nodes.filter((node) => visibleNodeIds.has(node.id));
@@ -161,17 +169,31 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
     const selectedLinkIds = new Set<string>();
 
     for (const link of visibleGraph.links) {
-      if (link.source === selectedDrug) {
-        neighborNodeIds.add(link.target);
+      const sourceId = endpointId(link.source);
+      const targetId = endpointId(link.target);
+
+      if (sourceId === selectedDrug) {
+        neighborNodeIds.add(targetId);
         selectedLinkIds.add(link.id);
-      } else if (link.target === selectedDrug) {
-        neighborNodeIds.add(link.source);
+      } else if (targetId === selectedDrug) {
+        neighborNodeIds.add(sourceId);
         selectedLinkIds.add(link.id);
       }
     }
 
     return { neighborNodeIds, selectedLinkIds };
   }, [selectedDrug, visibleGraph.links]);
+
+  useEffect(() => {
+    const api = graphRef.current;
+    if (!api) return;
+    api.cameraPosition({ x: 1400, y: -900, z: 1700 }, undefined, 0);
+    const controls = api.controls?.();
+    if (controls) {
+      controls.autoRotate = true;
+      controls.autoRotateSpeed = 0.35;
+    }
+  }, []);
 
   useEffect(() => {
     const targetId = selectedDrug;
@@ -202,10 +224,13 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
         ref={graphRef}
         graphData={visibleGraph}
         backgroundColor="#020617"
+        numDimensions={3}
         nodeRelSize={4.5}
         linkCurvature={0.1}
         linkOpacity={0.75}
-        cooldownTicks={0}
+        warmupTicks={80}
+        cooldownTicks={120}
+        d3VelocityDecay={0.22}
         enableNodeDrag={false}
         showNavInfo={false}
         onNodeClick={(node) => {
