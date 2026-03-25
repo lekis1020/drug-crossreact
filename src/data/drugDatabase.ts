@@ -30,11 +30,43 @@ export interface RawDrugStructure {
   formula: string;
 }
 
+export interface LiteratureConfirmedPair {
+  drug_a: string;
+  drug_b: string;
+  ige_cross_reactivity: string;
+  rate_percent?: string | number | null;
+  structural_basis?: string | null;
+  evidence_pmids: string[];
+  clinical_note?: string | null;
+}
+
+export interface LiteratureMonitoringRecord {
+  pmid: string;
+  title?: string | null;
+  journal?: string | null;
+  pubdate?: string | null;
+  doi?: string | null;
+  source?: string;
+  status?: string;
+  pubmed_url?: string;
+  first_seen_at?: string;
+  last_seen_at?: string;
+}
+
 export interface CrossReactDatabase {
   metadata: DatabaseMetadata;
   r1_groups: RawR1Group[];
   drug_r1_map: Record<string, RawDrugR1Entry>;
   drug_structures: Record<string, RawDrugStructure>;
+  literature_confirmed_pairs: LiteratureConfirmedPair[];
+  literature_monitoring?: {
+    strategy: string;
+    query: string;
+    checked_window_days: number;
+    max_results: number;
+    checked_at: string;
+    records: LiteratureMonitoringRecord[];
+  };
   prediction_rules: Array<{
     rule_id: string;
     condition: string;

@@ -54,6 +54,20 @@ function formatLabel(name: string): string {
   return name.charAt(0).toUpperCase() + name.slice(1);
 }
 
+function canonicalTerm(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+function mapLiteratureRisk(value: string): CrossReactEdgeData['crossReactivity'] | null {
+  const key = value.toLowerCase().trim();
+  if (key === 'high' || key === 'moderate' || key === 'low' || key === 'disputed') return key;
+  return null;
+}
+
+function edgeKey(source: string, target: string): string {
+  return source < target ? `${source}|${target}` : `${target}|${source}`;
+}
+
 const DRUG_CLASS_MAP: Record<string, DrugClass> = {
   amoxicillin: 'penicillin',
   ampicillin: 'penicillin',
@@ -141,6 +155,13 @@ function makePairs(ids: string[]): Array<[string, string]> {
   return pairs;
 }
 
+const EDGE_RISK_PRIORITY: Record<CrossReactEdgeData['crossReactivity'], number> = {
+  high: 4,
+  disputed: 3,
+  moderate: 2,
+  low: 1,
+};
+
 
 export const DRUG_SUBGROUP_MAP: Record<string, string> = {
   // Penicillins
@@ -221,7 +242,7 @@ export function buildGraphElements(): { nodes: DrugNodeData[]; edges: CrossReact
 
   const nodes: DrugNodeData[] = [];
   const edges: CrossReactEdgeData[] = [];
-  const { drug_r1_map, drug_structures, r1_groups, prediction_rules } = drugDatabase;
+  const { drug_r1_map, drug_structures, r1_groups, prediction_rules, literature_confirmed_pairs } = drugDatabase;
 
   // Build beta-lactam nodes
   for (const [name, r1Data] of Object.entries(drug_r1_map)) {
@@ -517,6 +538,103 @@ export function buildGraphElements(): { nodes: DrugNodeData[]; edges: CrossReact
     clinicalNote: 'DISPUTED: Trubiano considers safe; Romano & Zagursky report identical R1 ring. Exercise caution.',
   });
 
+  // === Literature-confirmed pair ingestion (targeted mapping) ===
+  const availableNodeIds = new Set(nodes.map(n => n.id));
+  const cephalosporinIds = nodes.filter(n => n.drugClass === 'cephalosporin').map(n => n.id);
+  const carbapenemIds = nodes.filter(n => n.drugClass === 'carbapenem').map(n => n.id);
+
+  const termAliases: Record<string, string[]> = {
+    [canonicalTerm('penicillins')]: ['penicillin-g', 'penicillin-v'],
+    [canonicalTerm('penicillins (confirmed allergy)')]: ['penicillin-g', 'penicillin-v'],
+    [canonicalTerm('penicillin/amoxicillin')]: ['penicillin-g', 'penicillin-v', 'amoxicillin'],
+    [canonicalTerm('aminopenicillins')]: ['amoxicillin', 'ampicillin'],
+    [canonicalTerm('aminopenicillins (amoxicillin)')]: ['amoxicillin'],
+    [canonicalTerm('aminopenicillins (ampicillin/amoxicillin)')]: ['ampicillin', 'amoxicillin'],
+    [canonicalTerm('aminocephalosporins')]: ['cephalexin', 'cefaclor', 'cefadroxil', 'cefprozil'],
+    [canonicalTerm('aminocephalosporins (cefalexin/cefaclor)')]: ['cephalexin', 'cefaclor'],
+    [canonicalTerm('early generation cephalosporins')]: ['cephalexin', 'cefadroxil', 'cefazolin', 'cefaclor', 'cephalothin', 'cefuroxime', 'cefprozil', 'cefoxitin'],
+    [canonicalTerm('later-generation cephalosporins')]: ['ceftriaxone', 'cefotaxime', 'ceftazidime', 'ceftibuten', 'cefixime', 'cefdinir', 'cefpodoxime', 'cefditoren', 'cefepime', 'ceftaroline', 'ceftobiprole'],
+    [canonicalTerm('3rd-gen cephalosporins')]: ['ceftriaxone', 'cefotaxime', 'ceftazidime', 'ceftibuten', 'cefixime', 'cefdinir', 'cefpodoxime', 'cefditoren'],
+    [canonicalTerm('cephalosporins')]: cephalosporinIds,
+    [canonicalTerm('carbapenems')]: carbapenemIds,
+    [canonicalTerm('cefamandole')]: [], // not in current graph
+    [canonicalTerm('clavulanate')]: [], // not in current graph
+    [canonicalTerm('tazobactam')]: [],  // not in current graph
+    [canonicalTerm('neomycin')]: [],    // not in current graph
+    [canonicalTerm('enoxaparin')]: [],  // not in current graph
+    [canonicalTerm('patients with ≥3 BL allergy labels')]: [],
+    [canonicalTerm('cephalosporins (confirmed allergic)')]: [],
+    [canonicalTerm('unrelated R1 cephalosporins')]: [],
+  };
+
+  const resolveTermIds = (term: string): string[] => {
+    const canonical = canonicalTerm(term);
+    const aliasHits = termAliases[canonical];
+    if (aliasHits) return aliasHits.filter(id => availableNodeIds.has(id));
+
+    const directId = canonical.replace(/\s+/g, '-');
+    if (availableNodeIds.has(directId)) return [directId];
+
+    if (canonical === 'penicillin g') return ['penicillin-g'];
+    if (canonical === 'penicillin v') return ['penicillin-v'];
+    return [];
+  };
+
+  for (const pair of literature_confirmed_pairs) {
+    const risk = mapLiteratureRisk(pair.ige_cross_reactivity);
+    if (!risk) continue;
+
+    const sources = resolveTermIds(pair.drug_a);
+    const targets = resolveTermIds(pair.drug_b);
+    if (!sources.length || !targets.length) continue;
+
+    for (const source of sources) {
+      for (const target of targets) {
+        if (source === target) continue;
+        const pmids = pair.evidence_pmids ?? [];
+        const structural = pair.structural_basis ? `Structural basis: ${pair.structural_basis}.` : '';
+        const note = pair.clinical_note ? `Literature note: ${pair.clinical_note}` : '';
+        const clinicalNote = [structural, note].filter(Boolean).join(' ').trim();
+
+        edges.push({
+          id: `edge-lit-${source}-${target}`,
+          source,
+          target,
+          crossReactivity: risk,
+          pmids,
+          clinicalNote: clinicalNote || undefined,
+        });
+      }
+    }
+  }
+
+  // Deduplicate pair edges while preserving the more conservative risk when conflicts exist.
+  const mergedEdgeMap = new Map<string, CrossReactEdgeData>();
+  for (const edge of edges) {
+    const key = edgeKey(edge.source, edge.target);
+    const existing = mergedEdgeMap.get(key);
+
+    if (!existing) {
+      mergedEdgeMap.set(key, { ...edge, pmids: [...new Set(edge.pmids)] });
+      continue;
+    }
+
+    const existingPriority = EDGE_RISK_PRIORITY[existing.crossReactivity] ?? 0;
+    const incomingPriority = EDGE_RISK_PRIORITY[edge.crossReactivity] ?? 0;
+    const preferred = incomingPriority > existingPriority ? edge : existing;
+
+    const mergedPmids = [...new Set([...(existing.pmids ?? []), ...(edge.pmids ?? [])])];
+    const mergedNotes = [...new Set([existing.clinicalNote, edge.clinicalNote].filter(Boolean))].join(' | ');
+
+    mergedEdgeMap.set(key, {
+      ...preferred,
+      pmids: mergedPmids,
+      clinicalNote: mergedNotes || undefined,
+    });
+  }
+
+  const dedupedEdges = [...mergedEdgeMap.values()];
+
   // Build compound parent nodes for subgroups
   const subgroups = new Set<string>();
   for (const node of nodes) {
@@ -536,7 +654,7 @@ export function buildGraphElements(): { nodes: DrugNodeData[]; edges: CrossReact
     if (sg) nodeParents[node.id] = subgroupId(sg);
   }
 
-  cache = { nodes, edges, parentNodes, nodeParents };
+  cache = { nodes, edges: dedupedEdges, parentNodes, nodeParents };
   return cache;
 }
 
