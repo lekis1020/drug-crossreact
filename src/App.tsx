@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { Graph } from './components/Graph';
+import type { GraphViewMode } from './components/Graph';
 import { SearchBar } from './components/SearchBar';
 import { SidePanel } from './components/SidePanel';
 import { FilterPanel } from './components/FilterPanel';
@@ -30,6 +31,7 @@ const INITIAL_FILTERS: FilterState = {
 
 export default function App() {
   const [selectedDrug, setSelectedDrug] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<GraphViewMode>('3d');
   const [tooltip, setTooltip] = useState<TooltipState | null>(null);
   const [filters, setFilters] = useState<FilterState>(INITIAL_FILTERS);
   const [sidePanelOpen, setSidePanelOpen] = useState(true);
@@ -97,6 +99,27 @@ export default function App() {
         </div>
 
         <div className="flex items-center gap-2 ml-auto">
+          <div
+            className="flex items-center rounded-xl p-1 mr-1"
+            style={{
+              background: 'rgba(30, 41, 59, 0.8)',
+              border: '1px solid rgba(51, 65, 85, 0.6)',
+            }}
+          >
+            {(['2d', '3d'] as GraphViewMode[]).map((mode) => (
+              <button
+                key={mode}
+                onClick={() => setViewMode(mode)}
+                className="px-2.5 py-1.5 text-xs font-semibold rounded-lg transition-all"
+                style={{
+                  color: viewMode === mode ? '#f8fafc' : '#94a3b8',
+                  background: viewMode === mode ? 'rgba(59, 130, 246, 0.35)' : 'transparent',
+                }}
+              >
+                {mode.toUpperCase()}
+              </button>
+            ))}
+          </div>
           <div className="hidden lg:flex flex-col items-end mr-2 text-[11px] text-slate-500 leading-tight">
             <span>DB 업데이트: {formatDate(lastDatabaseUpdateRaw)}</span>
             <span>모니터링: {formatDate(lastMonitoringRaw)}</span>
@@ -114,6 +137,7 @@ export default function App() {
             onDrugSelect={handleDrugSelect}
             onDrugHover={handleDrugHover}
             filters={filters}
+            viewMode={viewMode}
           />
 
           {/* Legend — floating glass card */}
@@ -159,7 +183,9 @@ export default function App() {
               </div>
             </div>
             <div className="mt-2 pt-2 border-t border-slate-700/50">
-              <p className="text-xs text-slate-500">Click node to select · Scroll to zoom</p>
+              <p className="text-xs text-slate-500">
+                {viewMode === '3d' ? 'Drag to orbit · Scroll to zoom' : 'Drag to pan · Scroll to zoom'}
+              </p>
             </div>
           </div>
 

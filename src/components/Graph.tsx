@@ -1,13 +1,17 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
+import ForceGraph2D from 'react-force-graph-2d';
 import ForceGraph3D from 'react-force-graph-3d';
 import { buildGraphElements } from '../data/graphData';
 import type { CrossReactEdgeData, DrugNodeData, FilterState } from '../types';
+
+export type GraphViewMode = '2d' | '3d';
 
 interface GraphProps {
   selectedDrug: string | null;
   onDrugSelect: (drugId: string) => void;
   onDrugHover: (drugId: string | null, x?: number, y?: number) => void;
   filters: FilterState;
+  viewMode: GraphViewMode;
 }
 
 interface GraphNode extends DrugNodeData {
@@ -82,7 +86,7 @@ function endpointId(endpoint: string | GraphNode): string {
   return typeof endpoint === 'string' ? endpoint : endpoint.id;
 }
 
-export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: GraphProps) {
+export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters, viewMode }: GraphProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<any>(null);
 
@@ -101,10 +105,7 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
 
     const nodes3d: GraphNode[] = nodes.map((node) => {
       const parentId = nodeParents[node.id];
-      const center =
-        parentId && GROUP_POSITIONS_3D[parentId]
-          ? GROUP_POSITIONS_3D[parentId]
-          : { x: 0, y: 0, z: 0 };
+      const center = parentId && GROUP_POSITIONS_3D[parentId] ? GROUP_POSITIONS_3D[parentId] : { x: 0, y: 0, z: 0 };
 
       if (!parentId) {
         return { ...node, x: center.x, y: center.y, z: center.z };
@@ -121,6 +122,7 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
       const inLayer = idx % layerSize;
       const row = Math.floor(inLayer / cube);
       const col = inLayer % cube;
+
       const spacing = 100;
       const depthSpacing = 140;
       const offsetX = (col - (cube - 1) / 2) * spacing;
@@ -171,7 +173,6 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
     for (const link of visibleGraph.links) {
       const sourceId = endpointId(link.source);
       const targetId = endpointId(link.target);
-
       if (sourceId === selectedDrug) {
         neighborNodeIds.add(targetId);
         selectedLinkIds.add(link.id);
@@ -184,35 +185,130 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
     return { neighborNodeIds, selectedLinkIds };
   }, [selectedDrug, visibleGraph.links]);
 
+  const focusSelectedNode = useCallback(() => {
+    const api = graphRef.current;
+    if (!api || !selectedDrug) return;
+
+    const target = visibleGraph.nodes.find((node) => node.id === selectedDrug);
+    if (!target) return;
+
+    if (viewMode === '3d') {
+      api.cameraPosition(
+        { x: target.x + 220, y: target.y - 180, z: target.z + 640 },
+        { x: target.x, y: target.y, z: target.z },
+        900,
+      );
+      return;
+    }
+
+    api.centerAt?.(target.x, target.y, 700);
+    api.zoom?.(2.1, 700);
+  }, [selectedDrug, viewMode, visibleGraph.nodes]);
+
   useEffect(() => {
     const api = graphRef.current;
     if (!api) return;
-    api.cameraPosition({ x: 1400, y: -900, z: 1700 }, undefined, 0);
-    const controls = api.controls?.();
-    if (controls) {
-      controls.autoRotate = true;
-      controls.autoRotateSpeed = 0.35;
+
+    if (viewMode === '3d') {
+      api.cameraPosition({ x: 1400, y: -900, z: 1700 }, undefined, 0);
+      const controls = api.controls?.();
+      if (controls) {
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 0.35;
+      }
+      return;
     }
-  }, []);
+
+    api.centerAt?.(0, 0, 0);
+    api.zoom?.(0.75, 0);
+  }, [viewMode]);
 
   useEffect(() => {
-    const targetId = selectedDrug;
-    const api = graphRef.current;
-    if (!targetId || !api) return;
-
-    const target = visibleGraph.nodes.find((node) => node.id === targetId);
-    if (!target) return;
-
-    api.cameraPosition(
-      { x: target.x + 220, y: target.y - 180, z: target.z + 640 },
-      { x: target.x, y: target.y, z: target.z },
-      900,
-    );
-  }, [selectedDrug, visibleGraph.nodes]);
+    focusSelectedNode();
+  }, [focusSelectedNode]);
 
   useEffect(() => {
     if (!selectedDrug) onDrugHover(null);
   }, [selectedDrug, onDrugHover]);
+
+  const handleNodeHover = useCallback(
+    (node: unknown) => {
+      const container = containerRef.current;
+      if (!container) return;
+
+      if (!node) {
+        container.style.cursor = 'default';
+        onDrugHover(null);
+        return;
+      }
+
+      container.style.cursor = 'pointer';
+      const drugNode = node as GraphNode;
+      const api = graphRef.current;
+
+      let screenPos: { x: number; y: number } | null = null;
+      if (api?.graph2ScreenCoords) {
+        try {
+          screenPos = api.graph2ScreenCoords(drugNode.x, drugNode.y, drugNode.z);
+        } catch {
+          screenPos = api.graph2ScreenCoords(drugNode.x, drugNode.y);
+        }
+      }
+
+      if (!screenPos) {
+        onDrugHover(drugNode.id);
+        return;
+      }
+
+      const rect = container.getBoundingClientRect();
+      onDrugHover(drugNode.id, rect.left + screenPos.x, rect.top + screenPos.y);
+    },
+    [onDrugHover],
+  );
+
+  const commonProps = {
+    ref: graphRef,
+    graphData: visibleGraph,
+    backgroundColor: '#020617',
+    nodeRelSize: 4.5,
+    linkCurvature: 0.12,
+    linkOpacity: 0.75,
+    warmupTicks: 80,
+    cooldownTicks: 120,
+    d3VelocityDecay: 0.22,
+    enableNodeDrag: false,
+    onNodeClick: (node: unknown) => onDrugSelect((node as GraphNode).id),
+    onNodeHover: handleNodeHover,
+    nodeLabel: (node: unknown) => {
+      const n = node as GraphNode;
+      return `<div style=\"padding:6px 8px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0\">${n.label}</div>`;
+    },
+    nodeVal: (node: unknown) => {
+      const n = node as GraphNode;
+      if (selectedDrug && n.id === selectedDrug) return 11;
+      if (selectedDrug && selectionContext.neighborNodeIds.has(n.id)) return 8.5;
+      return 6.5;
+    },
+    nodeColor: (node: unknown) => {
+      const n = node as GraphNode;
+      if (!selectedDrug) return n.color;
+      if (n.id === selectedDrug || selectionContext.neighborNodeIds.has(n.id)) return n.color;
+      return applyAlpha('#334155', 0.25);
+    },
+    linkColor: (link: unknown) => {
+      const edge = link as GraphLink;
+      const baseColor = EDGE_COLORS[edge.crossReactivity];
+      if (!selectedDrug) return baseColor;
+      if (selectionContext.selectedLinkIds.has(edge.id)) return baseColor;
+      return applyAlpha('#334155', 0.18);
+    },
+    linkWidth: (link: unknown) => {
+      const edge = link as GraphLink;
+      const width = EDGE_WIDTH[edge.crossReactivity];
+      if (!selectedDrug) return width;
+      return selectionContext.selectedLinkIds.has(edge.id) ? width + 0.6 : 0.45;
+    },
+  };
 
   return (
     <div
@@ -220,73 +316,17 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
       className="w-full h-full"
       style={{ background: 'radial-gradient(ellipse at center, #0f172a 0%, #020617 70%)' }}
     >
-      <ForceGraph3D
-        ref={graphRef}
-        graphData={visibleGraph}
-        backgroundColor="#020617"
-        numDimensions={3}
-        nodeRelSize={4.5}
-        linkCurvature={0.1}
-        linkOpacity={0.75}
-        warmupTicks={80}
-        cooldownTicks={120}
-        d3VelocityDecay={0.22}
-        enableNodeDrag={false}
-        showNavInfo={false}
-        onNodeClick={(node) => {
-          onDrugSelect((node as GraphNode).id);
-        }}
-        onNodeHover={(node) => {
-          const container = containerRef.current;
-          if (!container) return;
-
-          if (!node) {
-            container.style.cursor = 'default';
-            onDrugHover(null);
-            return;
-          }
-
-          container.style.cursor = 'pointer';
-          const drugNode = node as GraphNode;
-          const screenPos = graphRef.current?.graph2ScreenCoords?.(drugNode.x, drugNode.y, drugNode.z);
-          if (!screenPos) {
-            onDrugHover(drugNode.id);
-            return;
-          }
-
-          const rect = container.getBoundingClientRect();
-          onDrugHover(drugNode.id, rect.left + screenPos.x, rect.top + screenPos.y);
-        }}
-        nodeLabel={(node) => {
-          const n = node as GraphNode;
-          return `<div style=\"padding:6px 8px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0\">${n.label}</div>`;
-        }}
-        nodeVal={(node) => {
-          const n = node as GraphNode;
-          if (selectedDrug && n.id === selectedDrug) return 11;
-          if (selectedDrug && selectionContext.neighborNodeIds.has(n.id)) return 8.5;
-          return 6.5;
-        }}
-        nodeColor={(node) => {
-          const n = node as GraphNode;
-          if (!selectedDrug) return n.color;
-          if (n.id === selectedDrug || selectionContext.neighborNodeIds.has(n.id)) return n.color;
-          return applyAlpha('#334155', 0.25);
-        }}
-        linkColor={(link) => {
-          const edge = link as GraphLink;
-          const baseColor = EDGE_COLORS[edge.crossReactivity];
-          if (!selectedDrug) return baseColor;
-          if (selectionContext.selectedLinkIds.has(edge.id)) return baseColor;
-          return applyAlpha('#334155', 0.18);
-        }}
-        linkWidth={(link) => {
-          const edge = link as GraphLink;
-          const width = EDGE_WIDTH[edge.crossReactivity];
-          if (!selectedDrug) return width;
-          return selectionContext.selectedLinkIds.has(edge.id) ? width + 0.6 : 0.45;
-        }}
-      />
+      {viewMode === '3d' ? (
+        <ForceGraph3D
+          {...commonProps}
+          numDimensions={3}
+          showNavInfo={false}
+        />
+      ) : (
+        <ForceGraph2D
+          {...commonProps}
+        />
+      )}
     </div>
   );
 }

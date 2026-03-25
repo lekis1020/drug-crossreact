@@ -7,6 +7,7 @@ Interactive graph visualization of antibiotic cross-reactivity relationships, de
 ## Features
 
 - **Interactive graph** — Obsidian-style force graph with ~60 antibiotics
+- **2D / 3D viewer toggle** — Switch between flat map and volumetric layout
 - **R1 side-chain model** — Beta-lactam cross-reactivity based on structural similarity
 - **4 risk levels** — High / Disputed / Moderate / Low with visual edge styling
 - **Spectrum tags** — 🛡️ MRSA, 🦠 Pseudomonas, 🔬 Anaerobe, 🫁 Atypical, 💊 ESBL coverage badges
