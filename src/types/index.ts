@@ -11,7 +11,8 @@ export type DrugClass =
   | 'tetracycline'
   | 'lincosamide'
   | 'oxazolidinone'
-  | 'nitroimidazole';
+  | 'nitroimidazole'
+  | 'lipopeptide';
 
 export type CrossReactivity = 'high' | 'moderate' | 'low' | 'disputed';
 

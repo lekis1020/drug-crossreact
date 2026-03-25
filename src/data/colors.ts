@@ -32,6 +32,7 @@ export const DRUG_CLASS_COLORS: Record<DrugClass, string> = {
   lincosamide: '#F43F5E',
   oxazolidinone: '#8B5CF6',
   nitroimidazole: '#D97706',
+  lipopeptide: '#14B8A6',
 };
 
 export const CLASS_LABELS: Record<DrugClass, string> = {
@@ -48,6 +49,7 @@ export const CLASS_LABELS: Record<DrugClass, string> = {
   lincosamide: 'Lincosamide',
   oxazolidinone: 'Oxazolidinone',
   nitroimidazole: 'Nitroimidazole',
+  lipopeptide: 'Lipopeptide',
 };
 
 export function getDrugColor(r1Group?: string, drugClass?: DrugClass): string {

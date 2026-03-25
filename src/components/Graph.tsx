@@ -60,7 +60,8 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
 
       // === Row 4: Non-BL — Gram- / Anaerobe / Niche (bottom) ===
       'group-aminoglycoside':           { x: 150,  y: 450 },    // Gram- / Pseudomonas
-      'group-nitroimidazole':           { x: 550,  y: 450 },    // Anaerobe
+      'group-nitroimidazole':           { x: 550,  y: 450 },
+      'group-lipopeptide':              { x: -900, y: 450 },    // Daptomycin = MRSA    // Anaerobe
     };
 
     // Assign positions to drug nodes based on their parent group

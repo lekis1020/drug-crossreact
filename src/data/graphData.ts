@@ -42,6 +42,7 @@ export const DRUG_SPECTRUM_TAGS: Record<string, SpectrumTag[]> = {
   'clarithromycin': ['atypical'],
   'erythromycin': ['atypical'],
   'moxifloxacin': ['atypical', 'anaerobe'],
+  'daptomycin': ['mrsa'],
   'tetracycline': ['atypical'],
 };
 
@@ -122,6 +123,8 @@ const NON_BETA_LACTAM_NODES: DrugNodeData[] = [
   { id: 'sulfamethoxazole', label: 'Sulfamethoxazole', drugClass: 'sulfonamide', color: getDrugColor(undefined, 'sulfonamide') },
   { id: 'sulfasalazine', label: 'Sulfasalazine', drugClass: 'sulfonamide', color: getDrugColor(undefined, 'sulfonamide') },
   { id: 'trimethoprim-sulfamethoxazole', label: 'TMP-SMX', drugClass: 'sulfonamide', color: getDrugColor(undefined, 'sulfonamide') },
+  // Lipopeptide
+  { id: 'daptomycin', label: 'Daptomycin', drugClass: 'lipopeptide', color: getDrugColor(undefined, 'lipopeptide') },
   // Nitroimidazoles
   { id: 'metronidazole', label: 'Metronidazole', drugClass: 'nitroimidazole', color: getDrugColor(undefined, 'nitroimidazole') },
   { id: 'tinidazole', label: 'Tinidazole', drugClass: 'nitroimidazole', color: getDrugColor(undefined, 'nitroimidazole') },
@@ -202,6 +205,7 @@ export const DRUG_SUBGROUP_MAP: Record<string, string> = {
   'trimethoprim-sulfamethoxazole': 'Sulfonamide',
   'metronidazole': 'Nitroimidazole',
   'tinidazole': 'Nitroimidazole',
+  'daptomycin': 'Lipopeptide',
 };
 
 function subgroupId(name: string): string {
@@ -327,6 +331,85 @@ export function buildGraphElements(): { nodes: DrugNodeData[]; edges: CrossReact
   edges.push({ id: 'edge-metronidazole-tinidazole', source: 'metronidazole', target: 'tinidazole', crossReactivity: 'moderate', pmids: [] });
 
 
+
+
+  // === Case-report and study-level cross-reactivity (comprehensive) ===
+
+  // Aztreonam ↔ Ceftazidime: HIGH (identical R1, G4) - already in same-group edges but ensure it exists
+  // (already covered by R1 group edges since both in G4)
+
+  // Glycopeptide detailed pairs with PMIDs
+  // vancomycin↔teicoplanin, vancomycin↔dalbavancin already have moderate edges from class grouping
+  // Add specific evidence notes
+  
+  // Teicoplanin ↔ Daptomycin: T-cell cross-reactivity (case report)
+  edges.push({
+    id: 'edge-teicoplanin-daptomycin',
+    source: 'teicoplanin',
+    target: 'daptomycin',
+    crossReactivity: 'low',
+    pmids: ['35107993'],
+    clinicalNote: 'CASE REPORT: Teicoplanin-specific CD8+ T-cells cross-react with daptomycin (granzyme B, perforin, FasL). Caution in teicoplanin DRESS.',
+  });
+
+  // Cefotaxime ↔ Teicoplanin: cosensitization (case report)
+  edges.push({
+    id: 'edge-cefotaxime-teicoplanin',
+    source: 'cefotaxime',
+    target: 'teicoplanin',
+    crossReactivity: 'low',
+    pmids: ['35610175'],
+    clinicalNote: 'CASE REPORT: Pediatric cefotaxime-DRESS with cosensitization to teicoplanin.',
+  });
+
+  // Penicillin G ↔ Carbapenems: low (≤1%)
+  for (const carb of ['meropenem', 'imipenem', 'ertapenem', 'doripenem']) {
+    edges.push({
+      id: `edge-penicillin-g-${carb}`,
+      source: 'penicillin-g',
+      target: carb,
+      crossReactivity: 'low',
+      pmids: ['37499906', '28887994'],
+      clinicalNote: 'Cross-reactivity ≤1%. Carbapenems generally safe in penicillin allergy. Risk/benefit for life-threatening allergy.',
+    });
+  }
+
+  // Anti-staph penicillins ↔ Penicillin G/V: class cross-reactivity
+  for (const staph of ['oxacillin', 'dicloxacillin', 'nafcillin']) {
+    for (const pen of ['penicillin-g', 'penicillin-v']) {
+      edges.push({
+        id: `edge-${staph}-${pen}`,
+        source: staph,
+        target: pen,
+        crossReactivity: 'moderate',
+        pmids: ['28887994'],
+        clinicalNote: 'Penicillin class cross-reactivity via shared core. Confirmed penicillin allergy: avoid all penicillins.',
+      });
+    }
+  }
+  // Anti-staph ↔ Aminopenicillins
+  for (const staph of ['oxacillin', 'dicloxacillin', 'nafcillin']) {
+    for (const amino of ['amoxicillin', 'ampicillin']) {
+      edges.push({
+        id: `edge-${staph}-${amino}`,
+        source: staph,
+        target: amino,
+        crossReactivity: 'moderate',
+        pmids: ['28887994'],
+        clinicalNote: 'Penicillin class cross-reactivity. Different R1 but shared penicillin core.',
+      });
+    }
+  }
+
+  // Vancomycin ↔ Telavancin: derivative risk (case report level)
+  edges.push({
+    id: 'edge-vancomycin-telavancin-case',
+    source: 'vancomycin',
+    target: 'telavancin',
+    crossReactivity: 'moderate',
+    pmids: ['38177093'],
+    clinicalNote: 'Vancomycin DRESS: HLA-A*32:01 associated. Telavancin is vancomycin derivative - theoretical cross-reactivity.',
+  });
 
   // === Piperacillin cross-reactivity ===
   // G14 (ureido-aminobenzyl) shares aminobenzyl backbone with G1/G2

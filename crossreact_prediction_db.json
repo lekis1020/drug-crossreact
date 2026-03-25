@@ -776,6 +776,163 @@
         "34998313"
       ],
       "clinical_note": "Penicillin class cross-reactivity via shared core structure. In confirmed penicillin allergy (SPT+), other penicillins including piperacillin should be avoided (Trubiano 2017)."
+    },
+    {
+      "drug_a": "aztreonam",
+      "drug_b": "ceftazidime",
+      "ige_cross_reactivity": "high",
+      "rate_percent": null,
+      "structural_basis": "Identical R1 side chain (aminothiazolyl-carboxypropoxyimino, G4)",
+      "evidence_pmids": [
+        "34998313",
+        "28887994"
+      ],
+      "clinical_note": "Well-established cross-reactivity. Both share identical R1 (G4). Avoid ceftazidime in aztreonam-allergic patients and vice versa."
+    },
+    {
+      "drug_a": "vancomycin",
+      "drug_b": "teicoplanin",
+      "ige_cross_reactivity": "moderate",
+      "rate_percent": null,
+      "structural_basis": "Shared glycopeptide core structure",
+      "evidence_pmids": [
+        "41365697"
+      ],
+      "clinical_note": "Case report: glycopeptide cross-reactivity risk highlighted. Close hematological monitoring recommended."
+    },
+    {
+      "drug_a": "vancomycin",
+      "drug_b": "dalbavancin",
+      "ige_cross_reactivity": "low",
+      "rate_percent": null,
+      "structural_basis": "Lipoglycopeptide derived from glycopeptide backbone",
+      "evidence_pmids": [
+        "36464517"
+      ],
+      "clinical_note": "Case series: 10 vancomycin-allergic patients received dalbavancin (4 had Type I IgE history). Limited data on cross-reactivity."
+    },
+    {
+      "drug_a": "teicoplanin",
+      "drug_b": "daptomycin",
+      "ige_cross_reactivity": "low",
+      "rate_percent": null,
+      "structural_basis": "Teicoplanin-specific T-cells cross-react with daptomycin (lipopeptide). CD8+, HLA class I restricted.",
+      "evidence_pmids": [
+        "35107993"
+      ],
+      "clinical_note": "CASE REPORT: Teicoplanin-specific T-cells showed proliferation and cytotoxicity (granzyme B, perforin, FasL) with daptomycin. Exercise caution in teicoplanin DRESS patients."
+    },
+    {
+      "drug_a": "cefotaxime",
+      "drug_b": "teicoplanin",
+      "ige_cross_reactivity": "low",
+      "rate_percent": null,
+      "structural_basis": "Cosensitization (not classical R1-based cross-reactivity)",
+      "evidence_pmids": [
+        "35610175"
+      ],
+      "clinical_note": "CASE REPORT: Pediatric cefotaxime-induced DRESS with cosensitization to teicoplanin and cross-reactivity to other cephalosporins."
+    },
+    {
+      "drug_a": "penicillin G",
+      "drug_b": "meropenem",
+      "ige_cross_reactivity": "low",
+      "rate_percent": "\u22641%",
+      "structural_basis": "Different ring structure but shared beta-lactam core",
+      "evidence_pmids": [
+        "37499906",
+        "28887994"
+      ],
+      "clinical_note": "Cross-reactivity \u22641%. Carbapenems generally safe in penicillin-allergic patients. Risk/benefit for life-threatening allergy."
+    },
+    {
+      "drug_a": "penicillin G",
+      "drug_b": "imipenem",
+      "ige_cross_reactivity": "low",
+      "rate_percent": "\u22641%",
+      "structural_basis": "Different ring structure but shared beta-lactam core",
+      "evidence_pmids": [
+        "37499906",
+        "28887994"
+      ],
+      "clinical_note": "Cross-reactivity \u22641%. Imipenem historically slightly higher concern than meropenem but still low."
+    },
+    {
+      "drug_a": "ciprofloxacin",
+      "drug_b": "moxifloxacin",
+      "ige_cross_reactivity": "low",
+      "rate_percent": "6.3-9.5%",
+      "structural_basis": "Shared quinolone core, different substituents",
+      "evidence_pmids": [
+        "37154772"
+      ],
+      "clinical_note": "Patients with ciprofloxacin HSR may tolerate moxifloxacin. 9.5% reaction rate on provocation."
+    },
+    {
+      "drug_a": "ciprofloxacin",
+      "drug_b": "levofloxacin",
+      "ige_cross_reactivity": "low",
+      "rate_percent": "2.2-6.3%",
+      "structural_basis": "Shared quinolone core",
+      "evidence_pmids": [
+        "37154772"
+      ],
+      "clinical_note": "Low cross-reactivity. Levofloxacin had lowest reaction rate (2.2%) among tested FQ alternatives."
+    },
+    {
+      "drug_a": "neomycin",
+      "drug_b": "enoxaparin",
+      "ige_cross_reactivity": "low",
+      "rate_percent": null,
+      "structural_basis": "Structural similarity suspected between aminoglycoside and LMWH",
+      "evidence_pmids": [
+        "34911671"
+      ],
+      "clinical_note": "CASE REPORT: Positive patch tests to enoxaparin and tinzaparin in neomycin contact allergy patients. Unusual cross-reactivity."
+    },
+    {
+      "drug_a": "vancomycin",
+      "drug_b": "telavancin",
+      "ige_cross_reactivity": "low",
+      "rate_percent": null,
+      "structural_basis": "Lipoglycopeptide, vancomycin derivative",
+      "evidence_pmids": [
+        "38177093"
+      ],
+      "clinical_note": "Vancomycin DRESS associated with HLA-A*32:01. Telavancin is a vancomycin derivative - theoretical cross-reactivity risk."
+    },
+    {
+      "drug_a": "oxacillin",
+      "drug_b": "penicillin G",
+      "ige_cross_reactivity": "moderate",
+      "rate_percent": null,
+      "structural_basis": "Shared penicillin core (beta-lactam + thiazolidine ring), different R1",
+      "evidence_pmids": [
+        "28887994"
+      ],
+      "clinical_note": "Penicillin class cross-reactivity via shared core. Confirmed penicillin allergy: avoid all penicillins."
+    },
+    {
+      "drug_a": "dicloxacillin",
+      "drug_b": "penicillin G",
+      "ige_cross_reactivity": "moderate",
+      "rate_percent": null,
+      "structural_basis": "Shared penicillin core, different R1",
+      "evidence_pmids": [
+        "28887994"
+      ],
+      "clinical_note": "Penicillin class cross-reactivity."
+    },
+    {
+      "drug_a": "nafcillin",
+      "drug_b": "penicillin G",
+      "ige_cross_reactivity": "moderate",
+      "rate_percent": null,
+      "structural_basis": "Shared penicillin core, different R1",
+      "evidence_pmids": [
+        "28887994"
+      ],
+      "clinical_note": "Penicillin class cross-reactivity."
     }
   ],
   "prediction_rules": [

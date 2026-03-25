@@ -23,6 +23,7 @@ const INITIAL_FILTERS: FilterState = {
     lincosamide: true,
     oxazolidinone: true,
     nitroimidazole: true,
+      lipopeptide: true,
   },
   risks: { high: true, moderate: true, low: true, disputed: true },
 };
