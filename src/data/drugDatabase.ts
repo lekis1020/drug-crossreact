@@ -1,5 +1,14 @@
 import rawDb from '../../crossreact_prediction_db.json';
 
+export interface DatabaseMetadata {
+  created?: string;
+  version?: string;
+  scope?: string;
+  last_database_update_at?: string;
+  last_literature_monitoring_at?: string;
+  [key: string]: unknown;
+}
+
 export interface RawR1Group {
   group_id: string;
   name: string;
@@ -22,6 +31,7 @@ export interface RawDrugStructure {
 }
 
 export interface CrossReactDatabase {
+  metadata: DatabaseMetadata;
   r1_groups: RawR1Group[];
   drug_r1_map: Record<string, RawDrugR1Entry>;
   drug_structures: Record<string, RawDrugStructure>;

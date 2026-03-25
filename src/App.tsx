@@ -6,6 +6,7 @@ import { FilterPanel } from './components/FilterPanel';
 import { EvidenceManager } from './components/EvidenceManager';
 import { DrugTooltip } from './components/DrugTooltip';
 import { buildGraphElements } from './data/graphData';
+import { drugDatabase } from './data/drugDatabase';
 import type { FilterState, TooltipState } from './types';
 
 const INITIAL_FILTERS: FilterState = {
@@ -52,6 +53,24 @@ export default function App() {
   );
 
   const tooltipDrug = tooltip ? nodeMap.get(tooltip.drugId) : null;
+  const lastDatabaseUpdateRaw =
+    drugDatabase.metadata?.last_database_update_at ??
+    drugDatabase.metadata?.last_literature_monitoring_at ??
+    drugDatabase.metadata?.created ??
+    null;
+  const lastMonitoringRaw = drugDatabase.metadata?.last_literature_monitoring_at ?? null;
+
+  const formatDate = (value: string | null) => {
+    if (!value) return 'N/A';
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) return value;
+    return new Intl.DateTimeFormat('ko-KR', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      ...(value.includes('T') ? { hour: '2-digit', minute: '2-digit' } : {}),
+    }).format(parsed);
+  };
 
   return (
     <div className="flex flex-col h-screen overflow-hidden" style={{ background: '#020617', color: '#e2e8f0' }}>
@@ -80,6 +99,10 @@ export default function App() {
         </div>
 
         <div className="flex items-center gap-2 ml-auto">
+          <div className="hidden lg:flex flex-col items-end mr-2 text-[11px] text-slate-500 leading-tight">
+            <span>DB 업데이트: {formatDate(lastDatabaseUpdateRaw)}</span>
+            <span>모니터링: {formatDate(lastMonitoringRaw)}</span>
+          </div>
           <button
             onClick={() => setEvidenceOpen(true)}
             className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-medium transition-all hover:scale-105"

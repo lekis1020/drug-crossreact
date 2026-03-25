@@ -102,6 +102,19 @@ npm run update:literature
 
 The workflow updates `crossreact_prediction_db.json` under `literature_monitoring.records` and opens an automated PR for review.
 
+### GitHub-native bot monitoring setup (recommended)
+
+1. Repository → **Settings → Actions → General**
+   - Workflow permissions: **Read and write permissions**
+   - Enable: **Allow GitHub Actions to create and approve pull requests**
+2. Repository → **Actions**
+   - Run `Monitor cross-reactivity literature` manually once to validate.
+3. Review the auto-created PR (`automation/literature-monitoring`) and merge only clinically relevant updates.
+
+The app header now shows:
+- `DB 업데이트`: `metadata.last_database_update_at` (fallback: `last_literature_monitoring_at` → `created`)
+- `모니터링`: `metadata.last_literature_monitoring_at`
+
 ## Tech Stack
 
 - React 19 + TypeScript

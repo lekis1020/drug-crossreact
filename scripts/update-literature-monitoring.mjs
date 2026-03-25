@@ -192,6 +192,7 @@ async function main() {
 
   database.metadata = {
     ...(database.metadata ?? {}),
+    last_database_update_at: checkedAtIso,
     last_literature_monitoring_at: checkedAtIso,
   };
 
