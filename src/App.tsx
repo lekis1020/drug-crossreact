@@ -36,10 +36,6 @@ export default function App() {
   const [filters, setFilters] = useState<FilterState>(INITIAL_FILTERS);
   const [sidePanelOpen, setSidePanelOpen] = useState(true);
 
-  if (projectMode === 'contrast') {
-    return <ContrastPage onSwitchToAntibiotic={() => setProjectMode('antibiotic')} />;
-  }
-
   const { nodes } = buildGraphElements();
   const nodeMap = new Map(nodes.map(n => [n.id, n]));
 
@@ -75,6 +71,10 @@ export default function App() {
       ...(value.includes('T') ? { hour: '2-digit', minute: '2-digit' } : {}),
     }).format(parsed);
   };
+
+  if (projectMode === 'contrast') {
+    return <ContrastPage onSwitchToAntibiotic={() => setProjectMode('antibiotic')} />;
+  }
 
   return (
     <div className="flex flex-col h-screen overflow-hidden" style={{ background: '#020617', color: '#e2e8f0' }}>
