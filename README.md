@@ -13,6 +13,7 @@ Interactive graph visualization of antibiotic cross-reactivity relationships, de
 - **Evidence-linked** — PMID/DOI links to PubMed for every cross-reactivity claim
 - **Subgroup clustering** — Ceph 1G→5G, Penicillin subtypes, organized by clinical spectrum
 - **Safe alternatives** — Shows drugs with no reported cross-reactivity
+- **Dual project mode** — Switch between Antibiotics and CT Contrast views in-app
 
 ## Data Sources
 
@@ -116,12 +117,15 @@ The app header now shows:
 
 ## CT Contrast Cross-Reactivity Blueprint
 
-Scaffold artifacts for a second project (iodinated CT contrast media) are included:
+Scaffold + MVP viewer artifacts for a second project (iodinated CT contrast media) are included:
 
 - `docs/ct-contrast-project-plan.md` — implementation roadmap
 - `contrast_crossreact_db.json` — starter schema/template dataset
 - `scripts/update-contrast-literature-monitoring.mjs` — PubMed monitoring script
 - `.github/workflows/update-contrast-literature-monitoring.yml` — scheduled review-first PR workflow
+- `src/contrast/*` — CT contrast graph/search/filter/side-panel modules
+
+Use the **`CT 조영제 보기`** button in the top header to open the contrast mode.
 
 Manual monitoring run:
 

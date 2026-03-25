@@ -7,6 +7,7 @@ import { DrugTooltip } from './components/DrugTooltip';
 import { buildGraphElements } from './data/graphData';
 import { drugDatabase } from './data/drugDatabase';
 import type { FilterState, TooltipState } from './types';
+import { ContrastPage } from './contrast/ContrastPage';
 
 const INITIAL_FILTERS: FilterState = {
   classes: {
@@ -29,10 +30,15 @@ const INITIAL_FILTERS: FilterState = {
 };
 
 export default function App() {
+  const [projectMode, setProjectMode] = useState<'antibiotic' | 'contrast'>('antibiotic');
   const [selectedDrug, setSelectedDrug] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<TooltipState | null>(null);
   const [filters, setFilters] = useState<FilterState>(INITIAL_FILTERS);
   const [sidePanelOpen, setSidePanelOpen] = useState(true);
+
+  if (projectMode === 'contrast') {
+    return <ContrastPage onSwitchToAntibiotic={() => setProjectMode('antibiotic')} />;
+  }
 
   const { nodes } = buildGraphElements();
   const nodeMap = new Map(nodes.map(n => [n.id, n]));
@@ -111,6 +117,17 @@ export default function App() {
               모니터링: {formatDate(lastMonitoringRaw)}
             </span>
           </div>
+          <button
+            type="button"
+            onClick={() => setProjectMode('contrast')}
+            className="px-3 py-2 rounded-lg text-sm text-slate-200 hover:text-white transition-colors"
+            style={{
+              background: 'rgba(30, 41, 59, 0.8)',
+              border: '1px solid rgba(71, 85, 105, 0.8)',
+            }}
+          >
+            CT 조영제 보기
+          </button>
           <FilterPanel filters={filters} onFiltersChange={setFilters} />
         </div>
       </header>
