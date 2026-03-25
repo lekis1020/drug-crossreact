@@ -277,6 +277,27 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
       wheelSensitivity: 0.25,
     });
 
+    const applyResponsiveGroupLabelStyle = (containerWidth: number) => {
+      const groupFontSize = Math.max(12, Math.min(18, Math.round(containerWidth / 90)));
+      const minZoomedFontSize = Math.max(10, groupFontSize - 2);
+
+      cy.style()
+        .selector('node[isGroup = "true"]')
+        .style({
+          'font-size': `${groupFontSize}px`,
+          'min-zoomed-font-size': `${minZoomedFontSize}px`,
+        })
+        .update();
+    };
+
+    applyResponsiveGroupLabelStyle(containerRef.current.clientWidth);
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      const width = entries[0]?.contentRect.width ?? containerRef.current?.clientWidth ?? 1200;
+      applyResponsiveGroupLabelStyle(width);
+    });
+    resizeObserver.observe(containerRef.current);
+
     cy.on('tap', 'node[!isGroup]', (e: EventObject) => {
       onDrugSelect(e.target.id());
     });
@@ -297,6 +318,7 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
     cyRef.current = cy;
 
     return () => {
+      resizeObserver.disconnect();
       cy.destroy();
       cyRef.current = null;
     };
