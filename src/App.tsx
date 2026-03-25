@@ -135,6 +135,19 @@ export default function App() {
               </div>
             </div>
             <div className="mt-3 pt-3 border-t border-slate-700/50">
+              <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-2">Node Border</p>
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <div className="w-5 h-5 rounded-full" style={{ border: '3px double #f43f5e', background: 'transparent' }} />
+                  <span className="text-sm text-slate-300">🛡️ MRSA coverage</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-5 h-5 rounded-full" style={{ border: '2.5px solid #06b6d4', background: 'transparent' }} />
+                  <span className="text-sm text-slate-300">🦠 Pseudomonas coverage</span>
+                </div>
+              </div>
+            </div>
+            <div className="mt-2 pt-2 border-t border-slate-700/50">
               <p className="text-xs text-slate-500">Click node to select · Scroll to zoom</p>
             </div>
           </div>

@@ -108,6 +108,8 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
           r1Group: n.r1Group ?? '',
           color: n.color,
           parent: nodeParents[n.id] || undefined,
+          hasMrsa: (n.spectrumTags || []).includes('mrsa') ? 'true' : 'false',
+          hasPseudomonas: (n.spectrumTags || []).includes('pseudomonas') ? 'true' : 'false',
         },
         position: nodePositions[n.id] || { x: 0, y: 0 },
       })),
@@ -171,6 +173,26 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
             'border-opacity': 0.5,
             'transition-property': 'opacity, width, height, border-width, border-opacity',
             'transition-duration': 200,
+          } as any,
+        },
+
+        // MRSA-covering drugs: double border effect
+        {
+          selector: 'node[hasMrsa = "true"]',
+          style: {
+            'border-width': 3,
+            'border-color': '#f43f5e',
+            'border-opacity': 0.9,
+            'border-style': 'double' as any,
+          } as any,
+        },
+        // Pseudomonas-covering drugs: cyan ring
+        {
+          selector: 'node[hasPseudomonas = "true"]',
+          style: {
+            'border-width': 2.5,
+            'border-color': '#06b6d4',
+            'border-opacity': 0.8,
           } as any,
         },
         // Edge styles

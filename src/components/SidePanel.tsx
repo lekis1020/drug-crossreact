@@ -1,4 +1,4 @@
-import { buildGraphElements, getCrossReactiveDrugs, getSafeAlternatives } from '../data/graphData';
+import { buildGraphElements, getCrossReactiveDrugs, getSafeAlternatives, DRUG_SPECTRUM_TAGS } from '../data/graphData';
 import { CLASS_LABELS } from '../data/colors';
 import type { DrugClass, DrugNodeData } from '../types';
 
@@ -106,6 +106,25 @@ export function SidePanel({ selectedDrugId }: SidePanelProps) {
             <div>Formula: <span className="text-slate-300 font-mono">{drug.formula}</span></div>
           )}
         </div>
+
+        {/* Spectrum tags */}
+        {DRUG_SPECTRUM_TAGS[selectedDrugId] && (
+          <div className="flex flex-wrap gap-1.5 mt-3">
+            {DRUG_SPECTRUM_TAGS[selectedDrugId].map(tag => (
+              <span key={tag} className="text-xs px-2.5 py-1 rounded-lg font-semibold"
+                style={
+                  tag === 'mrsa' ? { background: 'rgba(244,63,94,0.15)', color: '#fb7185', border: '1px solid rgba(244,63,94,0.3)' }
+                  : tag === 'pseudomonas' ? { background: 'rgba(6,182,212,0.15)', color: '#22d3ee', border: '1px solid rgba(6,182,212,0.3)' }
+                  : tag === 'anaerobe' ? { background: 'rgba(168,85,247,0.15)', color: '#c084fc', border: '1px solid rgba(168,85,247,0.3)' }
+                  : tag === 'atypical' ? { background: 'rgba(34,197,94,0.15)', color: '#4ade80', border: '1px solid rgba(34,197,94,0.3)' }
+                  : { background: 'rgba(251,146,60,0.15)', color: '#fb923c', border: '1px solid rgba(251,146,60,0.3)' }
+                }
+              >
+                {tag === 'mrsa' ? '🛡️ MRSA' : tag === 'pseudomonas' ? '🦠 Pseudomonas' : tag === 'anaerobe' ? '🔬 Anaerobe' : tag === 'atypical' ? '🫁 Atypical' : '💊 ESBL'}
+              </span>
+            ))}
+          </div>
+        )}
 
         {/* Key References */}
         {allPmids.length > 0 && (

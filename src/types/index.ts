@@ -15,6 +15,8 @@ export type DrugClass =
 
 export type CrossReactivity = 'high' | 'moderate' | 'low' | 'disputed';
 
+export type SpectrumTag = 'mrsa' | 'pseudomonas' | 'anaerobe' | 'atypical' | 'esbl';
+
 export interface DrugNodeData {
   id: string;
   label: string;
@@ -24,6 +26,7 @@ export interface DrugNodeData {
   formula?: string;
   pubchemCid?: number;
   color: string;
+  spectrumTags?: SpectrumTag[];
 }
 
 export interface CrossReactEdgeData {

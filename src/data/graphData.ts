@@ -1,6 +1,49 @@
 import { drugDatabase } from './drugDatabase';
 import { getDrugColor } from './colors';
-import type { DrugNodeData, CrossReactEdgeData, DrugClass, CrossReactInfo } from '../types';
+import type { DrugNodeData, CrossReactEdgeData, DrugClass, CrossReactInfo, SpectrumTag } from '../types';
+
+export const DRUG_SPECTRUM_TAGS: Record<string, SpectrumTag[]> = {
+  // === MRSA coverage ===
+  'vancomycin': ['mrsa'],
+  'teicoplanin': ['mrsa'],
+  'dalbavancin': ['mrsa'],
+  'oritavancin': ['mrsa'],
+  'telavancin': ['mrsa'],
+  'linezolid': ['mrsa'],
+  'tedizolid': ['mrsa'],
+  'clindamycin': ['mrsa', 'anaerobe'],
+  'trimethoprim-sulfamethoxazole': ['mrsa'],
+  'doxycycline': ['mrsa', 'atypical'],
+  'minocycline': ['mrsa', 'atypical'],
+  'tigecycline': ['mrsa', 'anaerobe'],
+  'ceftaroline': ['mrsa'],
+  'ceftobiprole': ['mrsa', 'pseudomonas'],
+  'delafloxacin': ['mrsa'],
+  // === Pseudomonas coverage ===
+  'piperacillin': ['pseudomonas'],
+  'ceftazidime': ['pseudomonas'],
+  'cefepime': ['pseudomonas'],
+  'aztreonam': ['pseudomonas'],
+  'meropenem': ['pseudomonas', 'anaerobe', 'esbl'],
+  'imipenem': ['pseudomonas', 'anaerobe', 'esbl'],
+  'doripenem': ['pseudomonas', 'anaerobe', 'esbl'],
+  'ciprofloxacin': ['pseudomonas'],
+  'levofloxacin': ['pseudomonas', 'atypical'],
+  'gentamicin': ['pseudomonas'],
+  'tobramycin': ['pseudomonas'],
+  'amikacin': ['pseudomonas'],
+  // === Anaerobe coverage ===
+  'metronidazole': ['anaerobe'],
+  'tinidazole': ['anaerobe'],
+  'ertapenem': ['anaerobe', 'esbl'],
+  'amoxicillin': ['anaerobe'],  // amox-clav
+  // === Atypical coverage ===
+  'azithromycin': ['atypical'],
+  'clarithromycin': ['atypical'],
+  'erythromycin': ['atypical'],
+  'moxifloxacin': ['atypical', 'anaerobe'],
+  'tetracycline': ['atypical'],
+};
 
 function drugId(name: string): string {
   return name.toLowerCase().replace(/\s+/g, '-');
@@ -188,11 +231,14 @@ export function buildGraphElements(): { nodes: DrugNodeData[]; edges: CrossReact
       formula: structure?.formula,
       pubchemCid: structure?.cid,
       color: getDrugColor(r1Data.group),
+      spectrumTags: DRUG_SPECTRUM_TAGS[drugId(name)],
     });
   }
 
-  // Add non-beta-lactam nodes
-  nodes.push(...NON_BETA_LACTAM_NODES);
+  // Add non-beta-lactam nodes with spectrum tags
+  for (const nbl of NON_BETA_LACTAM_NODES) {
+    nodes.push({ ...nbl, spectrumTags: DRUG_SPECTRUM_TAGS[nbl.id] });
+  }
 
   const rule001Pmids = prediction_rules.find(r => r.rule_id === 'R001')?.pmids ?? [];
   const rule002Pmids = prediction_rules.find(r => r.rule_id === 'R002')?.pmids ?? [];
