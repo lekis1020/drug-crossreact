@@ -44,7 +44,8 @@
       "stevenson_2026": "Retrospective audit, n=212, 2 Australian tertiary hospitals, 2016-2021. Strong support for R1 model. Limitation: limited non-cefazolin confirmed allergies.",
       "hutten_2025": "Systematic comparison of 4 cross-reactivity tables covering 51 BAs. Found 36% disharmony, highlighting need for standardization. No new clinical data but critical for interpretation.",
       "clinical_predictors": "Anaphylaxis (OR 6.05) and IV route (OR 9.68) are significant predictors of positive ST (Stevenson 2026)."
-    }
+    },
+    "last_literature_monitoring_at": "2026-03-25T04:54:01.995Z"
   },
   "r1_groups": [
     {
@@ -650,7 +651,7 @@
       "clinical_note": "1 cefalexin-allergic patient reacted to amoxicillin OPC with urticaria. Confirms R1 side-chain cross-reactivity."
     },
     {
-      "drug_a": "patients with \u22653 BL allergy labels",
+      "drug_a": "patients with ≥3 BL allergy labels",
       "drug_b": "penicillins",
       "ige_cross_reactivity": "moderate",
       "rate_percent": "37.5% OPC reaction rate (3/8)",
@@ -741,12 +742,12 @@
       "drug_a": "penicillins",
       "drug_b": "carbapenems",
       "ige_cross_reactivity": "low",
-      "rate_percent": "\u22641%",
+      "rate_percent": "≤1%",
       "structural_basis": "Different ring structure (5-membered with carbon replacing sulfur)",
       "evidence_pmids": [
         "28887994"
       ],
-      "clinical_note": "Trubiano 2017: Carbapenems can be used in penicillin-allergic patients. Cross-reactivity \u22641%. Risk/benefit assessment for life-threatening penicillin allergy."
+      "clinical_note": "Trubiano 2017: Carbapenems can be used in penicillin-allergic patients. Cross-reactivity ≤1%. Risk/benefit assessment for life-threatening penicillin allergy."
     },
     {
       "drug_a": "penicillins",
@@ -843,25 +844,25 @@
       "drug_a": "penicillin G",
       "drug_b": "meropenem",
       "ige_cross_reactivity": "low",
-      "rate_percent": "\u22641%",
+      "rate_percent": "≤1%",
       "structural_basis": "Different ring structure but shared beta-lactam core",
       "evidence_pmids": [
         "37499906",
         "28887994"
       ],
-      "clinical_note": "Cross-reactivity \u22641%. Carbapenems generally safe in penicillin-allergic patients. Risk/benefit for life-threatening allergy."
+      "clinical_note": "Cross-reactivity ≤1%. Carbapenems generally safe in penicillin-allergic patients. Risk/benefit for life-threatening allergy."
     },
     {
       "drug_a": "penicillin G",
       "drug_b": "imipenem",
       "ige_cross_reactivity": "low",
-      "rate_percent": "\u22641%",
+      "rate_percent": "≤1%",
       "structural_basis": "Different ring structure but shared beta-lactam core",
       "evidence_pmids": [
         "37499906",
         "28887994"
       ],
-      "clinical_note": "Cross-reactivity \u22641%. Imipenem historically slightly higher concern than meropenem but still low."
+      "clinical_note": "Cross-reactivity ≤1%. Imipenem historically slightly higher concern than meropenem but still low."
     },
     {
       "drug_a": "ciprofloxacin",
@@ -991,7 +992,7 @@
     },
     {
       "rule_id": "R002",
-      "condition": "aminobenzyl_variants (G1\u2194G2)",
+      "condition": "aminobenzyl_variants (G1↔G2)",
       "predicted_cross_reactivity": "moderate",
       "evidence_basis": "structural_similarity",
       "pmids": [
@@ -1053,5 +1054,206 @@
       "notes": "Trubiano 2017: Some non-identical R1 pairs show clinical cross-reactivity, particularly cefuroxime (G6 furyl-methoxyimino) with aminothiazolyl-methoxyimino group (G3). R1 similarity rather than identity may drive some cross-reactivity."
     }
   ],
-  "predict_function_logic": "Same R1 group \u2192 HIGH | G1\u2194G2 \u2192 MODERATE | Different \u2192 LOW/SAFE"
+  "predict_function_logic": "Same R1 group → HIGH | G1↔G2 → MODERATE | Different → LOW/SAFE",
+  "literature_monitoring": {
+    "strategy": "PubMed E-utilities scheduled monitor",
+    "query": "((beta-lactam*[Title/Abstract] OR cephalosporin*[Title/Abstract] OR penicillin*[Title/Abstract] OR carbapenem*[Title/Abstract] OR monobactam*[Title/Abstract] OR antibiotic*[Title/Abstract])) AND (cross-react*[Title/Abstract] OR hypersensitiv*[Title/Abstract] OR allergy[Title/Abstract] OR anaphylaxis[Title/Abstract]) AND (case report[Publication Type] OR clinical study[Publication Type] OR cohort[Title/Abstract] OR trial[Title/Abstract])",
+    "checked_window_days": 30,
+    "max_results": 150,
+    "checked_at": "2026-03-25T04:54:01.995Z",
+    "records": [
+      {
+        "pmid": "41784074",
+        "title": "An Overview of Red Breast Syndrome: A Qualitative Systematic Review of the Literature and a Single-center Case Series.",
+        "journal": "Aesthetic surgery journal",
+        "pubdate": "2026 Mar 4",
+        "doi": "10.1093/asj/sjag053",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41784074/",
+        "first_seen_at": "2026-03-25T04:54:01.995Z",
+        "last_seen_at": "2026-03-25T04:54:01.995Z"
+      },
+      {
+        "pmid": "41782164",
+        "title": "Repairing Peri-Anal Fistulas with regenerative cell therapeutics: study protocol for a double-blinded randomized controlled phase I-II trial from Denmark (REP-PAF).",
+        "journal": "Trials",
+        "pubdate": "2026 Mar 4",
+        "doi": "10.1186/s13063-026-09565-y",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41782164/",
+        "first_seen_at": "2026-03-25T04:54:01.995Z",
+        "last_seen_at": "2026-03-25T04:54:01.995Z"
+      },
+      {
+        "pmid": "41872049",
+        "title": "Antibiotics in the first week of life are not associated with functional gastrointestinal disorders at 9-12 years of age.",
+        "journal": "Journal of pediatric gastroenterology and nutrition",
+        "pubdate": "2026 Mar 23",
+        "doi": "10.1002/jpn3.70402",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41872049/",
+        "first_seen_at": "2026-03-25T04:54:01.995Z",
+        "last_seen_at": "2026-03-25T04:54:01.995Z"
+      },
+      {
+        "pmid": "41833900",
+        "title": "Three-year Effectiveness of a Multidisciplinary Approach to Penicillin Allergy Delabelling in Pregnant Patients.",
+        "journal": "Journal of obstetrics and gynaecology Canada : JOGC = Journal d'obstetrique et gynecologie du Canada : JOGC",
+        "pubdate": "2026 Mar 13",
+        "doi": "10.1016/j.jogc.2026.103262",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41833900/",
+        "first_seen_at": "2026-03-25T04:54:01.995Z",
+        "last_seen_at": "2026-03-25T04:54:01.995Z"
+      },
+      {
+        "pmid": "41840409",
+        "title": "Comprehensive assessment of allergic manifestations including drug hypersensitivity in adult patients with inborn errors of immunity.",
+        "journal": "Allergy and asthma proceedings",
+        "pubdate": "2026 Mar 1",
+        "doi": "10.2500/aap.2026.47.260007",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41840409/",
+        "first_seen_at": "2026-03-25T04:54:01.995Z",
+        "last_seen_at": "2026-03-25T04:54:01.995Z"
+      },
+      {
+        "pmid": "41859182",
+        "title": "Cefazolin prophylaxis is associated with lower surgical site infection risk than vancomycin following elective spine surgery.",
+        "journal": "North American Spine Society journal",
+        "pubdate": "2026 Mar",
+        "doi": "10.1016/j.xnsj.2026.100857",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41859182/",
+        "first_seen_at": "2026-03-25T04:54:01.995Z",
+        "last_seen_at": "2026-03-25T04:54:01.995Z"
+      },
+      {
+        "pmid": "41772923",
+        "title": "Safety of Short-Term Trimethoprim-Sulfamethoxazole Use for Uncomplicated Cystitis: A Nationwide Retrospective Cohort Study.",
+        "journal": "Pharmacoepidemiology and drug safety",
+        "pubdate": "2026 Mar",
+        "doi": "10.1002/pds.70342",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41772923/",
+        "first_seen_at": "2026-03-25T04:54:01.995Z",
+        "last_seen_at": "2026-03-25T04:54:01.995Z"
+      },
+      {
+        "pmid": "41733406",
+        "title": "Feasibility Trial of Prolonged versus Single-Dose Challenge in Penicillin Allergy.",
+        "journal": "NEJM evidence",
+        "pubdate": "2026 Mar",
+        "doi": "10.1056/EVIDoa2500038",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41733406/",
+        "first_seen_at": "2026-03-25T04:54:01.995Z",
+        "last_seen_at": "2026-03-25T04:54:01.995Z"
+      },
+      {
+        "pmid": "41733399",
+        "title": "Feasibility of PROSPECTOR - A Randomized Trial Evaluating Oral Challenge Duration in Penicillin Allergy Evaluation.",
+        "journal": "NEJM evidence",
+        "pubdate": "2026 Mar",
+        "doi": "10.1056/EVIDe2500223",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41733399/",
+        "first_seen_at": "2026-03-25T04:54:01.995Z",
+        "last_seen_at": "2026-03-25T04:54:01.995Z"
+      },
+      {
+        "pmid": "41575649",
+        "title": "Safety and Effectiveness of a Fixed-Dose Combination of Cephalexin Extended Release and Clavulanate Potassium in Bacterial Sore Throat and Uncomplicated Skin and Soft-Tissue Infections: A Multicentre, Open-Label, Phase IV Study in India.",
+        "journal": "Drugs - real world outcomes",
+        "pubdate": "2026 Mar",
+        "doi": "10.1007/s40801-025-00533-7",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41575649/",
+        "first_seen_at": "2026-03-25T04:54:01.995Z",
+        "last_seen_at": "2026-03-25T04:54:01.995Z"
+      },
+      {
+        "pmid": "41317864",
+        "title": "Racial differences in penicillin allergy delabeling in a multicenter US primary care cohort.",
+        "journal": "Annals of allergy, asthma & immunology : official publication of the American College of Allergy, Asthma, & Immunology",
+        "pubdate": "2026 Mar",
+        "doi": "10.1016/j.anai.2025.11.025",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41317864/",
+        "first_seen_at": "2026-03-25T04:54:01.995Z",
+        "last_seen_at": "2026-03-25T04:54:01.995Z"
+      },
+      {
+        "pmid": "41177521",
+        "title": "Is Preoperative Serum Albumin Associated With Medication Related Osteonecrosis of the Jaw Severity and Surgical Outcomes?",
+        "journal": "Journal of oral and maxillofacial surgery : official journal of the American Association of Oral and Maxillofacial Surgeons",
+        "pubdate": "2026 Mar",
+        "doi": "10.1016/j.joms.2025.10.002",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41177521/",
+        "first_seen_at": "2026-03-25T04:54:01.995Z",
+        "last_seen_at": "2026-03-25T04:54:01.995Z"
+      },
+      {
+        "pmid": "37522348",
+        "title": "Safety of Antibiotic Irrigations for Acute Exacerbations of Chronic Rhinosinusitis in Patients with Identical Drug Allergies or Adverse Reactions: A Pilot Study.",
+        "journal": "Ear, nose, & throat journal",
+        "pubdate": "2026 Mar",
+        "doi": "10.1177/01455613231189057",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/37522348/",
+        "first_seen_at": "2026-03-25T04:54:01.995Z",
+        "last_seen_at": "2026-03-25T04:54:01.995Z"
+      },
+      {
+        "pmid": "41749358",
+        "title": "Impact of beta-lactam allergy labels on antibiotic prophylaxis and surgical site infections after cesarean section; a retrospective study.",
+        "journal": "Antimicrobial resistance and infection control",
+        "pubdate": "2026 Feb 27",
+        "doi": "10.1186/s13756-026-01724-9",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41749358/",
+        "first_seen_at": "2026-03-25T04:54:01.995Z",
+        "last_seen_at": "2026-03-25T04:54:01.995Z"
+      },
+      {
+        "pmid": "41763604",
+        "title": "Prospective outcomes of penicillin allergy evaluation: Quality of life and relabeling rates.",
+        "journal": "Annals of allergy, asthma & immunology : official publication of the American College of Allergy, Asthma, & Immunology",
+        "pubdate": "2026 Feb 26",
+        "doi": "10.1016/j.anai.2026.02.005",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41763604/",
+        "first_seen_at": "2026-03-25T04:54:01.995Z",
+        "last_seen_at": "2026-03-25T04:54:01.995Z"
+      },
+      {
+        "pmid": "41729756",
+        "title": "Drug Reaction with Eosinophilia and Systemic Symptoms in the Electronic Medical Record.",
+        "journal": "International archives of allergy and immunology",
+        "pubdate": "2026 Feb 23",
+        "doi": "10.1159/000549707",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41729756/",
+        "first_seen_at": "2026-03-25T04:54:01.995Z",
+        "last_seen_at": "2026-03-25T04:54:01.995Z"
+      }
+    ]
+  }
 }
