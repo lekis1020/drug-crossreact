@@ -1,0 +1,77 @@
+name: Monitor cross-reactivity literature
+
+on:
+  schedule:
+    - cron: '0 20 * * 0'
+  workflow_dispatch:
+    inputs:
+      days_back:
+        description: 'Publication window (days)'
+        required: false
+        default: '30'
+      max_results:
+        description: 'Maximum PubMed IDs to process'
+        required: false
+        default: '150'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Refresh literature monitoring records
+        env:
+          DAYS_BACK: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.days_back || '30' }}
+          MAX_RESULTS: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.max_results || '150' }}
+        run: node scripts/update-literature-monitoring.mjs --days-back "$DAYS_BACK" --max-results "$MAX_RESULTS"
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create pull request
+        if: steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: automation/literature-monitoring
+          delete-branch: true
+          title: 'chore: refresh monitored cross-reactivity literature'
+          commit-message: |
+            Keep monitored cross-reactivity literature current
+
+            Automated PubMed monitoring refresh for candidate antibiotic cross-reactivity reports.
+
+            Constraint: Scheduled workflow must use public APIs only
+            Confidence: medium
+            Scope-risk: narrow
+            Directive: Review new records before promoting them into literature_confirmed_pairs
+            Tested: GitHub Actions run of monitoring script
+            Not-tested: Manual clinical validation of newly discovered records
+          body: |
+            ## Summary
+            - refreshes `literature_monitoring.records` from PubMed
+            - updates `metadata.last_literature_monitoring_at`
+
+            ## Review checklist
+            - [ ] Verify each new PMID/DOI is relevant to antibiotic cross-reactivity
+            - [ ] Promote validated evidence into `literature_confirmed_pairs` as needed
+            - [ ] Confirm UI behavior remains unchanged for existing graph logic
+          labels: |
+            automated
+            literature-monitoring

@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "update:literature": "node scripts/update-literature-monitoring.mjs"
   },
   "dependencies": {
     "cytoscape": "^3.30.0",

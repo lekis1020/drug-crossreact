@@ -31,6 +31,32 @@ npm run dev
 
 Open `http://localhost:5173`
 
+## Deployment (GitHub Pages)
+
+This repository is ready for GitHub Pages via Actions.
+
+1. In GitHub → **Settings → Pages**, set **Source** to **GitHub Actions**.
+2. Push to `main` or `master` (or run the workflow manually).
+3. Workflow: `.github/workflows/deploy-pages.yml`
+
+`vite.config.ts` automatically resolves the correct `base` path for both:
+- user/org pages (`https://<user>.github.io/`)
+- project pages (`https://<user>.github.io/<repo>/`)
+
+## Scheduled Literature Monitoring
+
+Weekly PubMed monitoring is automated with:
+- workflow: `.github/workflows/update-literature-monitoring.yml`
+- script: `scripts/update-literature-monitoring.mjs`
+
+Manual run:
+
+```bash
+npm run update:literature
+```
+
+The workflow updates `crossreact_prediction_db.json` under `literature_monitoring.records` and opens an automated PR for review.
+
 ## Tech Stack
 
 - React 19 + TypeScript
