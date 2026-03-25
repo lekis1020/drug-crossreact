@@ -3,7 +3,6 @@ import { Graph } from './components/Graph';
 import { SearchBar } from './components/SearchBar';
 import { SidePanel } from './components/SidePanel';
 import { FilterPanel } from './components/FilterPanel';
-import { EvidenceManager } from './components/EvidenceManager';
 import { DrugTooltip } from './components/DrugTooltip';
 import { buildGraphElements } from './data/graphData';
 import { drugDatabase } from './data/drugDatabase';
@@ -30,7 +29,6 @@ const INITIAL_FILTERS: FilterState = {
 };
 
 export default function App() {
-  const [evidenceOpen, setEvidenceOpen] = useState(false);
   const [selectedDrug, setSelectedDrug] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<TooltipState | null>(null);
   const [filters, setFilters] = useState<FilterState>(INITIAL_FILTERS);
@@ -103,17 +101,6 @@ export default function App() {
             <span>DB 업데이트: {formatDate(lastDatabaseUpdateRaw)}</span>
             <span>모니터링: {formatDate(lastMonitoringRaw)}</span>
           </div>
-          <button
-            onClick={() => setEvidenceOpen(true)}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-medium transition-all hover:scale-105"
-            style={{
-              background: 'rgba(30, 41, 59, 0.8)',
-              border: '1px solid rgba(51, 65, 85, 0.6)',
-              color: '#94a3b8',
-            }}
-          >
-            <span>📚</span> Evidence
-          </button>
           <FilterPanel filters={filters} onFiltersChange={setFilters} />
         </div>
       </header>
@@ -229,7 +216,6 @@ export default function App() {
       {tooltip && tooltipDrug && (
         <DrugTooltip drug={tooltipDrug} x={tooltip.x} y={tooltip.y} />
       )}
-      <EvidenceManager isOpen={evidenceOpen} onClose={() => setEvidenceOpen(false)} />
     </div>
   );
 }
