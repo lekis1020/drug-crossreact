@@ -97,9 +97,19 @@ export default function App() {
         </div>
 
         <div className="flex items-center gap-2 ml-auto">
-          <div className="hidden lg:flex flex-col items-end mr-2 text-[11px] text-slate-500 leading-tight">
-            <span>DB 업데이트: {formatDate(lastDatabaseUpdateRaw)}</span>
-            <span>모니터링: {formatDate(lastMonitoringRaw)}</span>
+          <div className="hidden md:flex flex-col items-end mr-2 text-[11px] leading-tight">
+            <span
+              className="text-slate-400"
+              title="검토 후 반영된 데이터베이스 최종 갱신 시점"
+            >
+              DB 업데이트: {formatDate(lastDatabaseUpdateRaw)}
+            </span>
+            <span
+              className="text-slate-500"
+              title="자동 문헌 모니터링 마지막 실행 시점"
+            >
+              모니터링: {formatDate(lastMonitoringRaw)}
+            </span>
           </div>
           <FilterPanel filters={filters} onFiltersChange={setFilters} />
         </div>

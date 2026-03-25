@@ -1,6 +1,7 @@
 import { buildGraphElements, getCrossReactiveDrugs, getSafeAlternatives, DRUG_SPECTRUM_TAGS } from '../data/graphData';
 import { CLASS_LABELS } from '../data/colors';
 import type { DrugClass, DrugNodeData } from '../types';
+import { RiskBadge } from './RiskBadge';
 
 interface SidePanelProps {
   selectedDrugId: string | null;
@@ -69,26 +70,6 @@ export function SidePanel({ selectedDrugId }: SidePanelProps) {
     safeByClass[alt.drugClass].push(alt);
   }
 
-  const riskBadgeStyle = (risk: string) => {
-    switch (risk) {
-      case 'high': return { background: 'rgba(239,68,68,0.15)', color: '#fca5a5', border: '1px solid rgba(239,68,68,0.3)' };
-      case 'disputed': return { background: 'rgba(234,179,8,0.15)', color: '#fde047', border: '1px solid rgba(234,179,8,0.3)' };
-      case 'moderate': return { background: 'rgba(249,115,22,0.15)', color: '#fdba74', border: '1px solid rgba(249,115,22,0.3)' };
-      case 'low': return { background: 'rgba(107,114,128,0.15)', color: '#9ca3af', border: '1px solid rgba(107,114,128,0.3)' };
-      default: return { background: '#333', color: '#999', border: '1px solid #555' };
-    }
-  };
-
-  const riskLabel = (risk: string) => {
-    switch (risk) {
-      case 'high': return 'High';
-      case 'disputed': return '⚠️ Disputed';
-      case 'moderate': return 'Moderate';
-      case 'low': return 'Low';
-      default: return risk;
-    }
-  };
-
   return (
     <div className="h-full overflow-y-auto">
       {/* Drug header */}
@@ -142,7 +123,7 @@ export function SidePanel({ selectedDrugId }: SidePanelProps) {
       {/* Cross-reactive drugs */}
       <div className="p-5 border-b border-slate-800">
         <h3 className="text-sm font-semibold text-red-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-          🔴 Cross-reactive
+          🔴 Known cross-reactive
           <span className="text-slate-500 font-normal normal-case tracking-normal">
             ({crossReactive.length})
           </span>
@@ -173,12 +154,7 @@ export function SidePanel({ selectedDrugId }: SidePanelProps) {
                     </p>
                   )}
                 </div>
-                <span
-                  className="text-sm px-2.5 py-1 rounded-full flex-shrink-0 font-medium"
-                  style={riskBadgeStyle(cr.crossReactivity)}
-                >
-                  {riskLabel(cr.crossReactivity)}
-                </span>
+                <RiskBadge risk={cr.crossReactivity} />
               </div>
             ))}
           </div>
@@ -188,13 +164,17 @@ export function SidePanel({ selectedDrugId }: SidePanelProps) {
       {/* Safe alternatives */}
       <div className="p-5">
         <h3 className="text-sm font-semibold text-green-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-          🟢 Safe alternatives
+          🟢 No known cross-reactivity options
           <span className="text-slate-500 font-normal normal-case tracking-normal">
             ({safeAlts.length})
           </span>
         </h3>
+        <p className="text-xs text-slate-500 mb-3 leading-relaxed">
+          No known signal ≠ guaranteed safety. Final decisions should follow clinical context, guideline-based testing,
+          and specialist judgement.
+        </p>
         {safeAlts.length === 0 ? (
-          <p className="text-sm text-slate-500 italic">No safe alternatives identified</p>
+          <p className="text-sm text-slate-500 italic">No low-signal alternatives identified</p>
         ) : (
           <div className="space-y-5">
             {Object.entries(safeByClass).map(([cls, alts]) => (
@@ -207,7 +187,7 @@ export function SidePanel({ selectedDrugId }: SidePanelProps) {
                     <div key={alt.id} className="flex items-center gap-2">
                       <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: alt.color }} />
                       <span className="text-base text-slate-300">{alt.label}</span>
-                      <span className="text-green-700 text-sm ml-auto">✓ safe</span>
+                      <span className="text-emerald-400/90 text-xs ml-auto">No known signal</span>
                     </div>
                   ))}
                 </div>
