@@ -22,6 +22,51 @@ Interactive graph visualization of antibiotic cross-reactivity relationships, de
 - 24+ referenced PMIDs
 - Key papers: Trubiano 2017, Stevenson 2026, Hutten 2025, Romano, Zagursky
 
+## Current Database Structure (`crossreact_prediction_db.json`)
+
+The app currently loads one JSON database file via `src/data/drugDatabase.ts`.
+
+### Top-level keys (current)
+
+```text
+metadata
+r1_groups                      # 15
+drug_r1_map                    # 32 drugs
+drug_structures                # 25 structures
+literature_confirmed_pairs     # 39 curated edges
+prediction_rules               # 7 model rules
+predict_function_logic         # explanatory text
+```
+
+### Key object shapes
+
+```json
+{
+  "r1_groups[]": {
+    "group_id": "G2",
+    "name": "...",
+    "drugs": ["amoxicillin", "..."],
+    "expected_ige_cross_reactivity": "high",
+    "pmids": ["..."]
+  },
+  "drug_r1_map.<drug>": {
+    "group": "G2",
+    "r1_name": "para-hydroxy-aminobenzyl",
+    "confidence": "high"
+  },
+  "literature_confirmed_pairs[]": {
+    "drug_a": "amoxicillin",
+    "drug_b": "cefadroxil",
+    "ige_cross_reactivity": "high|moderate|low|disputed",
+    "rate_percent": null,
+    "evidence_pmids": ["..."],
+    "clinical_note": "..."
+  }
+}
+```
+
+> Note: Scheduled monitoring workflow proposes new evidence in PRs; only reviewed items should be promoted into `literature_confirmed_pairs`.
+
 ## Quick Start
 
 ```bash
