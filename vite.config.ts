@@ -22,6 +22,15 @@ function resolveBasePath(): string {
 
 export default defineConfig({
   base: resolveBasePath(),
+  server: {
+    watch: {
+      ignored: [
+        '**/.omx/**',
+        '**/.omc/**',
+        '**/.playwright-mcp/**',
+      ],
+    },
+  },
   plugins: [
     tailwindcss(),
     react(),
