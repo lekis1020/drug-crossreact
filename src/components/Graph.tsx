@@ -1,402 +1,367 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react';
-import ForceGraph2D from 'react-force-graph-2d';
-import ForceGraph3D from 'react-force-graph-3d';
+import { useEffect, useRef } from 'react';
+import cytoscape from 'cytoscape';
+import type { Core, EventObject } from 'cytoscape';
+// @ts-ignore
+import coseBilkent from 'cytoscape-cose-bilkent';
 import { buildGraphElements } from '../data/graphData';
-import type { CrossReactEdgeData, DrugNodeData, FilterState } from '../types';
+import type { FilterState, DrugClass } from '../types';
 
-export type GraphViewMode = '2d' | '3d';
+cytoscape.use(coseBilkent);
 
 interface GraphProps {
   selectedDrug: string | null;
   onDrugSelect: (drugId: string) => void;
   onDrugHover: (drugId: string | null, x?: number, y?: number) => void;
   filters: FilterState;
-  viewMode: GraphViewMode;
 }
 
-interface GraphNode extends DrugNodeData {
-  x: number;
-  y: number;
-  z: number;
-  fx?: number;
-  fy?: number;
-}
-
-interface GraphLink extends Omit<CrossReactEdgeData, 'source' | 'target'> {
-  source: string | GraphNode;
-  target: string | GraphNode;
-}
-
-const GROUP_POSITIONS_2D: Record<string, { x: number; y: number }> = {
-  'group-penicillin-natural-': { x: -900, y: -600 },
-  'group-penicillin-amino-': { x: -550, y: -600 },
-  'group-penicillin-anti-staph-': { x: -900, y: -350 },
-  'group-penicillin-extended-': { x: -550, y: -350 },
-
-  'group-cephalosporin-1g': { x: -50, y: -600 },
-  'group-cephalosporin-2g': { x: 350, y: -600 },
-  'group-cephalosporin-3g': { x: 750, y: -650 },
-  'group-cephalosporin-4g': { x: 1250, y: -400 },
-  'group-cephalosporin-5g': { x: 1250, y: -750 },
-
-  'group-carbapenem': { x: 350, y: -250 },
-  'group-monobactam': { x: 800, y: -250 },
-
-  'group-glycopeptide': { x: -900, y: 150 },
-  'group-oxazolidinone': { x: -550, y: 150 },
-  'group-lincosamide': { x: -250, y: 150 },
-
-  'group-fluoroquinolone': { x: 150, y: 150 },
-  'group-tetracycline': { x: 550, y: 150 },
-  'group-macrolide': { x: 950, y: 150 },
-  'group-sulfonamide': { x: 1350, y: 150 },
-
-  'group-aminoglycoside': { x: 150, y: 450 },
-  'group-nitroimidazole': { x: 550, y: 450 },
-  'group-lipopeptide': { x: -900, y: 450 },
-};
-
-const GROUP_POSITIONS_3D: Record<string, { x: number; y: number; z: number }> = {
-  'group-penicillin-natural-': { x: -900, y: -500, z: 900 },
-  'group-penicillin-amino-': { x: -550, y: -500, z: 720 },
-  'group-penicillin-anti-staph-': { x: -900, y: -280, z: 620 },
-  'group-penicillin-extended-': { x: -550, y: -280, z: 520 },
-
-  'group-cephalosporin-1g': { x: -100, y: -500, z: 760 },
-  'group-cephalosporin-2g': { x: 300, y: -500, z: 620 },
-  'group-cephalosporin-3g': { x: 740, y: -560, z: 460 },
-  'group-cephalosporin-4g': { x: 1180, y: -320, z: 280 },
-  'group-cephalosporin-5g': { x: 1180, y: -730, z: 120 },
-
-  'group-carbapenem': { x: 360, y: -220, z: 180 },
-  'group-monobactam': { x: 800, y: -220, z: 40 },
-
-  'group-glycopeptide': { x: -860, y: 140, z: -120 },
-  'group-oxazolidinone': { x: -560, y: 140, z: -240 },
-  'group-lincosamide': { x: -240, y: 140, z: -340 },
-
-  'group-fluoroquinolone': { x: 120, y: 140, z: -460 },
-  'group-tetracycline': { x: 500, y: 140, z: -560 },
-  'group-macrolide': { x: 860, y: 140, z: -660 },
-  'group-sulfonamide': { x: 1260, y: 140, z: -760 },
-
-  'group-aminoglycoside': { x: 140, y: 430, z: -820 },
-  'group-nitroimidazole': { x: 520, y: 430, z: -900 },
-  'group-lipopeptide': { x: -860, y: 430, z: -760 },
-};
-
-const EDGE_COLORS: Record<CrossReactEdgeData['crossReactivity'], string> = {
-  high: '#ef4444',
-  disputed: '#eab308',
-  moderate: '#f97316',
-  low: '#6b7280',
-};
-
-const EDGE_WIDTH: Record<CrossReactEdgeData['crossReactivity'], number> = {
-  high: 1.9,
-  disputed: 1.6,
-  moderate: 1.2,
-  low: 0.9,
-};
-
-function parseHexColor(hex: string): [number, number, number] {
-  const normalized = hex.replace('#', '');
-  if (normalized.length !== 6) return [148, 163, 184];
-  const r = Number.parseInt(normalized.slice(0, 2), 16);
-  const g = Number.parseInt(normalized.slice(2, 4), 16);
-  const b = Number.parseInt(normalized.slice(4, 6), 16);
-  return [r, g, b];
-}
-
-function applyAlpha(hex: string, alpha: number): string {
-  const [r, g, b] = parseHexColor(hex);
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
-
-function endpointId(endpoint: string | GraphNode): string {
-  return typeof endpoint === 'string' ? endpoint : endpoint.id;
-}
-
-export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters, viewMode }: GraphProps) {
+export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: GraphProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const graphRef = useRef<any>(null);
+  const cyRef = useRef<Core | null>(null);
 
-  const baseGraphByMode = useMemo(() => {
-    const { nodes, edges, nodeParents } = buildGraphElements();
+  useEffect(() => {
+    if (!containerRef.current) return;
 
+    const { nodes, edges, parentNodes, nodeParents } = buildGraphElements();
+
+
+    // === Preset positions: logical group arrangement ===
+    // Layout: Beta-lactams top, Non-BL bottom grouped by spectrum
+    // Non-BL arrangement: 
+    //   Left (Gram+/MRSA) → Center (Broad) → Right (Gram-/Pseudomonas)
+    const GROUP_POSITIONS: Record<string, { x: number; y: number }> = {
+      // === Row 1: Penicillins ===
+      'group-penicillin-natural-':     { x: -900, y: -600 },
+      'group-penicillin-amino-':       { x: -550, y: -600 },
+      'group-penicillin-anti-staph-':  { x: -900, y: -350 },
+      'group-penicillin-extended-':    { x: -550, y: -350 },
+
+      // === Row 1-2: Cephalosporins (1G→5G left to right) ===
+      'group-cephalosporin-1g':         { x: -50,  y: -600 },
+      'group-cephalosporin-2g':         { x: 350,  y: -600 },
+      'group-cephalosporin-3g':         { x: 750,  y: -650 },
+      'group-cephalosporin-4g':         { x: 1250, y: -400 },
+      'group-cephalosporin-5g':         { x: 1250, y: -750 },
+
+      // === Row 2: Other beta-lactams ===
+      'group-carbapenem':               { x: 350,  y: -250 },
+      'group-monobactam':               { x: 800,  y: -250 },
+
+      // === Row 3: Non-BL — Gram+ / MRSA cover (left) ===
+      'group-glycopeptide':             { x: -900, y: 150 },    // Vancomycin = MRSA
+      'group-oxazolidinone':            { x: -550, y: 150 },    // Linezolid = MRSA
+      'group-lincosamide':              { x: -250, y: 150 },    // Clindamycin = Gram+/anaerobe
+
+      // === Row 3: Non-BL — Broad spectrum (center) ===
+      'group-fluoroquinolone':          { x: 150,  y: 150 },    // Broad (G+/G-)
+      'group-tetracycline':             { x: 550,  y: 150 },    // Broad (atypicals)
+      'group-macrolide':                { x: 950,  y: 150 },    // Atypical/Gram+
+      'group-sulfonamide':              { x: 1350, y: 150 },    // Broad (UTI, PJP)
+
+      // === Row 4: Non-BL — Gram- / Anaerobe / Niche (bottom) ===
+      'group-aminoglycoside':           { x: 150,  y: 450 },    // Gram- / Pseudomonas
+      'group-nitroimidazole':           { x: 550,  y: 450 },
+      'group-lipopeptide':              { x: -900, y: 450 },    // Daptomycin = MRSA    // Anaerobe
+    };
+
+    // Assign positions to drug nodes based on their parent group
+    const nodePositions: Record<string, { x: number; y: number }> = {};
     const groupChildCounts: Record<string, number> = {};
-    const groupChildIndex2d: Record<string, number> = {};
-    const groupChildIndex3d: Record<string, number> = {};
+    const groupChildIndex: Record<string, number> = {};
 
-    for (const node of nodes) {
-      const parentId = nodeParents[node.id];
+    // Count children per group
+    for (const n of nodes) {
+      const parentId = nodeParents[n.id];
       if (parentId) {
-        groupChildCounts[parentId] = (groupChildCounts[parentId] ?? 0) + 1;
+        groupChildCounts[parentId] = (groupChildCounts[parentId] || 0) + 1;
       }
     }
 
-    const nodes2d: GraphNode[] = nodes.map((node) => {
-      const parentId = nodeParents[node.id];
-      const center2d = parentId && GROUP_POSITIONS_2D[parentId] ? GROUP_POSITIONS_2D[parentId] : { x: 0, y: 0 };
-
-      if (!parentId) {
-        return { ...node, x: center2d.x, y: center2d.y, z: 0, fx: center2d.x, fy: center2d.y };
+    // Assign positions in a grid within each group
+    for (const n of nodes) {
+      const parentId = nodeParents[n.id];
+      if (parentId && GROUP_POSITIONS[parentId]) {
+        const center = GROUP_POSITIONS[parentId];
+        const idx = groupChildIndex[parentId] || 0;
+        groupChildIndex[parentId] = idx + 1;
+        const total = groupChildCounts[parentId];
+        const cols = Math.ceil(Math.sqrt(total));
+        const row = Math.floor(idx / cols);
+        const col = idx % cols;
+        const spacing = 90;
+        const offsetX = (col - (cols - 1) / 2) * spacing;
+        const offsetY = row * spacing;
+        nodePositions[n.id] = { x: center.x + offsetX, y: center.y + offsetY };
       }
+    }
 
-      const idx = groupChildIndex2d[parentId] ?? 0;
-      groupChildIndex2d[parentId] = idx + 1;
+    const elements: cytoscape.ElementDefinition[] = [
+      // Parent (compound) nodes
+      ...parentNodes.map(p => ({
+        data: { id: p.id, label: p.label, isGroup: 'true' },
+      })),
+      // Drug nodes with parent reference + preset position
+      ...nodes.map(n => ({
+        data: {
+          id: n.id,
+          label: n.label,
+          drugClass: n.drugClass,
+          r1Group: n.r1Group ?? '',
+          color: n.color,
+          parent: nodeParents[n.id] || undefined,
+          hasMrsa: (n.spectrumTags || []).includes('mrsa') ? 'true' : 'false',
+          hasPseudomonas: (n.spectrumTags || []).includes('pseudomonas') ? 'true' : 'false',
+        },
+        position: nodePositions[n.id] || { x: 0, y: 0 },
+      })),
+      // Edges
+      ...edges.map(e => ({
+        data: {
+          id: e.id,
+          source: e.source,
+          target: e.target,
+          crossReactivity: e.crossReactivity,
+        },
+      })),
+    ];
 
-      const total = groupChildCounts[parentId] ?? 1;
-      const cols = Math.max(2, Math.ceil(Math.sqrt(total)));
-      const row = Math.floor(idx / cols);
-      const col = idx % cols;
-      const spacing = 90;
-      const offsetX = (col - (cols - 1) / 2) * spacing;
-      const offsetY = row * spacing;
-      const x = center2d.x + offsetX;
-      const y = center2d.y + offsetY;
+    const cy = cytoscape({
+      container: containerRef.current,
+      elements,
+      style: [
+        // Compound (parent/group) nodes
+        {
+          selector: 'node[isGroup = "true"]',
+          style: {
+            'background-color': 'rgba(30, 41, 59, 0.25)',
+            'background-opacity': 0.25,
+            'border-width': 1,
+            'border-color': 'rgba(100, 116, 139, 0.25)',
+            'border-style': 'dashed' as any,
+            shape: 'round-rectangle',
+            'padding': '25px',
+            label: 'data(label)',
+            'font-size': '16px',
+            'font-weight': 'bold',
+            color: 'rgba(148, 163, 184, 0.6)',
+            'text-valign': 'top',
+            'text-halign': 'center',
+            'text-margin-y': -6,
+            'text-outline-width': 0,
+            'text-background-color': '#0f172a',
+            'text-background-opacity': 0.7,
+            'text-background-padding': '4px',
+            'text-background-shape': 'round-rectangle',
+          } as any,
+        },
+        // Drug nodes
+        {
+          selector: 'node[!isGroup]',
+          style: {
+            'background-color': 'data(color)',
+            label: 'data(label)',
+            width: 44,
+            height: 44,
+            'font-size': '18px',
+            color: '#cbd5e1',
+            'text-valign': 'bottom',
+            'text-halign': 'center',
+            'text-margin-y': 8,
+            'text-outline-width': 3,
+            'text-outline-color': '#0f172a',
+            'border-width': 1.5,
+            'border-color': 'data(color)',
+            'border-opacity': 0.5,
+            'transition-property': 'opacity, width, height, border-width, border-opacity',
+            'transition-duration': 200,
+          } as any,
+        },
 
-      return { ...node, x, y, z: 0, fx: x, fy: y };
+        // MRSA-covering drugs: double border effect
+        {
+          selector: 'node[hasMrsa = "true"]',
+          style: {
+            'border-width': 3,
+            'border-color': '#f43f5e',
+            'border-opacity': 0.9,
+            'border-style': 'double' as any,
+          } as any,
+        },
+        // Pseudomonas-covering drugs: cyan ring
+        {
+          selector: 'node[hasPseudomonas = "true"]',
+          style: {
+            'border-width': 2.5,
+            'border-color': '#06b6d4',
+            'border-opacity': 0.8,
+          } as any,
+        },
+        // Edge styles
+        {
+          selector: 'edge[crossReactivity = "high"]',
+          style: {
+            width: 3,
+            'line-color': '#ef4444',
+            'line-style': 'solid',
+            opacity: 0.75,
+            'curve-style': 'bezier',
+          },
+        },
+        {
+          selector: 'edge[crossReactivity = "moderate"]',
+          style: {
+            width: 2,
+            'line-color': '#f97316',
+            'line-style': 'dashed',
+            'line-dash-pattern': [8, 5],
+            opacity: 0.6,
+            'curve-style': 'bezier',
+          },
+        },
+        {
+          selector: 'edge[crossReactivity = "low"]',
+          style: {
+            width: 1,
+            'line-color': '#6b7280',
+            'line-style': 'dashed',
+            'line-dash-pattern': [4, 6],
+            opacity: 0.4,
+            'curve-style': 'bezier',
+          },
+        },
+        {
+          selector: 'edge[crossReactivity = "disputed"]',
+          style: {
+            width: 2.5,
+            'line-color': '#eab308',
+            'line-style': 'dashed',
+            'line-dash-pattern': [3, 3],
+            opacity: 0.8,
+            'curve-style': 'bezier',
+          },
+        },
+        // Selection states
+        {
+          selector: 'node.selected',
+          style: {
+            width: 66,
+            height: 66,
+            'font-size': '22px',
+            'border-width': 3,
+            'border-color': '#ffffff',
+            'border-opacity': 1,
+            'z-index': 999,
+          } as any,
+        },
+        {
+          selector: 'node.highlighted',
+          style: {
+            'border-width': 2.5,
+            'border-color': '#ffffff',
+            'border-opacity': 0.7,
+            'z-index': 100,
+          } as any,
+        },
+        {
+          selector: 'node.dimmed',
+          style: { opacity: 0.12 },
+        },
+        {
+          selector: 'edge.dimmed',
+          style: { opacity: 0.05 },
+        },
+      ],
+      layout: { name: 'preset' } as Parameters<Core['layout']>[0],
+      minZoom: 0.15,
+      maxZoom: 4,
+      wheelSensitivity: 0.25,
     });
 
-    const nodes3d: GraphNode[] = nodes.map((node) => {
-      const parentId = nodeParents[node.id];
-      const center3d = parentId && GROUP_POSITIONS_3D[parentId] ? GROUP_POSITIONS_3D[parentId] : { x: 0, y: 0, z: 0 };
-
-      if (!parentId) {
-        return { ...node, x: center3d.x, y: center3d.y, z: center3d.z };
-      }
-
-      const idx = groupChildIndex3d[parentId] ?? 0;
-      groupChildIndex3d[parentId] = idx + 1;
-
-      const total = groupChildCounts[parentId] ?? 1;
-      const cube = Math.max(2, Math.ceil(Math.cbrt(total)));
-      const layerSize = cube * cube;
-      const layers = Math.ceil(total / layerSize);
-      const layer = Math.floor(idx / layerSize);
-      const inLayer = idx % layerSize;
-      const row = Math.floor(inLayer / cube);
-      const col = inLayer % cube;
-
-      const spacing = 100;
-      const depthSpacing = 140;
-      const offsetX = (col - (cube - 1) / 2) * spacing;
-      const offsetY = (row - (cube - 1) / 2) * spacing;
-      const offsetZ = (layer - (layers - 1) / 2) * depthSpacing;
-
-      return {
-        ...node,
-        x: center3d.x + offsetX,
-        y: center3d.y + offsetY,
-        z: center3d.z + offsetZ,
-      };
+    cy.on('tap', 'node[!isGroup]', (e: EventObject) => {
+      onDrugSelect(e.target.id());
     });
 
-    return {
-      '2d': {
-        nodes: nodes2d,
-        links: edges as GraphLink[],
-      },
-      '3d': {
-        nodes: nodes3d,
-        links: edges as GraphLink[],
-      },
+    cy.on('mouseover', 'node[!isGroup]', (e: EventObject) => {
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const pos = e.target.renderedPosition() as { x: number; y: number };
+      onDrugHover(e.target.id(), rect.left + pos.x, rect.top + pos.y);
+      (containerRef.current as HTMLElement).style.cursor = 'pointer';
+    });
+
+    cy.on('mouseout', 'node[!isGroup]', () => {
+      onDrugHover(null);
+      if (containerRef.current) (containerRef.current as HTMLElement).style.cursor = 'default';
+    });
+
+    cyRef.current = cy;
+
+    return () => {
+      cy.destroy();
+      cyRef.current = null;
     };
   }, []);
 
-  const baseGraph = baseGraphByMode[viewMode];
-
-  const visibleGraph = useMemo(() => {
-    const visibleNodeIds = new Set(
-      baseGraph.nodes.filter((node) => filters.classes[node.drugClass] !== false).map((node) => node.id),
-    );
-
-    const links = baseGraph.links.filter(
-      (link) =>
-        filters.risks[link.crossReactivity] &&
-        visibleNodeIds.has(endpointId(link.source)) &&
-        visibleNodeIds.has(endpointId(link.target)),
-    );
-
-    const nodes = baseGraph.nodes.filter((node) => visibleNodeIds.has(node.id));
-    return { nodes, links };
-  }, [baseGraph, filters]);
-
-  const selectionContext = useMemo(() => {
-    if (!selectedDrug) {
-      return {
-        neighborNodeIds: new Set<string>(),
-        selectedLinkIds: new Set<string>(),
-      };
-    }
-
-    const neighborNodeIds = new Set<string>();
-    const selectedLinkIds = new Set<string>();
-
-    for (const link of visibleGraph.links) {
-      const sourceId = endpointId(link.source);
-      const targetId = endpointId(link.target);
-      if (sourceId === selectedDrug) {
-        neighborNodeIds.add(targetId);
-        selectedLinkIds.add(link.id);
-      } else if (targetId === selectedDrug) {
-        neighborNodeIds.add(sourceId);
-        selectedLinkIds.add(link.id);
-      }
-    }
-
-    return { neighborNodeIds, selectedLinkIds };
-  }, [selectedDrug, visibleGraph.links]);
-
-  const focusSelectedNode = useCallback(() => {
-    const api = graphRef.current;
-    if (!api || !selectedDrug) return;
-
-    const target = visibleGraph.nodes.find((node) => node.id === selectedDrug);
-    if (!target) return;
-
-    if (viewMode === '3d') {
-      api.cameraPosition(
-        { x: target.x + 220, y: target.y - 180, z: target.z + 640 },
-        { x: target.x, y: target.y, z: target.z },
-        900,
-      );
-      return;
-    }
-
-    api.centerAt?.(target.x, target.y, 700);
-    api.zoom?.(2.1, 700);
-  }, [selectedDrug, viewMode, visibleGraph.nodes]);
-
+  // Highlight selection
   useEffect(() => {
-    const api = graphRef.current;
-    if (!api) return;
+    const cy = cyRef.current;
+    if (!cy) return;
 
-    if (viewMode === '3d') {
-      api.cameraPosition({ x: 1400, y: -900, z: 1700 }, undefined, 0);
-      const controls = api.controls?.();
-      if (controls) {
-        controls.autoRotate = true;
-        controls.autoRotateSpeed = 0.35;
+    cy.elements().removeClass('selected dimmed highlighted');
+
+    if (selectedDrug) {
+      const selected = cy.getElementById(selectedDrug);
+      if (selected.length) {
+        const connectedEdges = selected.connectedEdges();
+        const connectedNodes = connectedEdges.connectedNodes().not(selected);
+
+        // Only dim non-group nodes
+        cy.nodes('[!isGroup]').addClass('dimmed');
+        cy.edges().addClass('dimmed');
+        selected.removeClass('dimmed').addClass('selected');
+        connectedNodes.removeClass('dimmed').addClass('highlighted');
+        connectedEdges.removeClass('dimmed');
+
+        cy.animate({
+          center: { eles: selected },
+          duration: 400,
+          easing: 'ease-in-out-cubic',
+        } as Parameters<Core['animate']>[0]);
       }
-      return;
     }
+  }, [selectedDrug]);
 
-    api.centerAt?.(0, 0, 0);
-    api.zoom?.(0.75, 0);
-  }, [viewMode]);
-
+  // Apply class/risk filters
   useEffect(() => {
-    focusSelectedNode();
-  }, [focusSelectedNode]);
+    const cy = cyRef.current;
+    if (!cy) return;
 
-  useEffect(() => {
-    if (!selectedDrug) onDrugHover(null);
-  }, [selectedDrug, onDrugHover]);
-
-  const handleNodeHover = useCallback(
-    (node: unknown) => {
-      const container = containerRef.current;
-      if (!container) return;
-
-      if (!node) {
-        container.style.cursor = 'default';
-        onDrugHover(null);
-        return;
+    cy.nodes('[!isGroup]').forEach(node => {
+      const cls = node.data('drugClass') as DrugClass;
+      if (filters.classes[cls] === false) {
+        node.style('display', 'none');
+      } else {
+        node.style('display', 'element');
       }
+    });
 
-      container.style.cursor = 'pointer';
-      const drugNode = node as GraphNode;
-      const api = graphRef.current;
-
-      let screenPos: { x: number; y: number } | null = null;
-      if (api?.graph2ScreenCoords) {
-        try {
-          screenPos = api.graph2ScreenCoords(drugNode.x, drugNode.y, drugNode.z);
-        } catch {
-          screenPos = api.graph2ScreenCoords(drugNode.x, drugNode.y);
-        }
+    cy.edges().forEach(edge => {
+      const cr = edge.data('crossReactivity') as 'high' | 'moderate' | 'low' | 'disputed';
+      const riskVisible = filters.risks[cr];
+      const nodesVisible = edge.source().visible() && edge.target().visible();
+      if (riskVisible && nodesVisible) {
+        edge.style('display', 'element');
+      } else {
+        edge.style('display', 'none');
       }
-
-      if (!screenPos) {
-        onDrugHover(drugNode.id);
-        return;
-      }
-
-      const rect = container.getBoundingClientRect();
-      onDrugHover(drugNode.id, rect.left + screenPos.x, rect.top + screenPos.y);
-    },
-    [onDrugHover],
-  );
-
-  const commonProps = {
-    ref: graphRef,
-    graphData: visibleGraph,
-    backgroundColor: '#020617',
-    nodeRelSize: 4.5,
-    linkCurvature: 0.12,
-    linkOpacity: 0.75,
-    warmupTicks: 80,
-    cooldownTicks: 120,
-    d3VelocityDecay: 0.22,
-    enableNodeDrag: false,
-    onNodeClick: (node: unknown) => onDrugSelect((node as GraphNode).id),
-    onNodeHover: handleNodeHover,
-    nodeLabel: (node: unknown) => {
-      const n = node as GraphNode;
-      return `<div style=\"padding:6px 8px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0\">${n.label}</div>`;
-    },
-    nodeVal: (node: unknown) => {
-      const n = node as GraphNode;
-      if (selectedDrug && n.id === selectedDrug) return 11;
-      if (selectedDrug && selectionContext.neighborNodeIds.has(n.id)) return 8.5;
-      return 6.5;
-    },
-    nodeColor: (node: unknown) => {
-      const n = node as GraphNode;
-      if (!selectedDrug) return n.color;
-      if (n.id === selectedDrug || selectionContext.neighborNodeIds.has(n.id)) return n.color;
-      return applyAlpha('#334155', 0.25);
-    },
-    linkColor: (link: unknown) => {
-      const edge = link as GraphLink;
-      const baseColor = EDGE_COLORS[edge.crossReactivity];
-      if (!selectedDrug) return baseColor;
-      if (selectionContext.selectedLinkIds.has(edge.id)) return baseColor;
-      return applyAlpha('#334155', 0.18);
-    },
-    linkWidth: (link: unknown) => {
-      const edge = link as GraphLink;
-      const width = EDGE_WIDTH[edge.crossReactivity];
-      if (!selectedDrug) return width;
-      return selectionContext.selectedLinkIds.has(edge.id) ? width + 0.6 : 0.45;
-    },
-  };
+    });
+  }, [filters]);
 
   return (
     <div
       ref={containerRef}
       className="w-full h-full"
       style={{ background: 'radial-gradient(ellipse at center, #0f172a 0%, #020617 70%)' }}
-    >
-      {viewMode === '3d' ? (
-        <ForceGraph3D
-          {...commonProps}
-          numDimensions={3}
-          warmupTicks={80}
-          cooldownTicks={120}
-          d3VelocityDecay={0.22}
-          showNavInfo={false}
-        />
-      ) : (
-        <ForceGraph2D
-          {...commonProps}
-          warmupTicks={0}
-          cooldownTicks={0}
-          d3VelocityDecay={0.35}
-        />
-      )}
-    </div>
+    />
   );
 }

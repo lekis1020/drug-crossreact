@@ -13,10 +13,7 @@
     "cytoscape": "^3.30.0",
     "cytoscape-cose-bilkent": "^4.1.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-force-graph-2d": "^1.29.1",
-    "react-force-graph-3d": "^1.29.1",
-    "three": "^0.183.2"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.0",
