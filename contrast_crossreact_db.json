@@ -1,0 +1,131 @@
+{
+  "metadata": {
+    "created": "2026-03-25",
+    "version": "0.1-draft",
+    "scope": "Iodinated CT contrast-media cross-reactivity",
+    "status": "template",
+    "last_database_update_at": null,
+    "last_literature_monitoring_at": null,
+    "notes": "Template scaffold. Populate literature_confirmed_pairs only after clinical review."
+  },
+  "agent_groups": [
+    {
+      "group_id": "nonionic_monomer_low_osmolar",
+      "name": "Non-ionic monomer (low-osmolar)",
+      "agents": [
+        "iohexol",
+        "iopromide",
+        "iopamidol",
+        "ioversol",
+        "iomeprol",
+        "iobitridol"
+      ]
+    },
+    {
+      "group_id": "nonionic_dimer_iso_osmolar",
+      "name": "Non-ionic dimer (iso-osmolar)",
+      "agents": [
+        "iodixanol"
+      ]
+    },
+    {
+      "group_id": "ionic_high_osmolar",
+      "name": "Ionic high-osmolar agents",
+      "agents": [
+        "ioxitalamate",
+        "diatrizoate",
+        "ioxaglate"
+      ]
+    }
+  ],
+  "agents": [
+    {
+      "id": "iohexol",
+      "label": "Iohexol",
+      "ionicity": "non-ionic",
+      "structure": "monomer",
+      "osmolality_class": "low-osmolar"
+    },
+    {
+      "id": "iopromide",
+      "label": "Iopromide",
+      "ionicity": "non-ionic",
+      "structure": "monomer",
+      "osmolality_class": "low-osmolar"
+    },
+    {
+      "id": "iopamidol",
+      "label": "Iopamidol",
+      "ionicity": "non-ionic",
+      "structure": "monomer",
+      "osmolality_class": "low-osmolar"
+    },
+    {
+      "id": "ioversol",
+      "label": "Ioversol",
+      "ionicity": "non-ionic",
+      "structure": "monomer",
+      "osmolality_class": "low-osmolar"
+    },
+    {
+      "id": "iomeprol",
+      "label": "Iomeprol",
+      "ionicity": "non-ionic",
+      "structure": "monomer",
+      "osmolality_class": "low-osmolar"
+    },
+    {
+      "id": "iobitridol",
+      "label": "Iobitridol",
+      "ionicity": "non-ionic",
+      "structure": "monomer",
+      "osmolality_class": "low-osmolar"
+    },
+    {
+      "id": "iodixanol",
+      "label": "Iodixanol",
+      "ionicity": "non-ionic",
+      "structure": "dimer",
+      "osmolality_class": "iso-osmolar"
+    },
+    {
+      "id": "ioxitalamate",
+      "label": "Ioxitalamate",
+      "ionicity": "ionic",
+      "structure": "monomer",
+      "osmolality_class": "high-osmolar"
+    },
+    {
+      "id": "diatrizoate",
+      "label": "Diatrizoate",
+      "ionicity": "ionic",
+      "structure": "monomer",
+      "osmolality_class": "high-osmolar"
+    },
+    {
+      "id": "ioxaglate",
+      "label": "Ioxaglate",
+      "ionicity": "ionic",
+      "structure": "dimer",
+      "osmolality_class": "high-osmolar"
+    }
+  ],
+  "literature_confirmed_pairs": [],
+  "risk_rules": [
+    {
+      "rule_id": "CM_R001",
+      "condition": "Same structural family and prior immediate hypersensitivity history",
+      "predicted_cross_reactivity": "moderate",
+      "notes": "Template rule for later calibration with reviewed evidence",
+      "pmids": []
+    }
+  ],
+  "literature_monitoring": {
+    "strategy": "PubMed E-utilities scheduled monitor",
+    "query": null,
+    "checked_window_days": 30,
+    "max_results": 150,
+    "checked_at": null,
+    "records": []
+  }
+}

@@ -114,6 +114,21 @@ The app header now shows:
 - `DB 업데이트`: `metadata.last_database_update_at` (fallback: `last_literature_monitoring_at` → `created`)
 - `모니터링`: `metadata.last_literature_monitoring_at`
 
+## CT Contrast Cross-Reactivity Blueprint
+
+Scaffold artifacts for a second project (iodinated CT contrast media) are included:
+
+- `docs/ct-contrast-project-plan.md` — implementation roadmap
+- `contrast_crossreact_db.json` — starter schema/template dataset
+- `scripts/update-contrast-literature-monitoring.mjs` — PubMed monitoring script
+- `.github/workflows/update-contrast-literature-monitoring.yml` — scheduled review-first PR workflow
+
+Manual monitoring run:
+
+```bash
+npm run update:contrast:literature
+```
+
 ## Tech Stack
 
 - React 19 + TypeScript

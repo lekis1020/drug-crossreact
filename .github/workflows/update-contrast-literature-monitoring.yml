@@ -1,0 +1,77 @@
+name: Monitor CT contrast cross-reactivity literature
+
+on:
+  schedule:
+    - cron: '0 21 * * 0'
+  workflow_dispatch:
+    inputs:
+      days_back:
+        description: 'Publication window (days)'
+        required: false
+        default: '30'
+      max_results:
+        description: 'Maximum PubMed IDs to process'
+        required: false
+        default: '150'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Refresh CT contrast literature monitoring records
+        env:
+          DAYS_BACK: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.days_back || '30' }}
+          MAX_RESULTS: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.max_results || '150' }}
+        run: node scripts/update-contrast-literature-monitoring.mjs --days-back "$DAYS_BACK" --max-results "$MAX_RESULTS"
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create pull request
+        if: steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: automation/contrast-literature-monitoring
+          delete-branch: true
+          title: 'chore: refresh CT contrast literature monitoring records'
+          commit-message: |
+            Keep CT contrast cross-reactivity monitoring records current
+
+            Automated PubMed monitoring refresh for iodinated CT contrast media literature.
+
+            Constraint: Monitoring updates must remain review-first via pull requests
+            Confidence: medium
+            Scope-risk: narrow
+            Directive: Promote records to literature_confirmed_pairs only after clinical review
+            Tested: GitHub Actions monitoring workflow run
+            Not-tested: Manual adjudication of newly identified records
+          body: |
+            ## Summary
+            - refreshes `contrast_crossreact_db.json` → `literature_monitoring.records`
+            - updates metadata monitoring timestamps
+
+            ## Clinical review checklist
+            - [ ] Confirm each PMID/DOI is relevant to CT contrast cross-reactivity
+            - [ ] Determine whether record should be promoted to `literature_confirmed_pairs`
+            - [ ] Verify risk wording remains conservative (no guaranteed-safe claims)
+          labels: |
+            automated
+            contrast-monitoring
