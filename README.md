@@ -26,6 +26,7 @@ Interactive graph visualization of drug cross-reactivity relationships, designed
 ### Shared
 
 - **Dual project mode** — Switch between Antibiotics and CT Contrast via header button
+- **Ingredient + brand-name search** — Product-name queries auto-resolve to active ingredient nodes
 - **Glass-morphism dark UI** — Tailwind CSS v4 dark theme with blur/transparency
 - **DB freshness display** — Header shows last database update and monitoring timestamps
 - **GitHub Pages deployment** — Automated via GitHub Actions

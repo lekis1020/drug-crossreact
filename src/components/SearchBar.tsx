@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { buildGraphElements } from '../data/graphData';
+import { CLASS_LABELS } from '../data/colors';
+import { searchAntibioticNodes } from '../data/searchAliases';
 
 interface SearchBarProps {
   onSearch: (drugId: string) => void;
@@ -13,9 +15,14 @@ export function SearchBar({ onSearch, selectedDrug }: SearchBarProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { nodes } = buildGraphElements();
-  const matches = query.length > 0
-    ? nodes.filter(n => n.label.toLowerCase().includes(query.toLowerCase())).slice(0, 8)
-    : [];
+  const matches =
+    query.length > 0
+      ? searchAntibioticNodes(
+          nodes,
+          query,
+          Object.fromEntries(nodes.map((node) => [node.id, CLASS_LABELS[node.drugClass]])),
+        )
+      : [];
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -43,7 +50,7 @@ export function SearchBar({ onSearch, selectedDrug }: SearchBarProps) {
           value={query}
           onChange={e => { setQuery(e.target.value); setIsOpen(true); }}
           onFocus={() => setIsOpen(true)}
-          placeholder="Search drug name..."
+          placeholder="Search ingredient or brand name..."
           className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm text-white placeholder-slate-500 outline-none transition-all focus:ring-2 focus:ring-blue-500/40"
           style={{
             background: 'rgba(30, 41, 59, 0.6)',
@@ -67,15 +74,24 @@ export function SearchBar({ onSearch, selectedDrug }: SearchBarProps) {
             boxShadow: '0 12px 40px rgba(0,0,0,0.4)',
           }}
         >
-          {matches.map(n => (
+          {matches.map((match, index) => (
             <button
-              key={n.id}
-              onClick={() => handleSelect(n.id, n.label)}
+              key={`${match.id}-${match.matchType}-${match.matchedAlias ?? index}`}
+              onClick={() => handleSelect(match.id, match.label)}
               className="w-full text-left px-4 py-3 text-sm hover:bg-slate-800/60 transition-colors flex items-center gap-3"
             >
-              <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: n.color }} />
-              <span className="text-slate-200">{n.label}</span>
-              <span className="text-xs text-slate-500 ml-auto">{n.drugClass}</span>
+              <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: match.color }} />
+              <span className="text-slate-200">{match.label}</span>
+              <span
+                className={`text-[10px] px-1.5 py-0.5 rounded ml-auto ${
+                  match.matchType === 'brand'
+                    ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-400/30'
+                    : 'bg-slate-700/50 text-slate-400 border border-slate-600/40'
+                }`}
+              >
+                {match.matchType === 'brand' ? '상품명' : '성분명'}
+              </span>
+              <span className="text-xs text-slate-500">{match.secondaryLabel}</span>
             </button>
           ))}
         </div>
