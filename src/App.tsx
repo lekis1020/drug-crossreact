@@ -8,6 +8,7 @@ import { buildGraphElements } from './data/graphData';
 import { drugDatabase } from './data/drugDatabase';
 import type { FilterState, TooltipState } from './types';
 import { ContrastPage } from './contrast/ContrastPage';
+import { OncologyPage } from './oncology/OncologyPage';
 import { SharedLayout } from './components/layout/SharedLayout';
 import { COLORS, EFFECTS } from './styles/design-tokens';
 
@@ -32,7 +33,7 @@ const INITIAL_FILTERS: FilterState = {
 };
 
 export default function App() {
-  const [projectMode, setProjectMode] = useState<'antibiotic' | 'contrast'>('antibiotic');
+  const [projectMode, setProjectMode] = useState<'antibiotic' | 'contrast' | 'oncology'>('antibiotic');
   const [selectedDrug, setSelectedDrug] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<TooltipState | null>(null);
   const [filters, setFilters] = useState<FilterState>(INITIAL_FILTERS);
@@ -63,7 +64,11 @@ export default function App() {
   const lastMonitoringRaw = drugDatabase.metadata?.last_literature_monitoring_at ?? null;
 
   if (projectMode === 'contrast') {
-    return <ContrastPage onSwitchToAntibiotic={() => setProjectMode('antibiotic')} />;
+    return <ContrastPage onSwitchToOncology={() => setProjectMode('oncology')} />;
+  }
+
+  if (projectMode === 'oncology') {
+    return <OncologyPage onSwitchToAntibiotic={() => setProjectMode('antibiotic')} />;
   }
 
   return (
@@ -75,6 +80,7 @@ export default function App() {
       searchBar={<SearchBar onSearch={handleDrugSelect} selectedDrug={selectedDrug} />}
       filterPanel={<FilterPanel filters={filters} onFiltersChange={setFilters} />}
       onSwitchMode={() => setProjectMode('contrast')}
+      switchModeLabel="CT 조영제 보기"
       lastDatabaseUpdate={lastDatabaseUpdateRaw}
       lastMonitoring={lastMonitoringRaw}
       sidePanel={<SidePanel selectedDrugId={selectedDrug} />}

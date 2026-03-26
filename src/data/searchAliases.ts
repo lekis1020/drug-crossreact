@@ -1,5 +1,6 @@
 import type { DrugNodeData } from '../types';
 import type { ContrastNodeData } from '../contrast/types';
+import type { OncologyNodeData } from '../oncology/types';
 
 export interface SearchHit {
   id: string;
@@ -67,6 +68,22 @@ const CONTRAST_BRAND_ALIASES: Record<string, string[]> = {
   diatrizoate: ['gastrografin', 'urografine', 'hypaque'],
   ioxaglate: ['hexabrix'],
   ioxitalamate: ['telebrix'],
+};
+
+const ONCOLOGY_BRAND_ALIASES: Record<string, string[]> = {
+  paclitaxel: ['taxol', 'genexol'],
+  docetaxel: ['taxotere'],
+  nab_paclitaxel: ['abraxane'],
+  cabazitaxel: ['jevtana'],
+  carboplatin: ['paraplatin'],
+  cisplatin: ['platinol'],
+  oxaliplatin: ['eloxatin'],
+  pegaspargase: ['oncaspar'],
+  asparaginase_erwinia: ['erwinaze', 'rylaze'],
+  calaspargase_pegol: ['asparlas'],
+  doxorubicin: ['adriamycin'],
+  pegylated_liposomal_doxorubicin: ['doxil', 'caelyx'],
+  daunorubicin: ['cerubidine'],
 };
 
 function normalizeTerm(value: string): string {
@@ -141,6 +158,48 @@ export function searchContrastNodes(nodes: ContrastNodeData[], query: string): S
     }
 
     const aliases = CONTRAST_BRAND_ALIASES[node.id] ?? [];
+    for (const alias of aliases) {
+      const normalizedAlias = normalizeTerm(alias);
+      if (!normalizedAlias.includes(normalizedQuery)) continue;
+
+      hits.push({
+        id: node.id,
+        label: node.label,
+        color: node.color,
+        secondaryLabel: `상품명: ${alias}`,
+        matchType: 'brand',
+        matchedAlias: alias,
+        score: calculateMatchScore(normalizedQuery, normalizedAlias, 'brand'),
+      });
+    }
+  }
+
+  return hits
+    .sort((a, b) => a.score - b.score || a.label.localeCompare(b.label))
+    .slice(0, 12)
+    .map(({ score: _score, ...rest }) => rest);
+}
+
+export function searchOncologyNodes(nodes: OncologyNodeData[], query: string): SearchHit[] {
+  const normalizedQuery = normalizeTerm(query);
+  if (!normalizedQuery) return [];
+
+  const hits: Array<SearchHit & { score: number }> = [];
+
+  for (const node of nodes) {
+    const normalizedLabel = normalizeTerm(node.label);
+    if (normalizedLabel.includes(normalizedQuery)) {
+      hits.push({
+        id: node.id,
+        label: node.label,
+        color: node.color,
+        secondaryLabel: node.groupName,
+        matchType: 'ingredient',
+        score: calculateMatchScore(normalizedQuery, normalizedLabel, 'ingredient'),
+      });
+    }
+
+    const aliases = ONCOLOGY_BRAND_ALIASES[node.id] ?? [];
     for (const alias of aliases) {
       const normalizedAlias = normalizeTerm(alias);
       if (!normalizedAlias.includes(normalizedQuery)) continue;

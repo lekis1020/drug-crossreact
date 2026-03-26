@@ -3,13 +3,14 @@ import { COLORS, EFFECTS } from '../../styles/design-tokens';
 import { formatDate } from '../../utils/formatters';
 
 interface SharedLayoutProps {
-  mode: 'antibiotic' | 'contrast';
+  mode: 'antibiotic' | 'contrast' | 'oncology';
   title: string;
   subtitle: string;
   icon: string;
   searchBar: ReactNode;
   filterPanel: ReactNode;
   onSwitchMode: () => void;
+  switchModeLabel?: string;
   lastDatabaseUpdate: string | null;
   lastMonitoring: string | null;
   sidePanel: ReactNode;
@@ -26,6 +27,7 @@ export function SharedLayout({
   searchBar,
   filterPanel,
   onSwitchMode,
+  switchModeLabel,
   lastDatabaseUpdate,
   lastMonitoring,
   sidePanel,
@@ -33,7 +35,12 @@ export function SharedLayout({
   onToggleSidePanel,
   children,
 }: SharedLayoutProps) {
-  const theme = mode === 'antibiotic' ? COLORS.brand.antibiotic : COLORS.brand.contrast;
+  const theme =
+    mode === 'antibiotic'
+      ? COLORS.brand.antibiotic
+      : mode === 'contrast'
+        ? COLORS.brand.contrast
+        : COLORS.brand.oncology;
 
   return (
     <div className="flex flex-col h-screen overflow-hidden" style={{ background: COLORS.bg.main, color: COLORS.text.primary }}>
@@ -79,7 +86,7 @@ export function SharedLayout({
             className="px-3 py-2 rounded-lg text-xs font-bold text-slate-200 hover:text-white transition-all hover:bg-white/5 border border-white/10"
             style={{ background: 'rgba(30, 41, 59, 0.4)' }}
           >
-            {mode === 'antibiotic' ? 'CT 조영제 보기' : '항생제 보기'}
+            {switchModeLabel ?? (mode === 'antibiotic' ? 'CT 조영제 보기' : '항생제 보기')}
           </button>
           
           {filterPanel}

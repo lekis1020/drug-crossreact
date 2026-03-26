@@ -16,6 +16,11 @@ export const COLORS = {
       secondary: '#14b8a6', // teal-500
       gradient: 'linear-gradient(135deg, #0ea5e9, #14b8a6)',
     },
+    oncology: {
+      primary: '#ec4899', // fuchsia-500
+      secondary: '#8b5cf6', // violet-500
+      gradient: 'linear-gradient(135deg, #ec4899, #8b5cf6)',
+    },
   },
 
   // Backgrounds (Deep Navy / Slate)

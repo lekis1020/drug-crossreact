@@ -1,6 +1,6 @@
 # Drug Cross-Reactivity Graph
 
-Interactive graph visualization of drug cross-reactivity relationships, designed for allergists and clinical immunologists. Covers antibiotic (beta-lactam) cross-reactivity and iodinated CT contrast media.
+Interactive graph visualization of drug cross-reactivity relationships, designed for allergists and clinical immunologists. Covers antibiotic (beta-lactam), iodinated CT contrast media, and selected anticancer-drug hypersensitivity cross-signals.
 
 ![Tech](https://img.shields.io/badge/React-TypeScript-blue) ![Graph](https://img.shields.io/badge/Cytoscape.js-Graph-green) ![License](https://img.shields.io/badge/license-MIT-gray)
 
@@ -23,10 +23,17 @@ Interactive graph visualization of drug cross-reactivity relationships, designed
 - **Separate graph/search/filter/side-panel** — Full viewer with same interaction patterns as antibiotic mode
 - **Template database** — `contrast_crossreact_db.json` ready for literature pair curation
 
+### Oncology Mode
+
+- **13 anticancer agents** across 4 classes (platinum, taxane, asparaginase, anthracycline)
+- **Class-level and reviewed pair links** for immediate hypersensitivity cross-signal exploration
+- **Brand-name search support** (e.g., Taxol, Taxotere, Abraxane, Paraplatin)
+
 ### Shared
 
 - **Dual project mode** — Switch between Antibiotics and CT Contrast via header button
 - **Ingredient + brand-name search** — Product-name queries auto-resolve to active ingredient nodes
+- **Three-mode navigator** — Antibiotic → Contrast → Oncology cycle via header switch
 - **Glass-morphism dark UI** — Tailwind CSS v4 dark theme with blur/transparency
 - **DB freshness display** — Header shows last database update and monitoring timestamps
 - **GitHub Pages deployment** — Automated via GitHub Actions
@@ -51,6 +58,11 @@ Key papers: Trubiano 2017, Stevenson 2026, Hutten 2025, Romano, Zagursky
 
 - 10 agents, 3 groups, template status (v0.1-draft)
 - `literature_confirmed_pairs` to be populated after clinical review
+
+### Oncology Database (`oncology_crossreact_db.json`)
+
+- 13 agents, 4 groups, template status (v0.1-draft)
+- Includes reviewed starter links for platinum/taxane cross-reaction patterns
 
 ## Quick Start
 

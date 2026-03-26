@@ -1,0 +1,180 @@
+{
+  "metadata": {
+    "created": "2026-03-26",
+    "version": "0.1-draft",
+    "scope": "Anticancer-drug immediate hypersensitivity and in-class cross-reactivity",
+    "status": "template",
+    "last_database_update_at": null,
+    "last_literature_monitoring_at": null,
+    "notes": "Starter oncology cross-reactivity scaffold. Use literature_confirmed_pairs for reviewed evidence only."
+  },
+  "agent_groups": [
+    {
+      "group_id": "platinum_compounds",
+      "name": "Platinum compounds",
+      "agents": ["carboplatin", "cisplatin", "oxaliplatin"]
+    },
+    {
+      "group_id": "taxanes",
+      "name": "Taxanes",
+      "agents": ["paclitaxel", "docetaxel", "nab_paclitaxel", "cabazitaxel"]
+    },
+    {
+      "group_id": "asparaginase_products",
+      "name": "Asparaginase products",
+      "agents": ["pegaspargase", "asparaginase_erwinia", "calaspargase_pegol"]
+    },
+    {
+      "group_id": "anthracyclines",
+      "name": "Anthracyclines",
+      "agents": ["doxorubicin", "pegylated_liposomal_doxorubicin", "daunorubicin"]
+    }
+  ],
+  "agents": [
+    {
+      "id": "carboplatin",
+      "label": "Carboplatin",
+      "drug_class": "Platinum",
+      "formulation": "small molecule",
+      "mechanism": "DNA crosslinking (platinum adduct)"
+    },
+    {
+      "id": "cisplatin",
+      "label": "Cisplatin",
+      "drug_class": "Platinum",
+      "formulation": "small molecule",
+      "mechanism": "DNA crosslinking (platinum adduct)"
+    },
+    {
+      "id": "oxaliplatin",
+      "label": "Oxaliplatin",
+      "drug_class": "Platinum",
+      "formulation": "small molecule",
+      "mechanism": "DNA crosslinking (platinum adduct)"
+    },
+    {
+      "id": "paclitaxel",
+      "label": "Paclitaxel",
+      "drug_class": "Taxane",
+      "formulation": "solvent-based",
+      "mechanism": "microtubule stabilization"
+    },
+    {
+      "id": "docetaxel",
+      "label": "Docetaxel",
+      "drug_class": "Taxane",
+      "formulation": "solvent-based",
+      "mechanism": "microtubule stabilization"
+    },
+    {
+      "id": "nab_paclitaxel",
+      "label": "Nab-paclitaxel",
+      "drug_class": "Taxane",
+      "formulation": "albumin-bound",
+      "mechanism": "microtubule stabilization"
+    },
+    {
+      "id": "cabazitaxel",
+      "label": "Cabazitaxel",
+      "drug_class": "Taxane",
+      "formulation": "solvent-based",
+      "mechanism": "microtubule stabilization"
+    },
+    {
+      "id": "pegaspargase",
+      "label": "Pegaspargase",
+      "drug_class": "Asparaginase",
+      "formulation": "pegylated enzyme",
+      "mechanism": "L-asparagine depletion"
+    },
+    {
+      "id": "asparaginase_erwinia",
+      "label": "Asparaginase Erwinia",
+      "drug_class": "Asparaginase",
+      "formulation": "native enzyme",
+      "mechanism": "L-asparagine depletion"
+    },
+    {
+      "id": "calaspargase_pegol",
+      "label": "Calaspargase pegol",
+      "drug_class": "Asparaginase",
+      "formulation": "pegylated enzyme",
+      "mechanism": "L-asparagine depletion"
+    },
+    {
+      "id": "doxorubicin",
+      "label": "Doxorubicin",
+      "drug_class": "Anthracycline",
+      "formulation": "conventional",
+      "mechanism": "topoisomerase II inhibition"
+    },
+    {
+      "id": "pegylated_liposomal_doxorubicin",
+      "label": "Pegylated liposomal doxorubicin",
+      "drug_class": "Anthracycline",
+      "formulation": "liposomal",
+      "mechanism": "topoisomerase II inhibition"
+    },
+    {
+      "id": "daunorubicin",
+      "label": "Daunorubicin",
+      "drug_class": "Anthracycline",
+      "formulation": "conventional",
+      "mechanism": "topoisomerase II inhibition"
+    }
+  ],
+  "literature_confirmed_pairs": [
+    {
+      "agent_a": "paclitaxel",
+      "agent_b": "docetaxel",
+      "cross_reactivity": "high",
+      "evidence_pmids": ["16197986", "25089112"],
+      "clinical_note": "Cross-reaction between solvent-based taxanes has been repeatedly reported; specialist-supervised rechallenge/desensitization pathways are used."
+    },
+    {
+      "agent_a": "carboplatin",
+      "agent_b": "cisplatin",
+      "cross_reactivity": "moderate",
+      "evidence_pmids": ["30776524"],
+      "clinical_note": "Cross-reactivity can occur among platinum salts; phenotype and timing should guide substitution strategy."
+    },
+    {
+      "agent_a": "carboplatin",
+      "agent_b": "oxaliplatin",
+      "cross_reactivity": "disputed",
+      "evidence_pmids": ["30776524"],
+      "clinical_note": "Reported in cohorts but with variable rates across populations and protocols."
+    },
+    {
+      "agent_a": "cisplatin",
+      "agent_b": "oxaliplatin",
+      "cross_reactivity": "low",
+      "evidence_pmids": ["30776524"],
+      "clinical_note": "Lower but non-zero cross-signal reported in some series."
+    },
+    {
+      "agent_a": "pegaspargase",
+      "agent_b": "calaspargase_pegol",
+      "cross_reactivity": "moderate",
+      "evidence_pmids": [],
+      "clinical_note": "Both pegylated asparaginase products may share antigenicity concerns; verify with protocol-specific allergy pathways."
+    }
+  ],
+  "risk_rules": [
+    {
+      "rule_id": "ONC_R001",
+      "condition": "Same anticancer class with immediate hypersensitivity history",
+      "predicted_cross_reactivity": "moderate",
+      "notes": "Template class-based estimate. Replace with reviewed pair-level evidence whenever available.",
+      "pmids": ["30776524", "25089112"]
+    }
+  ],
+  "literature_monitoring": {
+    "strategy": "PubMed E-utilities scheduled monitor",
+    "query": null,
+    "checked_window_days": 30,
+    "max_results": 150,
+    "checked_at": null,
+    "records": []
+  }
+}

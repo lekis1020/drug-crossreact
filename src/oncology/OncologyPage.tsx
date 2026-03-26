@@ -1,22 +1,22 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { contrastDatabase } from './data/contrastDatabase';
-import { buildContrastGraphElements } from './data/contrastGraphData';
-import { ContrastGraph } from './components/ContrastGraph';
-import { ContrastSearchBar } from './components/ContrastSearchBar';
-import { ContrastFilterPanel } from './components/ContrastFilterPanel';
-import { ContrastSidePanel } from './components/ContrastSidePanel';
-import { ContrastTooltip } from './components/ContrastTooltip';
-import type { ContrastFilterState } from './types';
+import { oncologyDatabase } from './data/oncologyDatabase';
+import { buildOncologyGraphElements } from './data/oncologyGraphData';
+import { OncologyGraph } from './components/OncologyGraph';
+import { OncologySearchBar } from './components/OncologySearchBar';
+import { OncologyFilterPanel } from './components/OncologyFilterPanel';
+import { OncologySidePanel } from './components/OncologySidePanel';
+import { OncologyTooltip } from './components/OncologyTooltip';
+import type { OncologyFilterState } from './types';
 import { SharedLayout } from '../components/layout/SharedLayout';
 import { COLORS, EFFECTS } from '../styles/design-tokens';
 
-interface ContrastPageProps {
-  onSwitchToOncology: () => void;
+interface OncologyPageProps {
+  onSwitchToAntibiotic: () => void;
 }
 
-function createInitialFilters(): ContrastFilterState {
+function createInitialFilters(): OncologyFilterState {
   return {
-    groups: Object.fromEntries(contrastDatabase.agent_groups.map((group) => [group.group_id, true])),
+    groups: Object.fromEntries(oncologyDatabase.agent_groups.map((group) => [group.group_id, true])),
     risks: {
       high: true,
       disputed: true,
@@ -26,13 +26,13 @@ function createInitialFilters(): ContrastFilterState {
   };
 }
 
-export function ContrastPage({ onSwitchToOncology }: ContrastPageProps) {
+export function OncologyPage({ onSwitchToAntibiotic }: OncologyPageProps) {
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<{ agentId: string; x: number; y: number } | null>(null);
-  const [filters, setFilters] = useState<ContrastFilterState>(() => createInitialFilters());
+  const [filters, setFilters] = useState<OncologyFilterState>(() => createInitialFilters());
   const [sidePanelOpen, setSidePanelOpen] = useState(true);
 
-  const { nodes } = buildContrastGraphElements();
+  const { nodes } = buildOncologyGraphElements();
   const nodeMap = useMemo(() => new Map(nodes.map((node) => [node.id, node])), [nodes]);
 
   const handleAgentSelect = useCallback((agentId: string) => {
@@ -50,30 +50,30 @@ export function ContrastPage({ onSwitchToOncology }: ContrastPageProps) {
 
   const tooltipAgent = tooltip ? nodeMap.get(tooltip.agentId) : null;
   const lastDatabaseUpdateRaw =
-    contrastDatabase.metadata?.last_database_update_at ??
-    contrastDatabase.metadata?.last_literature_monitoring_at ??
-    contrastDatabase.metadata?.created ??
+    oncologyDatabase.metadata?.last_database_update_at ??
+    oncologyDatabase.metadata?.last_literature_monitoring_at ??
+    oncologyDatabase.metadata?.created ??
     null;
-  const lastMonitoringRaw = contrastDatabase.metadata?.last_literature_monitoring_at ?? null;
+  const lastMonitoringRaw = oncologyDatabase.metadata?.last_literature_monitoring_at ?? null;
 
   return (
     <SharedLayout
-      mode="contrast"
-      title="CT Contrast Cross-Reactivity"
-      subtitle="Iodinated Agent Explorer"
-      icon="🧪"
-      searchBar={<ContrastSearchBar onSearch={handleAgentSelect} selectedAgent={selectedAgent} />}
-      filterPanel={<ContrastFilterPanel filters={filters} onFiltersChange={setFilters} />}
-      onSwitchMode={onSwitchToOncology}
-      switchModeLabel="항암제 보기"
+      mode="oncology"
+      title="Anticancer Drug Cross-Reactivity"
+      subtitle="Hypersensitivity Cross-Signal Explorer"
+      icon="🧬"
+      searchBar={<OncologySearchBar onSearch={handleAgentSelect} selectedAgent={selectedAgent} />}
+      filterPanel={<OncologyFilterPanel filters={filters} onFiltersChange={setFilters} />}
+      onSwitchMode={onSwitchToAntibiotic}
+      switchModeLabel="항생제 보기"
       lastDatabaseUpdate={lastDatabaseUpdateRaw}
       lastMonitoring={lastMonitoringRaw}
-      sidePanel={<ContrastSidePanel selectedAgentId={selectedAgent} />}
+      sidePanel={<OncologySidePanel selectedAgentId={selectedAgent} />}
       sidePanelOpen={sidePanelOpen}
       onToggleSidePanel={() => setSidePanelOpen(!sidePanelOpen)}
     >
       <div className="w-full h-full relative">
-        <ContrastGraph 
+        <OncologyGraph 
           selectedAgent={selectedAgent} 
           onAgentSelect={handleAgentSelect} 
           onAgentHover={handleAgentHover} 
@@ -91,10 +91,10 @@ export function ContrastPage({ onSwitchToOncology }: ContrastPageProps) {
               <span className="text-[10px]">✕</span> Deselect
             </button>
             <div 
-              className="px-4 py-2 rounded-xl border border-sky-500/30 shadow-lg text-sm font-bold text-white flex items-center gap-2"
-              style={{ background: 'rgba(14, 165, 233, 0.2)', backdropFilter: EFFECTS.glass.backdrop }}
+              className="px-4 py-2 rounded-xl border border-fuchsia-500/30 shadow-lg text-sm font-bold text-white flex items-center gap-2"
+              style={{ background: 'rgba(217, 70, 239, 0.2)', backdropFilter: EFFECTS.glass.backdrop }}
             >
-              <span className="w-2 h-2 rounded-full bg-sky-500 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-fuchsia-500 animate-pulse" />
               {nodeMap.get(selectedAgent)?.label}
             </div>
           </div>
@@ -128,13 +128,13 @@ export function ContrastPage({ onSwitchToOncology }: ContrastPageProps) {
           </div>
           <div className="mt-4 pt-4 border-t border-white/5">
             <p className="text-[10px] text-slate-500 font-medium italic">
-              Evidence-based links mapping iodinated contrast cross-reactivity.
+              Evidence-linked signals for anticancer-drug cross-reactivity and substitution planning.
             </p>
           </div>
         </div>
       </div>
 
-      {tooltip && tooltipAgent && <ContrastTooltip agent={tooltipAgent} x={tooltip.x} y={tooltip.y} />}
+      {tooltip && tooltipAgent && <OncologyTooltip agent={tooltipAgent} x={tooltip.x} y={tooltip.y} />}
     </SharedLayout>
   );
 }
