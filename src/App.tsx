@@ -64,11 +64,11 @@ export default function App() {
   const lastMonitoringRaw = drugDatabase.metadata?.last_literature_monitoring_at ?? null;
 
   if (projectMode === 'contrast') {
-    return <ContrastPage onSwitchToOncology={() => setProjectMode('oncology')} />;
+    return <ContrastPage onNavigateMode={setProjectMode} />;
   }
 
   if (projectMode === 'oncology') {
-    return <OncologyPage onSwitchToAntibiotic={() => setProjectMode('antibiotic')} />;
+    return <OncologyPage onNavigateMode={setProjectMode} />;
   }
 
   return (
@@ -79,8 +79,7 @@ export default function App() {
       icon="💊"
       searchBar={<SearchBar onSearch={handleDrugSelect} selectedDrug={selectedDrug} />}
       filterPanel={<FilterPanel filters={filters} onFiltersChange={setFilters} />}
-      onSwitchMode={() => setProjectMode('contrast')}
-      switchModeLabel="CT 조영제 보기"
+      onNavigateMode={setProjectMode}
       lastDatabaseUpdate={lastDatabaseUpdateRaw}
       lastMonitoring={lastMonitoringRaw}
       sidePanel={<SidePanel selectedDrugId={selectedDrug} />}

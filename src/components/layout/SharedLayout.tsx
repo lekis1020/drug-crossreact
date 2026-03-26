@@ -9,8 +9,7 @@ interface SharedLayoutProps {
   icon: string;
   searchBar: ReactNode;
   filterPanel: ReactNode;
-  onSwitchMode: () => void;
-  switchModeLabel?: string;
+  onNavigateMode: (mode: 'antibiotic' | 'contrast' | 'oncology') => void;
   lastDatabaseUpdate: string | null;
   lastMonitoring: string | null;
   sidePanel: ReactNode;
@@ -26,8 +25,7 @@ export function SharedLayout({
   icon,
   searchBar,
   filterPanel,
-  onSwitchMode,
-  switchModeLabel,
+  onNavigateMode,
   lastDatabaseUpdate,
   lastMonitoring,
   sidePanel,
@@ -71,6 +69,31 @@ export function SharedLayout({
         </div>
 
         <div className="flex items-center gap-3 ml-auto">
+          <nav className="flex items-center gap-1 p-1 rounded-xl border border-white/10 bg-slate-900/40">
+            {[
+              { key: 'antibiotic', label: '항생제' },
+              { key: 'contrast', label: '조영제' },
+              { key: 'oncology', label: '항암제' },
+            ].map((tab) => {
+              const active = mode === tab.key;
+              return (
+                <button
+                  key={tab.key}
+                  type="button"
+                  onClick={() => onNavigateMode(tab.key as 'antibiotic' | 'contrast' | 'oncology')}
+                  className="px-3 py-1.5 rounded-lg text-xs font-bold transition-all"
+                  style={{
+                    color: active ? '#ffffff' : '#94a3b8',
+                    background: active ? 'rgba(59, 130, 246, 0.25)' : 'transparent',
+                    border: active ? '1px solid rgba(59, 130, 246, 0.45)' : '1px solid transparent',
+                  }}
+                >
+                  {tab.label}
+                </button>
+              );
+            })}
+          </nav>
+
           <div className="hidden lg:flex flex-col items-end mr-2 text-[10px] leading-tight font-mono">
             <span className="text-slate-400" title="검토 후 반영된 데이터베이스 최종 갱신 시점">
               DB: {formatDate(lastDatabaseUpdate)}
@@ -79,16 +102,7 @@ export function SharedLayout({
               Sync: {formatDate(lastMonitoring)}
             </span>
           </div>
-          
-          <button
-            type="button"
-            onClick={onSwitchMode}
-            className="px-3 py-2 rounded-lg text-xs font-bold text-slate-200 hover:text-white transition-all hover:bg-white/5 border border-white/10"
-            style={{ background: 'rgba(30, 41, 59, 0.4)' }}
-          >
-            {switchModeLabel ?? (mode === 'antibiotic' ? 'CT 조영제 보기' : '항생제 보기')}
-          </button>
-          
+
           {filterPanel}
         </div>
       </header>

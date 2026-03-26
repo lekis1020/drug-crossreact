@@ -11,7 +11,7 @@ import { SharedLayout } from '../components/layout/SharedLayout';
 import { COLORS, EFFECTS } from '../styles/design-tokens';
 
 interface OncologyPageProps {
-  onSwitchToAntibiotic: () => void;
+  onNavigateMode: (mode: 'antibiotic' | 'contrast' | 'oncology') => void;
 }
 
 function createInitialFilters(): OncologyFilterState {
@@ -26,7 +26,7 @@ function createInitialFilters(): OncologyFilterState {
   };
 }
 
-export function OncologyPage({ onSwitchToAntibiotic }: OncologyPageProps) {
+export function OncologyPage({ onNavigateMode }: OncologyPageProps) {
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<{ agentId: string; x: number; y: number } | null>(null);
   const [filters, setFilters] = useState<OncologyFilterState>(() => createInitialFilters());
@@ -64,8 +64,7 @@ export function OncologyPage({ onSwitchToAntibiotic }: OncologyPageProps) {
       icon="🧬"
       searchBar={<OncologySearchBar onSearch={handleAgentSelect} selectedAgent={selectedAgent} />}
       filterPanel={<OncologyFilterPanel filters={filters} onFiltersChange={setFilters} />}
-      onSwitchMode={onSwitchToAntibiotic}
-      switchModeLabel="항생제 보기"
+      onNavigateMode={onNavigateMode}
       lastDatabaseUpdate={lastDatabaseUpdateRaw}
       lastMonitoring={lastMonitoringRaw}
       sidePanel={<OncologySidePanel selectedAgentId={selectedAgent} />}

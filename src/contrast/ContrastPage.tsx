@@ -11,7 +11,7 @@ import { SharedLayout } from '../components/layout/SharedLayout';
 import { COLORS, EFFECTS } from '../styles/design-tokens';
 
 interface ContrastPageProps {
-  onSwitchToOncology: () => void;
+  onNavigateMode: (mode: 'antibiotic' | 'contrast' | 'oncology') => void;
 }
 
 function createInitialFilters(): ContrastFilterState {
@@ -26,7 +26,7 @@ function createInitialFilters(): ContrastFilterState {
   };
 }
 
-export function ContrastPage({ onSwitchToOncology }: ContrastPageProps) {
+export function ContrastPage({ onNavigateMode }: ContrastPageProps) {
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<{ agentId: string; x: number; y: number } | null>(null);
   const [filters, setFilters] = useState<ContrastFilterState>(() => createInitialFilters());
@@ -64,8 +64,7 @@ export function ContrastPage({ onSwitchToOncology }: ContrastPageProps) {
       icon="🧪"
       searchBar={<ContrastSearchBar onSearch={handleAgentSelect} selectedAgent={selectedAgent} />}
       filterPanel={<ContrastFilterPanel filters={filters} onFiltersChange={setFilters} />}
-      onSwitchMode={onSwitchToOncology}
-      switchModeLabel="항암제 보기"
+      onNavigateMode={onNavigateMode}
       lastDatabaseUpdate={lastDatabaseUpdateRaw}
       lastMonitoring={lastMonitoringRaw}
       sidePanel={<ContrastSidePanel selectedAgentId={selectedAgent} />}
