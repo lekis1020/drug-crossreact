@@ -1,33 +1,45 @@
 import type { CrossReactivity } from '../types';
+import { COLORS, EFFECTS } from '../styles/design-tokens';
 
 interface RiskBadgeProps {
   risk: CrossReactivity;
+  showIcon?: boolean;
 }
 
-const RISK_STYLES: Record<CrossReactivity, { label: string; className: string }> = {
+const RISK_CONFIG: Record<CrossReactivity, { label: string; color: typeof COLORS.risk.high }> = {
   high: {
-    label: '🔴 High',
-    className: 'bg-red-500/15 text-red-200 border border-red-400/40',
+    label: 'High Risk',
+    color: COLORS.risk.high,
   },
   disputed: {
-    label: '⚠️ Disputed',
-    className: 'bg-yellow-500/15 text-yellow-200 border border-yellow-400/40',
+    label: 'Disputed',
+    color: COLORS.risk.disputed,
   },
   moderate: {
-    label: '🟠 Moderate',
-    className: 'bg-orange-500/15 text-orange-200 border border-orange-400/40',
+    label: 'Moderate',
+    color: COLORS.risk.moderate,
   },
   low: {
-    label: '⚪ Low',
-    className: 'bg-slate-500/20 text-slate-200 border border-slate-400/35',
+    label: 'Low Signal',
+    color: COLORS.risk.low,
   },
 };
 
-export function RiskBadge({ risk }: RiskBadgeProps) {
-  const style = RISK_STYLES[risk];
+export function RiskBadge({ risk, showIcon = true }: RiskBadgeProps) {
+  const config = RISK_CONFIG[risk];
+  
   return (
-    <span className={`text-xs px-2.5 py-1 rounded-full font-semibold whitespace-nowrap ${style.className}`}>
-      {style.label}
+    <span 
+      className="text-[11px] px-2.5 py-1 rounded-full font-bold whitespace-nowrap flex items-center gap-1.5 transition-all"
+      style={{
+        background: config.color.bg,
+        color: config.color.text,
+        border: `1px solid ${config.color.border}`,
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+      }}
+    >
+      {showIcon && <span className="text-[10px]">{config.color.icon}</span>}
+      <span className="uppercase tracking-tight">{config.label}</span>
     </span>
   );
 }

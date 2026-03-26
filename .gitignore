@@ -4,3 +4,4 @@ dist/
 .omc/
 .playwright-mcp/
 REQUIREMENTS.md
+.omx/
