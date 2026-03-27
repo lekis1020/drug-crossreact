@@ -55,6 +55,19 @@ export interface TooltipState {
   y: number;
 }
 
+export interface EdgeTooltipState {
+  edgeId: string;
+  sourceId: string;
+  sourceLabel: string;
+  targetId: string;
+  targetLabel: string;
+  crossReactivity: CrossReactivity;
+  pmids: string[];
+  clinicalNote?: string;
+  x: number;
+  y: number;
+}
+
 export interface CrossReactInfo {
   drugId: string;
   drugName: string;

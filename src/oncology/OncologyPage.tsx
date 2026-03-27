@@ -6,7 +6,9 @@ import { OncologySearchBar } from './components/OncologySearchBar';
 import { OncologyFilterPanel } from './components/OncologyFilterPanel';
 import { OncologySidePanel } from './components/OncologySidePanel';
 import { OncologyTooltip } from './components/OncologyTooltip';
+import { EdgeTooltip } from '../components/EdgeTooltip';
 import type { OncologyFilterState } from './types';
+import type { EdgeTooltipState } from '../types';
 import { SharedLayout } from '../components/layout/SharedLayout';
 import { COLORS, EFFECTS } from '../styles/design-tokens';
 
@@ -29,6 +31,7 @@ function createInitialFilters(): OncologyFilterState {
 export function OncologyPage({ onNavigateMode }: OncologyPageProps) {
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<{ agentId: string; x: number; y: number } | null>(null);
+  const [edgeTooltip, setEdgeTooltip] = useState<EdgeTooltipState | null>(null);
   const [filters, setFilters] = useState<OncologyFilterState>(() => createInitialFilters());
   const [sidePanelOpen, setSidePanelOpen] = useState(true);
 
@@ -46,6 +49,12 @@ export function OncologyPage({ onNavigateMode }: OncologyPageProps) {
       return;
     }
     setTooltip({ agentId, x: x ?? 0, y: y ?? 0 });
+    setEdgeTooltip(null);
+  }, []);
+
+  const handleEdgeHover = useCallback((nextEdge: EdgeTooltipState | null) => {
+    setEdgeTooltip(nextEdge);
+    if (nextEdge) setTooltip(null);
   }, []);
 
   const tooltipAgent = tooltip ? nodeMap.get(tooltip.agentId) : null;
@@ -76,6 +85,7 @@ export function OncologyPage({ onNavigateMode }: OncologyPageProps) {
           selectedAgent={selectedAgent} 
           onAgentSelect={handleAgentSelect} 
           onAgentHover={handleAgentHover} 
+          onEdgeHover={handleEdgeHover}
           filters={filters} 
         />
 
@@ -134,6 +144,7 @@ export function OncologyPage({ onNavigateMode }: OncologyPageProps) {
       </div>
 
       {tooltip && tooltipAgent && <OncologyTooltip agent={tooltipAgent} x={tooltip.x} y={tooltip.y} />}
+      {edgeTooltip && <EdgeTooltip edge={edgeTooltip} />}
     </SharedLayout>
   );
 }

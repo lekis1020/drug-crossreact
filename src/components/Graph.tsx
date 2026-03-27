@@ -4,7 +4,7 @@ import type { Core, EventObject } from 'cytoscape';
 // @ts-ignore
 import coseBilkent from 'cytoscape-cose-bilkent';
 import { buildGraphElements } from '../data/graphData';
-import type { FilterState, DrugClass } from '../types';
+import type { EdgeTooltipState, FilterState, DrugClass } from '../types';
 
 cytoscape.use(coseBilkent);
 
@@ -12,10 +12,11 @@ interface GraphProps {
   selectedDrug: string | null;
   onDrugSelect: (drugId: string) => void;
   onDrugHover: (drugId: string | null, x?: number, y?: number) => void;
+  onEdgeHover: (edge: EdgeTooltipState | null) => void;
   filters: FilterState;
 }
 
-export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: GraphProps) {
+export function Graph({ selectedDrug, onDrugSelect, onDrugHover, onEdgeHover, filters }: GraphProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<Core | null>(null);
 
@@ -23,6 +24,7 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
     if (!containerRef.current) return;
 
     const { nodes, edges, parentNodes, nodeParents } = buildGraphElements();
+    const nodeLabelById = new Map(nodes.map((node) => [node.id, node.label]));
 
 
     // === Preset positions: logical group arrangement ===
@@ -121,6 +123,10 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
           source: e.source,
           target: e.target,
           crossReactivity: e.crossReactivity,
+          pmids: e.pmids,
+          clinicalNote: e.clinicalNote ?? '',
+          sourceLabel: nodeLabelById.get(e.source) ?? e.source,
+          targetLabel: nodeLabelById.get(e.target) ?? e.target,
         },
       })),
     ];
@@ -330,11 +336,72 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
       const rect = containerRef.current.getBoundingClientRect();
       const pos = e.target.renderedPosition() as { x: number; y: number };
       onDrugHover(e.target.id(), rect.left + pos.x, rect.top + pos.y);
+      onEdgeHover(null);
       (containerRef.current as HTMLElement).style.cursor = 'pointer';
     });
 
     cy.on('mouseout', 'node[!isGroup]', () => {
       onDrugHover(null);
+      if (containerRef.current) (containerRef.current as HTMLElement).style.cursor = 'default';
+    });
+
+    const getEdgeCursorPoint = (event: EventObject): { x: number; y: number } | null => {
+      const nativeEvent = event.originalEvent as MouseEvent | undefined;
+      if (nativeEvent?.clientX != null && nativeEvent?.clientY != null) {
+        return { x: nativeEvent.clientX, y: nativeEvent.clientY };
+      }
+      if (!containerRef.current) return null;
+      const rect = containerRef.current.getBoundingClientRect();
+      const pos = event.renderedPosition as { x: number; y: number } | undefined;
+      if (!pos) return null;
+      return { x: rect.left + pos.x, y: rect.top + pos.y };
+    };
+
+    const buildEdgeTooltip = (event: EventObject): EdgeTooltipState | null => {
+      const point = getEdgeCursorPoint(event);
+      if (!point) return null;
+
+      const edgeData = event.target.data() as {
+        id: string;
+        source: string;
+        target: string;
+        sourceLabel?: string;
+        targetLabel?: string;
+        crossReactivity: EdgeTooltipState['crossReactivity'];
+        pmids?: string[];
+        clinicalNote?: string;
+      };
+
+      return {
+        edgeId: edgeData.id,
+        sourceId: edgeData.source,
+        sourceLabel: edgeData.sourceLabel ?? edgeData.source,
+        targetId: edgeData.target,
+        targetLabel: edgeData.targetLabel ?? edgeData.target,
+        crossReactivity: edgeData.crossReactivity,
+        pmids: edgeData.pmids ?? [],
+        clinicalNote: edgeData.clinicalNote || undefined,
+        x: point.x,
+        y: point.y,
+      };
+    };
+
+    cy.on('mouseover', 'edge', (event: EventObject) => {
+      const edgeTooltip = buildEdgeTooltip(event);
+      if (edgeTooltip) {
+        onEdgeHover(edgeTooltip);
+        onDrugHover(null);
+      }
+      if (containerRef.current) (containerRef.current as HTMLElement).style.cursor = 'pointer';
+    });
+
+    cy.on('mousemove', 'edge', (event: EventObject) => {
+      const edgeTooltip = buildEdgeTooltip(event);
+      if (edgeTooltip) onEdgeHover(edgeTooltip);
+    });
+
+    cy.on('mouseout', 'edge', () => {
+      onEdgeHover(null);
       if (containerRef.current) (containerRef.current as HTMLElement).style.cursor = 'default';
     });
 
@@ -346,7 +413,7 @@ export function Graph({ selectedDrug, onDrugSelect, onDrugHover, filters }: Grap
       cy.destroy();
       cyRef.current = null;
     };
-  }, []);
+  }, [onDrugHover, onDrugSelect, onEdgeHover]);
 
   // Highlight selection
   useEffect(() => {

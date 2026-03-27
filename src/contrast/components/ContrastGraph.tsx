@@ -5,6 +5,7 @@ import type { Core, EventObject } from 'cytoscape';
 import coseBilkent from 'cytoscape-cose-bilkent';
 import { buildContrastGraphElements } from '../data/contrastGraphData';
 import type { ContrastFilterState } from '../types';
+import type { EdgeTooltipState } from '../../types';
 
 cytoscape.use(coseBilkent);
 
@@ -12,10 +13,11 @@ interface ContrastGraphProps {
   selectedAgent: string | null;
   onAgentSelect: (agentId: string) => void;
   onAgentHover: (agentId: string | null, x?: number, y?: number) => void;
+  onEdgeHover: (edge: EdgeTooltipState | null) => void;
   filters: ContrastFilterState;
 }
 
-export function ContrastGraph({ selectedAgent, onAgentSelect, onAgentHover, filters }: ContrastGraphProps) {
+export function ContrastGraph({ selectedAgent, onAgentSelect, onAgentHover, onEdgeHover, filters }: ContrastGraphProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<Core | null>(null);
 
@@ -23,6 +25,7 @@ export function ContrastGraph({ selectedAgent, onAgentSelect, onAgentHover, filt
     if (!containerRef.current) return;
 
     const { nodes, edges, parentNodes, nodeParents } = buildContrastGraphElements();
+    const nodeLabelById = new Map(nodes.map((node) => [node.id, node.label]));
 
     const GROUP_POSITIONS: Record<string, { x: number; y: number }> = {};
     const spacing = 520;
@@ -79,6 +82,10 @@ export function ContrastGraph({ selectedAgent, onAgentSelect, onAgentHover, filt
           source: edge.source,
           target: edge.target,
           crossReactivity: edge.crossReactivity,
+          pmids: edge.pmids,
+          clinicalNote: edge.clinicalNote ?? '',
+          sourceLabel: nodeLabelById.get(edge.source) ?? edge.source,
+          targetLabel: nodeLabelById.get(edge.target) ?? edge.target,
         },
       })),
     ];
@@ -256,11 +263,72 @@ export function ContrastGraph({ selectedAgent, onAgentSelect, onAgentHover, filt
       const rect = containerRef.current.getBoundingClientRect();
       const position = event.target.renderedPosition() as { x: number; y: number };
       onAgentHover(event.target.id(), rect.left + position.x, rect.top + position.y);
+      onEdgeHover(null);
       (containerRef.current as HTMLElement).style.cursor = 'pointer';
     });
 
     cy.on('mouseout', 'node[!isGroup]', () => {
       onAgentHover(null);
+      if (containerRef.current) (containerRef.current as HTMLElement).style.cursor = 'default';
+    });
+
+    const getEdgeCursorPoint = (event: EventObject): { x: number; y: number } | null => {
+      const nativeEvent = event.originalEvent as MouseEvent | undefined;
+      if (nativeEvent?.clientX != null && nativeEvent?.clientY != null) {
+        return { x: nativeEvent.clientX, y: nativeEvent.clientY };
+      }
+      if (!containerRef.current) return null;
+      const rect = containerRef.current.getBoundingClientRect();
+      const pos = event.renderedPosition as { x: number; y: number } | undefined;
+      if (!pos) return null;
+      return { x: rect.left + pos.x, y: rect.top + pos.y };
+    };
+
+    const buildEdgeTooltip = (event: EventObject): EdgeTooltipState | null => {
+      const point = getEdgeCursorPoint(event);
+      if (!point) return null;
+
+      const edgeData = event.target.data() as {
+        id: string;
+        source: string;
+        target: string;
+        sourceLabel?: string;
+        targetLabel?: string;
+        crossReactivity: EdgeTooltipState['crossReactivity'];
+        pmids?: string[];
+        clinicalNote?: string;
+      };
+
+      return {
+        edgeId: edgeData.id,
+        sourceId: edgeData.source,
+        sourceLabel: edgeData.sourceLabel ?? edgeData.source,
+        targetId: edgeData.target,
+        targetLabel: edgeData.targetLabel ?? edgeData.target,
+        crossReactivity: edgeData.crossReactivity,
+        pmids: edgeData.pmids ?? [],
+        clinicalNote: edgeData.clinicalNote || undefined,
+        x: point.x,
+        y: point.y,
+      };
+    };
+
+    cy.on('mouseover', 'edge', (event: EventObject) => {
+      const edgeTooltip = buildEdgeTooltip(event);
+      if (edgeTooltip) {
+        onEdgeHover(edgeTooltip);
+        onAgentHover(null);
+      }
+      if (containerRef.current) (containerRef.current as HTMLElement).style.cursor = 'pointer';
+    });
+
+    cy.on('mousemove', 'edge', (event: EventObject) => {
+      const edgeTooltip = buildEdgeTooltip(event);
+      if (edgeTooltip) onEdgeHover(edgeTooltip);
+    });
+
+    cy.on('mouseout', 'edge', () => {
+      onEdgeHover(null);
       if (containerRef.current) (containerRef.current as HTMLElement).style.cursor = 'default';
     });
 
@@ -279,7 +347,7 @@ export function ContrastGraph({ selectedAgent, onAgentSelect, onAgentHover, filt
       cy.destroy();
       cyRef.current = null;
     };
-  }, [onAgentHover, onAgentSelect]);
+  }, [onAgentHover, onAgentSelect, onEdgeHover]);
 
   useEffect(() => {
     const cy = cyRef.current;

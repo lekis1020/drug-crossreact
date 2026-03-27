@@ -4,9 +4,10 @@ import { SearchBar } from './components/SearchBar';
 import { SidePanel } from './components/SidePanel';
 import { FilterPanel } from './components/FilterPanel';
 import { DrugTooltip } from './components/DrugTooltip';
+import { EdgeTooltip } from './components/EdgeTooltip';
 import { buildGraphElements } from './data/graphData';
 import { drugDatabase } from './data/drugDatabase';
-import type { FilterState, TooltipState } from './types';
+import type { EdgeTooltipState, FilterState, TooltipState } from './types';
 import { ContrastPage } from './contrast/ContrastPage';
 import { OncologyPage } from './oncology/OncologyPage';
 import { SharedLayout } from './components/layout/SharedLayout';
@@ -36,6 +37,7 @@ export default function App() {
   const [projectMode, setProjectMode] = useState<'antibiotic' | 'contrast' | 'oncology'>('antibiotic');
   const [selectedDrug, setSelectedDrug] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<TooltipState | null>(null);
+  const [edgeTooltip, setEdgeTooltip] = useState<EdgeTooltipState | null>(null);
   const [filters, setFilters] = useState<FilterState>(INITIAL_FILTERS);
   const [sidePanelOpen, setSidePanelOpen] = useState(true);
 
@@ -49,11 +51,20 @@ export default function App() {
 
   const handleDrugHover = useCallback(
     (drugId: string | null, x?: number, y?: number) => {
-      if (!drugId) { setTooltip(null); return; }
+      if (!drugId) {
+        setTooltip(null);
+        return;
+      }
       setTooltip({ drugId, x: x ?? 0, y: y ?? 0 });
+      setEdgeTooltip(null);
     },
     [],
   );
+
+  const handleEdgeHover = useCallback((nextEdge: EdgeTooltipState | null) => {
+    setEdgeTooltip(nextEdge);
+    if (nextEdge) setTooltip(null);
+  }, []);
 
   const tooltipDrug = tooltip ? nodeMap.get(tooltip.drugId) : null;
   const lastDatabaseUpdateRaw =
@@ -92,6 +103,7 @@ export default function App() {
           selectedDrug={selectedDrug}
           onDrugSelect={handleDrugSelect}
           onDrugHover={handleDrugHover}
+          onEdgeHover={handleEdgeHover}
           filters={filters}
         />
 
@@ -166,6 +178,7 @@ export default function App() {
       {tooltip && tooltipDrug && (
         <DrugTooltip drug={tooltipDrug} x={tooltip.x} y={tooltip.y} />
       )}
+      {edgeTooltip && <EdgeTooltip edge={edgeTooltip} />}
     </SharedLayout>
   );
 }
