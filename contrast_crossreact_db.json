@@ -4,8 +4,8 @@
     "version": "0.1-draft",
     "scope": "Iodinated CT contrast-media cross-reactivity",
     "status": "template",
-    "last_database_update_at": "2026-03-25T08:49:06.498Z",
-    "last_literature_monitoring_at": "2026-03-25T08:49:06.498Z",
+    "last_database_update_at": "2026-03-29T21:19:53.567Z",
+    "last_literature_monitoring_at": "2026-03-29T21:19:53.567Z",
     "notes": "Template scaffold. Populate literature_confirmed_pairs only after clinical review."
   },
   "agent_groups": [
@@ -125,8 +125,32 @@
     "query": "((\"contrast media\"[MeSH Terms] OR \"iodinated contrast\"[Title/Abstract] OR \"contrast media\"[Title/Abstract]) OR iohexol[Title/Abstract] OR iopromide[Title/Abstract] OR iopamidol[Title/Abstract] OR ioversol[Title/Abstract] OR iomeprol[Title/Abstract] OR iobitridol[Title/Abstract] OR iodixanol[Title/Abstract] OR ioxaglate[Title/Abstract] OR ioxitalamate[Title/Abstract] OR diatrizoate[Title/Abstract]) AND (cross-react*[Title/Abstract] OR hypersensitiv*[Title/Abstract] OR allergy[Title/Abstract] OR anaphylaxis[Title/Abstract]) AND (skin test[Title/Abstract] OR provocation[Title/Abstract] OR case report[Publication Type] OR cohort[Title/Abstract] OR study[Title/Abstract])",
     "checked_window_days": 30,
     "max_results": 150,
-    "checked_at": "2026-03-25T08:49:06.498Z",
+    "checked_at": "2026-03-29T21:19:53.567Z",
     "records": [
+      {
+        "pmid": "41887530",
+        "title": "Deep Learning-Based Generation of Synthetic Multiphasic MRI In Hepatocellular Carcinoma and Cirrhosis.",
+        "journal": "JHEP reports : innovation in hepatology",
+        "pubdate": "2026 Mar 4",
+        "doi": "10.1016/j.jhepr.2026.101813",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41887530/",
+        "first_seen_at": "2026-03-29T21:19:53.567Z",
+        "last_seen_at": "2026-03-29T21:19:53.567Z"
+      },
+      {
+        "pmid": "41889701",
+        "title": "Adverse Drug Event Profile of Radiocontrast Iodine in Elderly: A Retrospective Focused Pharmacovigilance-Based Disproportionality Analysis Study.",
+        "journal": "Hospital pharmacy",
+        "pubdate": "2026 Mar 23",
+        "doi": "10.1177/00185787261427433",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41889701/",
+        "first_seen_at": "2026-03-29T21:19:53.567Z",
+        "last_seen_at": "2026-03-29T21:19:53.567Z"
+      },
       {
         "pmid": "41850224",
         "title": "Drug hypersensitivity leading to emergency department visit: a comprehensive analysis of clinical features and management.",
@@ -137,7 +161,7 @@
         "status": "needs_review",
         "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41850224/",
         "first_seen_at": "2026-03-25T08:49:06.498Z",
-        "last_seen_at": "2026-03-25T08:49:06.498Z"
+        "last_seen_at": "2026-03-29T21:19:53.567Z"
       },
       {
         "pmid": "41700646",
@@ -149,7 +173,7 @@
         "status": "needs_review",
         "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41700646/",
         "first_seen_at": "2026-03-25T08:49:06.498Z",
-        "last_seen_at": "2026-03-25T08:49:06.498Z"
+        "last_seen_at": "2026-03-29T21:19:53.567Z"
       },
       {
         "pmid": "41260486",
@@ -161,7 +185,19 @@
         "status": "needs_review",
         "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41260486/",
         "first_seen_at": "2026-03-25T08:49:06.498Z",
-        "last_seen_at": "2026-03-25T08:49:06.498Z"
+        "last_seen_at": "2026-03-29T21:19:53.567Z"
+      },
+      {
+        "pmid": "41886420",
+        "title": "Genetic variations associated with immediate hypersensitivity reactions to iodinated contrast media: A whole exome sequencing study.",
+        "journal": "PloS one",
+        "pubdate": "2026",
+        "doi": "10.1371/journal.pone.0345313",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41886420/",
+        "first_seen_at": "2026-03-29T21:19:53.567Z",
+        "last_seen_at": "2026-03-29T21:19:53.567Z"
       }
     ]
   }
