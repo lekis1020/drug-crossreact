@@ -45,8 +45,8 @@
       "hutten_2025": "Systematic comparison of 4 cross-reactivity tables covering 51 BAs. Found 36% disharmony, highlighting need for standardization. No new clinical data but critical for interpretation.",
       "clinical_predictors": "Anaphylaxis (OR 6.05) and IV route (OR 9.68) are significant predictors of positive ST (Stevenson 2026)."
     },
-    "last_literature_monitoring_at": "2026-03-25T08:49:08.678Z",
-    "last_database_update_at": "2026-03-25T08:49:08.678Z"
+    "last_literature_monitoring_at": "2026-08-30T22:14:42.181Z",
+    "last_database_update_at": "2026-08-30T22:14:42.181Z"
   },
   "r1_groups": [
     {
@@ -1061,7 +1061,7 @@
     "query": "((beta-lactam*[Title/Abstract] OR cephalosporin*[Title/Abstract] OR penicillin*[Title/Abstract] OR carbapenem*[Title/Abstract] OR monobactam*[Title/Abstract] OR antibiotic*[Title/Abstract])) AND (cross-react*[Title/Abstract] OR hypersensitiv*[Title/Abstract] OR allergy[Title/Abstract] OR anaphylaxis[Title/Abstract]) AND (case report[Publication Type] OR clinical study[Publication Type] OR cohort[Title/Abstract] OR trial[Title/Abstract])",
     "checked_window_days": 30,
     "max_results": 150,
-    "checked_at": "2026-03-25T08:49:08.678Z",
+    "checked_at": "2026-08-30T22:14:42.181Z",
     "records": [
       {
         "pmid": "41784074",
@@ -1220,6 +1220,18 @@
         "last_seen_at": "2026-03-25T08:49:08.678Z"
       },
       {
+        "pmid": "42116470",
+        "title": "Fructooligosaccharides alleviate early-life antibiotic-exposed food allergy via the Indole-3-propionic acid-AhR-Nrf2 Axis: A multi-omics prospective cohort study.",
+        "journal": "Food research international (Ottawa, Ont.)",
+        "pubdate": "2026 Jul 31",
+        "doi": "10.1016/j.foodres.2026.119200",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42116470/",
+        "first_seen_at": "2026-08-30T22:14:42.181Z",
+        "last_seen_at": "2026-08-30T22:14:42.181Z"
+      },
+      {
         "pmid": "41749358",
         "title": "Impact of beta-lactam allergy labels on antibiotic prophylaxis and surgical site infections after cesarean section; a retrospective study.",
         "journal": "Antimicrobial resistance and infection control",
@@ -1254,6 +1266,186 @@
         "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41729756/",
         "first_seen_at": "2026-03-25T04:54:01.995Z",
         "last_seen_at": "2026-03-25T08:49:08.678Z"
+      },
+      {
+        "pmid": "42555752",
+        "title": "Fecal microbiome transplant in food allergy in humans and mice identifies a role for bile acid metabolites in oral tolerance.",
+        "journal": "Science translational medicine",
+        "pubdate": "2026 Aug 5",
+        "doi": "10.1126/scitranslmed.aee3263",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42555752/",
+        "first_seen_at": "2026-08-30T22:14:42.181Z",
+        "last_seen_at": "2026-08-30T22:14:42.181Z"
+      },
+      {
+        "pmid": "42663704",
+        "title": "Treating through in pediatric patients: a single-center experience.",
+        "journal": "European journal of pediatrics",
+        "pubdate": "2026 Aug 28",
+        "doi": "10.1007/s00431-026-07349-9",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42663704/",
+        "first_seen_at": "2026-08-30T22:14:42.181Z",
+        "last_seen_at": "2026-08-30T22:14:42.181Z"
+      },
+      {
+        "pmid": "42642083",
+        "title": "Diagnostic accuracy of the passive mast cell activation test in neuromuscular blocking agent-induced perioperative anaphylaxis in a tertiary hospital in China: a diagnostic accuracy study.",
+        "journal": "BMJ open",
+        "pubdate": "2026 Aug 25",
+        "doi": "10.1136/bmjopen-2026-118254",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42642083/",
+        "first_seen_at": "2026-08-30T22:14:42.181Z",
+        "last_seen_at": "2026-08-30T22:14:42.181Z"
+      },
+      {
+        "pmid": "42631899",
+        "title": "Clinical characteristics and epidemiology of pediatric cow's milk protein allergy: a multicenter cohort study in urban China.",
+        "journal": "World journal of pediatrics : WJP",
+        "pubdate": "2026 Aug 22",
+        "doi": "10.1007/s12519-026-01062-1",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42631899/",
+        "first_seen_at": "2026-08-30T22:14:42.181Z",
+        "last_seen_at": "2026-08-30T22:14:42.181Z"
+      },
+      {
+        "pmid": "42629506",
+        "title": "Delabelling suspected amoxicillin allergy in pediatric patients using oral challenge: a retrospective study from Northwestern Ontario.",
+        "journal": "European journal of pediatrics",
+        "pubdate": "2026 Aug 22",
+        "doi": "10.1007/s00431-026-07169-x",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42629506/",
+        "first_seen_at": "2026-08-30T22:14:42.181Z",
+        "last_seen_at": "2026-08-30T22:14:42.181Z"
+      },
+      {
+        "pmid": "42653482",
+        "title": "Distinct Inflammation-Associated Microbiome Signatures in Pediatric Non-IgE-Mediated Food Allergy.",
+        "journal": "International journal of molecular sciences",
+        "pubdate": "2026 Aug 21",
+        "doi": "10.3390/ijms27167482",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42653482/",
+        "first_seen_at": "2026-08-30T22:14:42.181Z",
+        "last_seen_at": "2026-08-30T22:14:42.181Z"
+      },
+      {
+        "pmid": "42665789",
+        "title": "Bacterial etiology, antimicrobial susceptibility, and clinical outcomes in cervicofacial space infections before, during, and after the COVID-19 pandemic: a 10-year single-centre study.",
+        "journal": "BMC infectious diseases",
+        "pubdate": "2026 Aug 14",
+        "doi": "10.1186/s12879-026-14186-6",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42665789/",
+        "first_seen_at": "2026-08-30T22:14:42.181Z",
+        "last_seen_at": "2026-08-30T22:14:42.181Z"
+      },
+      {
+        "pmid": "42653755",
+        "title": "Discrepancies and Quality of Medication Allergy Documentation Between Primary Care and Hospital Information Systems: A Retrospective Cohort Study.",
+        "journal": "Pharmaceuticals (Basel, Switzerland)",
+        "pubdate": "2026 Aug 10",
+        "doi": "10.3390/ph19081259",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42653755/",
+        "first_seen_at": "2026-08-30T22:14:42.181Z",
+        "last_seen_at": "2026-08-30T22:14:42.181Z"
+      },
+      {
+        "pmid": "41989177",
+        "title": "Chronic rhinosinusitis in a birth cohort: symptom trajectories and early-life risk factors up to young adulthood.",
+        "journal": "Rhinology",
+        "pubdate": "2026 Aug 1",
+        "doi": "10.4193/Rhin26.079",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41989177/",
+        "first_seen_at": "2026-08-30T22:14:42.181Z",
+        "last_seen_at": "2026-08-30T22:14:42.181Z"
+      },
+      {
+        "pmid": "42466869",
+        "title": "Failure of Wide-Diameter Dental Implants (Predominantly 5.0 mm) Show Distinct Risk Profiles-A Large Cohort Study.",
+        "journal": "Clinical implant dentistry and related research",
+        "pubdate": "2026 Aug",
+        "doi": "10.1111/cid.70173",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42466869/",
+        "first_seen_at": "2026-08-30T22:14:42.181Z",
+        "last_seen_at": "2026-08-30T22:14:42.181Z"
+      },
+      {
+        "pmid": "42454622",
+        "title": "Self-Reported Penicillin Allergy, Alternative Antibiotics, and Implant Outcomes: A Retrospective Study.",
+        "journal": "Clinical implant dentistry and related research",
+        "pubdate": "2026 Aug",
+        "doi": "10.1111/cid.70169",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42454622/",
+        "first_seen_at": "2026-08-30T22:14:42.181Z",
+        "last_seen_at": "2026-08-30T22:14:42.181Z"
+      },
+      {
+        "pmid": "42376246",
+        "title": "Magnetic nanoparticles enable clinically relevant in vitro diagnosis of β-lactam allergy.",
+        "journal": "Materials today. Bio",
+        "pubdate": "2026 Aug",
+        "doi": "10.1016/j.mtbio.2026.103356",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42376246/",
+        "first_seen_at": "2026-08-30T22:14:42.181Z",
+        "last_seen_at": "2026-08-30T22:14:42.181Z"
+      },
+      {
+        "pmid": "42282116",
+        "title": "Implementing an Evidence-Based Guideline to Improve Perioperative Antimicrobial Prophylaxis Quality Among Patients With Penicillin Allergy Labels.",
+        "journal": "Mayo Clinic proceedings. Innovations, quality & outcomes",
+        "pubdate": "2026 Aug",
+        "doi": "10.1016/j.mayocpiqo.2026.100724",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42282116/",
+        "first_seen_at": "2026-08-30T22:14:42.181Z",
+        "last_seen_at": "2026-08-30T22:14:42.181Z"
+      },
+      {
+        "pmid": "42142819",
+        "title": "Penicillin allergy removal on history alone: delabeling outcomes in a pediatric cohort.",
+        "journal": "The journal of allergy and clinical immunology. In practice",
+        "pubdate": "2026 Aug",
+        "doi": "10.1016/j.jaip.2026.05.006",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42142819/",
+        "first_seen_at": "2026-08-30T22:14:42.181Z",
+        "last_seen_at": "2026-08-30T22:14:42.181Z"
+      },
+      {
+        "pmid": "41549873",
+        "title": "Development of Betalactam-Predictor: A Clinical Decision Tool for Delabeling Low-Risk Betalactam Allergy Patients. Initial Validation in Penicillin Allergy.",
+        "journal": "Allergy",
+        "pubdate": "2026 Aug",
+        "doi": "10.1111/all.70222",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41549873/",
+        "first_seen_at": "2026-08-30T22:14:42.181Z",
+        "last_seen_at": "2026-08-30T22:14:42.181Z"
       }
     ]
   }
