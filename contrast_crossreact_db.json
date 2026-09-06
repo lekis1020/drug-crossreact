@@ -4,8 +4,8 @@
     "version": "0.1-draft",
     "scope": "Iodinated CT contrast-media cross-reactivity",
     "status": "template",
-    "last_database_update_at": "2026-03-25T08:49:06.498Z",
-    "last_literature_monitoring_at": "2026-03-25T08:49:06.498Z",
+    "last_database_update_at": "2026-09-06T22:28:51.911Z",
+    "last_literature_monitoring_at": "2026-09-06T22:28:51.911Z",
     "notes": "Template scaffold. Populate literature_confirmed_pairs only after clinical review."
   },
   "agent_groups": [
@@ -125,8 +125,32 @@
     "query": "((\"contrast media\"[MeSH Terms] OR \"iodinated contrast\"[Title/Abstract] OR \"contrast media\"[Title/Abstract]) OR iohexol[Title/Abstract] OR iopromide[Title/Abstract] OR iopamidol[Title/Abstract] OR ioversol[Title/Abstract] OR iomeprol[Title/Abstract] OR iobitridol[Title/Abstract] OR iodixanol[Title/Abstract] OR ioxaglate[Title/Abstract] OR ioxitalamate[Title/Abstract] OR diatrizoate[Title/Abstract]) AND (cross-react*[Title/Abstract] OR hypersensitiv*[Title/Abstract] OR allergy[Title/Abstract] OR anaphylaxis[Title/Abstract]) AND (skin test[Title/Abstract] OR provocation[Title/Abstract] OR case report[Publication Type] OR cohort[Title/Abstract] OR study[Title/Abstract])",
     "checked_window_days": 30,
     "max_results": 150,
-    "checked_at": "2026-03-25T08:49:06.498Z",
+    "checked_at": "2026-09-06T22:28:51.911Z",
     "records": [
+      {
+        "pmid": "42697324",
+        "title": "Safety and Effectiveness of Carbon Dioxide Angiography for Endovascular Aneurysm Repair: Systematic Review and Meta-analysis.",
+        "journal": "Annals of vascular surgery",
+        "pubdate": "2026 Sep 4",
+        "doi": "10.1016/j.avsg.2026.08.034",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42697324/",
+        "first_seen_at": "2026-09-06T22:28:51.911Z",
+        "last_seen_at": "2026-09-06T22:28:51.911Z"
+      },
+      {
+        "pmid": "42025856",
+        "title": "The Otto Aufranc Award: Iodine-Containing Products Are Safe in Allergy-Labeled Patients Undergoing Total Joint Arthroplasty: A Prospective Observational Study.",
+        "journal": "The Journal of arthroplasty",
+        "pubdate": "2026 Sep",
+        "doi": "10.1016/j.arth.2026.04.051",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42025856/",
+        "first_seen_at": "2026-09-06T22:28:51.911Z",
+        "last_seen_at": "2026-09-06T22:28:51.911Z"
+      },
       {
         "pmid": "41850224",
         "title": "Drug hypersensitivity leading to emergency department visit: a comprehensive analysis of clinical features and management.",
@@ -162,6 +186,54 @@
         "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41260486/",
         "first_seen_at": "2026-03-25T08:49:06.498Z",
         "last_seen_at": "2026-03-25T08:49:06.498Z"
+      },
+      {
+        "pmid": "42659897",
+        "title": "Shortened preparative fasting before contrast-enhanced CT and acute adverse drug reactions: A real-world observational study of 242,435 examinations.",
+        "journal": "European journal of radiology",
+        "pubdate": "2026 Aug 25",
+        "doi": "10.1016/j.ejrad.2026.113187",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42659897/",
+        "first_seen_at": "2026-09-06T22:28:51.911Z",
+        "last_seen_at": "2026-09-06T22:28:51.911Z"
+      },
+      {
+        "pmid": "42679439",
+        "title": "Challenging the 4-h premedication regimen for iodinated contrast allergy: A multicenter retrospective study.",
+        "journal": "The American journal of emergency medicine",
+        "pubdate": "2026 Aug 24",
+        "doi": "10.1016/j.ajem.2026.08.041",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42679439/",
+        "first_seen_at": "2026-09-06T22:28:51.911Z",
+        "last_seen_at": "2026-09-06T22:28:51.911Z"
+      },
+      {
+        "pmid": "42637832",
+        "title": "A Prospective, Randomized Controlled Trial of Intravascular Ultrasound-Guided versus Digital Subtraction Angiography-Guided Mechanical Thrombectomy in Acute Intermediate-Risk and High-Risk Pulmonary Embolism.",
+        "journal": "Cardiovascular and interventional radiology",
+        "pubdate": "2026 Aug 24",
+        "doi": "10.1007/s00270-026-04526-z",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42637832/",
+        "first_seen_at": "2026-09-06T22:28:51.911Z",
+        "last_seen_at": "2026-09-06T22:28:51.911Z"
+      },
+      {
+        "pmid": "42618976",
+        "title": "Updated EAACI Statement on Drug Hypersensitivity Skin Testing: Methodology and Non-Irritative Concentrations.",
+        "journal": "Allergy",
+        "pubdate": "2026 Aug 19",
+        "doi": "10.1111/all.70466",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42618976/",
+        "first_seen_at": "2026-09-06T22:28:51.911Z",
+        "last_seen_at": "2026-09-06T22:28:51.911Z"
       }
     ]
   }
