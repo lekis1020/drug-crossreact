@@ -4,8 +4,8 @@
     "version": "0.1-draft",
     "scope": "Iodinated CT contrast-media cross-reactivity",
     "status": "template",
-    "last_database_update_at": "2026-03-25T08:49:06.498Z",
-    "last_literature_monitoring_at": "2026-03-25T08:49:06.498Z",
+    "last_database_update_at": "2026-10-18T22:38:50.550Z",
+    "last_literature_monitoring_at": "2026-10-18T22:38:50.550Z",
     "notes": "Template scaffold. Populate literature_confirmed_pairs only after clinical review."
   },
   "agent_groups": [
@@ -125,8 +125,56 @@
     "query": "((\"contrast media\"[MeSH Terms] OR \"iodinated contrast\"[Title/Abstract] OR \"contrast media\"[Title/Abstract]) OR iohexol[Title/Abstract] OR iopromide[Title/Abstract] OR iopamidol[Title/Abstract] OR ioversol[Title/Abstract] OR iomeprol[Title/Abstract] OR iobitridol[Title/Abstract] OR iodixanol[Title/Abstract] OR ioxaglate[Title/Abstract] OR ioxitalamate[Title/Abstract] OR diatrizoate[Title/Abstract]) AND (cross-react*[Title/Abstract] OR hypersensitiv*[Title/Abstract] OR allergy[Title/Abstract] OR anaphylaxis[Title/Abstract]) AND (skin test[Title/Abstract] OR provocation[Title/Abstract] OR case report[Publication Type] OR cohort[Title/Abstract] OR study[Title/Abstract])",
     "checked_window_days": 30,
     "max_results": 150,
-    "checked_at": "2026-03-25T08:49:06.498Z",
+    "checked_at": "2026-10-18T22:38:50.550Z",
     "records": [
+      {
+        "pmid": "42732936",
+        "title": "Genome-Wide Association Study of Contrast Media Hypersensitivity in Japanese Patients.",
+        "journal": "International heart journal",
+        "pubdate": "2026 Sep 30",
+        "doi": "10.1536/ihj.26-178",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42732936/",
+        "first_seen_at": "2026-10-18T22:38:50.550Z",
+        "last_seen_at": "2026-10-18T22:38:50.550Z"
+      },
+      {
+        "pmid": "42829394",
+        "title": "Multi-reflecting time-of-flight mass spectrometry enables high-accuracy metabolite identification in a demonstration study using serum samples from COVID-19 patients.",
+        "journal": "Metabolomics : Official journal of the Metabolomic Society",
+        "pubdate": "2026 Oct 3",
+        "doi": "10.1007/s11306-026-02539-w",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42829394/",
+        "first_seen_at": "2026-10-18T22:38:50.550Z",
+        "last_seen_at": "2026-10-18T22:38:50.550Z"
+      },
+      {
+        "pmid": "42878097",
+        "title": "Immediate Perioperative Hypersensitivity and Anaphylaxis in Neuroanesthesia Practice: A Focused Review.",
+        "journal": "Journal of neurosurgical anesthesiology",
+        "pubdate": "2026 Oct 15",
+        "doi": "10.1097/ANA.0000000000001174",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42878097/",
+        "first_seen_at": "2026-10-18T22:38:50.550Z",
+        "last_seen_at": "2026-10-18T22:38:50.550Z"
+      },
+      {
+        "pmid": "42349075",
+        "title": "Hypersensitivity reactions after intravascular administration of nonionic iodine-based contrast media: evidence on the influence of different sidechains on cross-reactivity.",
+        "journal": "European journal of radiology",
+        "pubdate": "2026 Oct",
+        "doi": "10.1016/j.ejrad.2026.112996",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42349075/",
+        "first_seen_at": "2026-10-18T22:38:50.550Z",
+        "last_seen_at": "2026-10-18T22:38:50.550Z"
+      },
       {
         "pmid": "41850224",
         "title": "Drug hypersensitivity leading to emergency department visit: a comprehensive analysis of clinical features and management.",
