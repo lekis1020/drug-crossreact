@@ -45,8 +45,8 @@
       "hutten_2025": "Systematic comparison of 4 cross-reactivity tables covering 51 BAs. Found 36% disharmony, highlighting need for standardization. No new clinical data but critical for interpretation.",
       "clinical_predictors": "Anaphylaxis (OR 6.05) and IV route (OR 9.68) are significant predictors of positive ST (Stevenson 2026)."
     },
-    "last_literature_monitoring_at": "2026-03-25T08:49:08.678Z",
-    "last_database_update_at": "2026-03-25T08:49:08.678Z"
+    "last_literature_monitoring_at": "2026-11-23T00:31:59.658Z",
+    "last_database_update_at": "2026-11-23T00:31:59.658Z"
   },
   "r1_groups": [
     {
@@ -1061,8 +1061,104 @@
     "query": "((beta-lactam*[Title/Abstract] OR cephalosporin*[Title/Abstract] OR penicillin*[Title/Abstract] OR carbapenem*[Title/Abstract] OR monobactam*[Title/Abstract] OR antibiotic*[Title/Abstract])) AND (cross-react*[Title/Abstract] OR hypersensitiv*[Title/Abstract] OR allergy[Title/Abstract] OR anaphylaxis[Title/Abstract]) AND (case report[Publication Type] OR clinical study[Publication Type] OR cohort[Title/Abstract] OR trial[Title/Abstract])",
     "checked_window_days": 30,
     "max_results": 150,
-    "checked_at": "2026-03-25T08:49:08.678Z",
+    "checked_at": "2026-11-23T00:31:59.658Z",
     "records": [
+      {
+        "pmid": "42918413",
+        "title": "Association of Non-Medical Drivers of Health with Completion of Penicillin Allergy Evaluation.",
+        "journal": "Annals of allergy, asthma & immunology : official publication of the American College of Allergy, Asthma, & Immunology",
+        "pubdate": "2026 Oct 23",
+        "doi": "10.1016/j.anai.2026.10.008",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42918413/",
+        "first_seen_at": "2026-11-23T00:31:59.658Z",
+        "last_seen_at": "2026-11-23T00:31:59.658Z"
+      },
+      {
+        "pmid": "43066607",
+        "title": "CLINICAL PATTERNS OF SUSPECTED DRUG HYPERSENSITIVITY AND FACTORS ASSOCIATED WITH DRUG-RELATED ANAPHYLAXIS: A REAL-WORLD STUDY OF 1,037 ADULTS.",
+        "journal": "International archives of allergy and immunology",
+        "pubdate": "2026 Nov 21",
+        "doi": "10.1159/iaa/adfag048",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/43066607/",
+        "first_seen_at": "2026-11-23T00:31:59.658Z",
+        "last_seen_at": "2026-11-23T00:31:59.658Z"
+      },
+      {
+        "pmid": "43054474",
+        "title": "Antibiotic Prescribing for Outpatient Dental Infections Across a Michigan Health System.",
+        "journal": "Open forum infectious diseases",
+        "pubdate": "2026 Nov",
+        "doi": "10.1093/ofid/ofag662",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/43054474/",
+        "first_seen_at": "2026-11-23T00:31:59.658Z",
+        "last_seen_at": "2026-11-23T00:31:59.658Z"
+      },
+      {
+        "pmid": "42970339",
+        "title": "Cefepime Dose Individualization in Early Sepsis: A Pragmatic Feasibility Trial Protocol.",
+        "journal": "Critical care explorations",
+        "pubdate": "2026 Nov",
+        "doi": "10.1097/CCE.0000000000001502",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42970339/",
+        "first_seen_at": "2026-11-23T00:31:59.658Z",
+        "last_seen_at": "2026-11-23T00:31:59.658Z"
+      },
+      {
+        "pmid": "42947924",
+        "title": "A prospective cohort study of serum sickness-like reactions in the pediatric population.",
+        "journal": "Paediatrics & child health",
+        "pubdate": "2026 Nov",
+        "doi": "10.1093/pch/pxag071",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42947924/",
+        "first_seen_at": "2026-11-23T00:31:59.658Z",
+        "last_seen_at": "2026-11-23T00:31:59.658Z"
+      },
+      {
+        "pmid": "42791664",
+        "title": "Risk Factors for Implant Failure and Peri-Implantitis: A Retrospective Cohort Study.",
+        "journal": "Clinical oral implants research",
+        "pubdate": "2026 Nov",
+        "doi": "10.1111/clr.70181",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42791664/",
+        "first_seen_at": "2026-11-23T00:31:59.658Z",
+        "last_seen_at": "2026-11-23T00:31:59.658Z"
+      },
+      {
+        "pmid": "42722596",
+        "title": "Drug allergy labels and complications after surgery: a prospective multicentre cohort study.",
+        "journal": "British journal of anaesthesia",
+        "pubdate": "2026 Nov",
+        "doi": "10.1016/j.bja.2026.07.035",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42722596/",
+        "first_seen_at": "2026-11-23T00:31:59.658Z",
+        "last_seen_at": "2026-11-23T00:31:59.658Z"
+      },
+      {
+        "pmid": "42633256",
+        "title": "Zero confirmed allergic reactions to cefazolin in an elective orthopedic cohort with high prevalence of reported beta-lactam allergies.",
+        "journal": "JSES reviews, reports, and techniques",
+        "pubdate": "2026 Nov",
+        "doi": "10.1016/j.xrrt.2026.100829",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42633256/",
+        "first_seen_at": "2026-11-23T00:31:59.658Z",
+        "last_seen_at": "2026-11-23T00:31:59.658Z"
+      },
       {
         "pmid": "41784074",
         "title": "An Overview of Red Breast Syndrome: A Qualitative Systematic Review of the Literature and a Single-center Case Series.",
@@ -1254,6 +1350,18 @@
         "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/41729756/",
         "first_seen_at": "2026-03-25T04:54:01.995Z",
         "last_seen_at": "2026-03-25T08:49:08.678Z"
+      },
+      {
+        "pmid": "43062439",
+        "title": "Antibiotic allergy labels in children attending a tertiary paediatric allergy clinic: prevalence, clinical phenotypes and delabelling outcomes.",
+        "journal": "Allergologia et immunopathologia",
+        "pubdate": "2026",
+        "doi": "10.15586/aei.v54i6.1823",
+        "source": "pubmed",
+        "status": "needs_review",
+        "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/43062439/",
+        "first_seen_at": "2026-11-23T00:31:59.658Z",
+        "last_seen_at": "2026-11-23T00:31:59.658Z"
       }
     ]
   }
